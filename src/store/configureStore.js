@@ -36,6 +36,8 @@ export const tokenService = createTokenService({
     path: '/',
     domain: getDomain(window.APP_CONFIG.dashboardHost),
   },
+  tokenName: window.APP_CONFIG.tokenName,
+  refreshTokenName: window.APP_CONFIG.refreshTokenName,
 });
 export const authService = Auth.services.createAuthService({
   strategy: window.APP_CONFIG.authStrategy,
