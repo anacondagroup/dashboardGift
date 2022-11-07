@@ -1,0 +1,3 @@
+export const GIFT_REPORT = {
+  SEND: 'ED/GIFT_REPORT/SEND_REQUEST',
+};

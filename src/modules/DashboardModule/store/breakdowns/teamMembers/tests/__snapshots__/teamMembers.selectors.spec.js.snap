@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[` 1`] = `"/enterprise/dashboard/breakdown/teams/1/members?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[` 2`] = `"/enterprise/report/team_breakdown?search=asd&sort_column=name&sort_direction=asc&team_id=1"`;
+
+exports[`team members selector getReportFileName Should build name with all params 1`] = `"Team members breakdown-WEX: sales dep-Team-campaign 4 test-Moment-2019-03-22-2019-03-29.xlsx"`;
+
+exports[`team members selector getReportFileName Should build name without params 1`] = `"Team members breakdown.xlsx"`;

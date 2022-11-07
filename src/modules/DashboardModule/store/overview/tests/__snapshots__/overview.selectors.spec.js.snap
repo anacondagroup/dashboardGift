@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Overview selector getReportFileName Should build name with all params 1`] = `"Current-gift-statuses-Shyanne Borer-campaign 4 test-Campaign-WEX: sales dep-Team-2019-03-22--2019-03-29.xlsx"`;
+
+exports[`Overview selector getReportFileName Should build name without params 1`] = `"Current-gift-statuses.xlsx"`;

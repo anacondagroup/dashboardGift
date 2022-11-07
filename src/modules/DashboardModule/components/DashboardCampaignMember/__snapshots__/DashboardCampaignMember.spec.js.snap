@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardCampaignMember Should render correctly when member loaded 1`] = `
+<DocumentFragment>
+  <div>
+    <dashboard-sticky-header
+      isloading="false"
+      kpi="#kpi#"
+    >
+      MemberFilter
+    </dashboard-sticky-header>
+    <dashboard-header
+      header="Let’s see how  is doing?"
+      subheader="Here’s an overview of the  performance."
+    >
+      <div>
+        DashboardHeader
+      </div>
+      MemberFilter
+    </dashboard-header>
+    <div
+      class="MuiGrid-root MuiGrid-container css-16g5rpk-MuiGrid-root"
+    >
+      GiftInvitationReportButton
+    </div>
+    DashboardKPI
+    <dashboard-section
+      hidepaper="true"
+      icon="heart-rate"
+      isloading="false"
+      isreportloading="false"
+      subtitle="This shows you the current status of all the gifts that have been sent in the  campaign."
+      title="Status of #total gift invites"
+    >
+      DashboardGiftStatuses
+    </dashboard-section>
+  </div>
+  GiftBreakdownSection
+</DocumentFragment>
+`;
+
+exports[`DashboardCampaignMember Should render correctly while members loading 1`] = `
+<DocumentFragment>
+  <div>
+    <dashboard-sticky-header
+      isloading="false"
+      kpi="#kpi#"
+    >
+      MemberFilter
+    </dashboard-sticky-header>
+    <dashboard-header
+      header="Let’s see how  is doing?"
+      subheader="Here’s an overview of the  performance."
+    >
+      <div>
+        DashboardHeader
+      </div>
+      MemberFilter
+    </dashboard-header>
+    <div
+      class="MuiGrid-root MuiGrid-container css-16g5rpk-MuiGrid-root"
+    >
+      GiftInvitationReportButton
+    </div>
+    DashboardKPI
+    <dashboard-section
+      hidepaper="true"
+      icon="heart-rate"
+      isloading="false"
+      isreportloading="false"
+      subtitle="This shows you the current status of all the gifts that have been sent in the  campaign."
+      title="Status of #total gift invites"
+    >
+      DashboardGiftStatuses
+    </dashboard-section>
+  </div>
+  GiftBreakdownSection
+</DocumentFragment>
+`;

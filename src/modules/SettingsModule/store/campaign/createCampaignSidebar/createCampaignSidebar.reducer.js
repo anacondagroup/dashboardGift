@@ -1,0 +1,64 @@
+import {
+  CREATE_CAMPAIGN_SIDEBAR_CLOSE,
+  CREATE_CAMPAIGN_SIDEBAR_LOADING_DATA,
+  CREATE_CAMPAIGN_SIDEBAR_CHOOSE_CAMPAIGN,
+  CREATE_CAMPAIGN_SIDEBAR_SWAG_SELECT,
+  CREATE_CAMPAIGN_SIDEBAR_SWAG_DIGITAL_CODES,
+  CREATE_CAMPAIGN_SIDEBAR_SWAG_PHYSICAL_CODES,
+} from './createCampaignSidebar.types';
+
+export const CREATE_CAMPAIGN_SIDEBAR_MODES = {
+  CLOSED: 'CLOSED',
+  CHOOSE_CAMPAIGN: 'CHOOSE_CAMPAIGN',
+  LOADING_DATA: 'LOADING_DATA',
+  ACTIVATE: 'LEAD_ACTIVATION',
+  SWAG_SELECT: 'SWAG_SELECT',
+  GENERATE_SWAG_DIGITAL_CODES: 'GENERATE_SWAG_DIGITAL_CODES',
+  GENERATE_SWAG_PHYSICAL_CODES: 'GENERATE_SWAG_PHYSICAL_CODES',
+  ACTIVATE_RECIPIENT_BULK_UPLOADING: 'ACTIVATE_RECIPIENT_BULK_UPLOADING',
+};
+
+const initialState = {
+  mode: CREATE_CAMPAIGN_SIDEBAR_MODES.CLOSED,
+  products: [],
+  isProductsLoading: false,
+};
+
+export const reducer = (state = initialState, action = {}) => {
+  switch (action.type) {
+    case CREATE_CAMPAIGN_SIDEBAR_CLOSE:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.CLOSED,
+      };
+    case CREATE_CAMPAIGN_SIDEBAR_LOADING_DATA:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.LOADING_DATA,
+      };
+    case CREATE_CAMPAIGN_SIDEBAR_CHOOSE_CAMPAIGN:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.CHOOSE_CAMPAIGN,
+      };
+    case CREATE_CAMPAIGN_SIDEBAR_SWAG_SELECT:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.SWAG_SELECT,
+      };
+    case CREATE_CAMPAIGN_SIDEBAR_SWAG_DIGITAL_CODES:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.GENERATE_SWAG_DIGITAL_CODES,
+      };
+    case CREATE_CAMPAIGN_SIDEBAR_SWAG_PHYSICAL_CODES:
+      return {
+        ...state,
+        mode: CREATE_CAMPAIGN_SIDEBAR_MODES.GENERATE_SWAG_PHYSICAL_CODES,
+      };
+    default:
+      return {
+        ...state,
+      };
+  }
+};

@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Overview reducer Should transform API data 1`] = `
+Object {
+  "downloadReportLink": "https://dashboard.alyce.com/enterprise/report/gift_statuses?team_id=123&date_range=month",
+  "errors": Object {},
+  "isLoading": false,
+  "isReportLoading": false,
+  "kpi": Object {
+    "conversion": Object {
+      "sent_to_booked": 33,
+      "view_to_booked": 49,
+    },
+    "invites": Object {
+      "accepted": 244,
+      "created": 123,
+      "delivered": 700,
+      "sent": 668,
+      "viewed": 200,
+    },
+    "meetings": Object {
+      "booked": 20,
+    },
+  },
+  "statuses": Object {
+    "accepted": 0,
+    "accepted_and_meeting_booked": 0,
+    "accepted_and_meeting_held": 0,
+    "accepted_and_meeting_not_held": 0,
+    "address_being_verified": 0,
+    "awaiting_fulfilment": 0,
+    "bounced_or_returned": 0,
+    "created_and_queued_for_research": 0,
+    "declined": 0,
+    "delivered_but_now_viewed": 0,
+    "disabled": 0,
+    "expired": 0,
+    "in_transit": 0,
+    "invite_options_ready": 0,
+    "queued_for_shipping": 0,
+    "requiring_attention": 0,
+    "scheduled_to_be_sent": 0,
+    "viewed": 0,
+  },
+}
+`;

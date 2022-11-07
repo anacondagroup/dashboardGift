@@ -1,0 +1,3 @@
+export const EXPIRE_SOON_REMINDER_SEND_IN_DAYS = 7;
+
+export const DEFAULT_GIFT_EXPIRES_IN_DAYS = 90;

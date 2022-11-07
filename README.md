@@ -1,92 +1,86 @@
-# dashboard-spa
+This project was bootstrapped with [Create React Dashboard](https://github.com/facebook/create-react-app).
 
+## Backend setup
+create file .env.development.local
+- REACT_APP_PROXY your local backend host.
+- REACT_APP_API_HOST your local frontend host, default is http://localhost:3000 if you want to setup without proxy leave it as REACT_APP_PROXY
+- REACT_APP_DASHBOARD_HOST the same as REACT_APP_API_HOST but for different purpose
 
+## Available Scripts
 
-## Getting started
+In the project directory, you can run:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+### `npm start`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Runs the app in the development mode.<br>
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Add your files
+The page will reload if you make edits.<br>
+You will also see any lint errors in the console.
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### `npm test`
+
+Launches the test runner in the interactive watch mode.<br>
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.<br>
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br>
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Development doc
+
+### Libraries
+- view — [react](https://reactjs.org/)
+- state — [redux](https://redux.js.org/)
+- side-effects — [redux-observable](https://redux-observable.js.org/)
+- styling — [material-ui](https://material-ui.com/)
+
+### Containers and components
+Containers — smart components which connected to redux state, implements side effects, contains routing. No styling.
+Components — implement layout, styling. No side effects or redux state connection.
+
+### Redux and rxjs
+Redux for state structure rxjs for actions flow management. Keep data in state, logic in epics. Each side effect should be injected as dependency in root epic.
+
+### Tests
+- component example — [DashboardHeader](./src/components/Dashboard/tests/dashboardHeader.spec.js)
+- container example — [Dashboard](src/modules/Dashboard/dashboard.spec.js)
+- epic example — [Auth](./src/store/auth/tests/auth.epic.spec.js)
+- reducer example — [Auth request](./src/store/auth/auth-request/tests/auth-request.reducer.spec.js)
+
+## CSS and styling
+Main theme is here — [Alyce theme](./src/styles/alyce-theme.js)
+Use vars from global theme. More about theme [here](https://material-ui.com/customization/themes/)
+Do not write your own base components or classes, everything defined in material UI, for example [Typography](https://material-ui.com/style/typography/)
 
 ```
-cd existing_repo
-git remote add origin https://gitlab.alycedev.com/alycecom/dashboard-spa.git
-git branch -M master
-git push -uf origin master
+const styles = theme => ({
+  root: {
+    padding: theme.spacing.unit,
+    background: theme.palette.primary.main,
+  }
+});
+
+const Header = ({ title, classes }) => (
+    <Paper className={classes.root}>
+        <Typography variant="h1">
+            { title }
+        </Typography>
+    </Paper>
+);
+
+export default withStyles(styles)(Header)
+
 ```
 
-## Integrate with your tools
+## Learn More
 
-- [ ] [Set up project integrations](https://gitlab.alycedev.com/alycecom/dashboard-spa/-/settings/integrations)
+You can learn more in the [Create React Dashboard documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-## Collaborate with your team
-
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+To learn React, check out the [React documentation](https://reactjs.org/).

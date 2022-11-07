@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard service urlToState Should rename keys 1`] = `
+Object {
+  "campaignsDirection": "",
+  "campaignsSearch": "",
+  "campaignsSort": "",
+  "contactsDirection": "",
+  "contactsPage": "",
+  "contactsSearch": "",
+  "contactsSort": "",
+  "dateRangeFrom": "",
+  "dateRangeTo": "",
+  "giftDirection": "",
+  "giftPage": "",
+  "giftSearch": "",
+  "giftSort": "",
+  "teamMembersDirection": "",
+  "teamMembersPage": "",
+  "teamMembersSearch": "",
+  "teamMembersSort": "",
+  "teamsDirection": "",
+  "teamsSearch": "",
+  "teamsSort": "",
+}
+`;
+
+exports[`Dashboard service urlToState stateToUrl Should rename keys 1`] = `
+Object {
+  "campaigns_direction": "",
+  "campaigns_search": "",
+  "campaigns_sort": "",
+  "contacts_direction": "",
+  "contacts_page": "",
+  "contacts_search": "",
+  "contacts_sort": "",
+  "date_range_from": "",
+  "date_range_to": "",
+  "gift_direction": "",
+  "gift_page": "",
+  "gift_search": "",
+  "gift_sort": "",
+  "team_members_direction": "",
+  "team_members_page": "",
+  "team_members_search": "",
+  "team_members_sort": "",
+  "teams_direction": "",
+  "teams_search": "",
+  "teams_sort": "",
+}
+`;

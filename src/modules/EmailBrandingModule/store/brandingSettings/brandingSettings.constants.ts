@@ -1,0 +1,15 @@
+export const EMPTY_BRANDING_SETTINGS = {
+  companyLogoUrl: '',
+  companyLogoId: 0,
+  companyLogoWidth: 0,
+  buttonColor: '',
+  buttonTextColor: '',
+  buttonBorderColor: '',
+  footerLinkColor: '',
+  outreachEmail: '',
+  footerCopyrightInscription: '',
+  privacyPolicyUrl: '',
+  headerBackgroundColor: '',
+  headerItemsColor: '',
+  headerItemsOpacity: 0,
+};
