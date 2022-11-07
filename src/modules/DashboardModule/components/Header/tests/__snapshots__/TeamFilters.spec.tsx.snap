@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamFilters should be rendered with edit feature 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-item MuiGrid-wrap-xs-nowrap MuiGrid-grid-xs-5 css-ufwsty-MuiGrid-root"
+>
+  <HasPermission
+    permissionKey="edit-teams"
+  >
+    <div
+      className="Body-Regular-Center-Link-Bold MuiBox-root css-1d3mru"
+    >
+      <div
+        className="MuiBox-root css-111wug5"
+      >
+        <Icon
+          color="inherit"
+          icon="cog"
+        />
+      </div>
+      <Link
+        to="/settings/teams/1/settings-and-permissions"
+      >
+        Edit team
+      </Link>
+    </div>
+  </HasPermission>
+  <div
+    disabled={false}
+    label="All teams"
+    name="teamId"
+    onFilterChange={[Function]}
+    value={1}
+  >
+    <li
+      className="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root"
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="menuitem"
+      tabIndex={-1}
+      value={1}
+    >
+      Team A
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </li>
+    <li
+      className="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root"
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="menuitem"
+      tabIndex={-1}
+      value={2}
+    >
+      Horde
+      <span
+        className="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      />
+    </li>
+  </div>
+  <div
+    className="MuiBox-root css-1isemmb"
+  >
+    <DateRangeSelect
+      disabled={false}
+      from="2011-11-11"
+      onChange={[Function]}
+      to="2012-12-12"
+    />
+  </div>
+</div>
+`;
+
+exports[`TeamFilters should be rendered without edit feature 1`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-item MuiGrid-wrap-xs-nowrap MuiGrid-grid-xs-5 css-ufwsty-MuiGrid-root"
+>
+  <div
+    disabled={true}
+    label="All teams"
+    name="teamId"
+    onFilterChange={[Function]}
+    value={1}
+  >
+    <li
+      className="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root"
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="menuitem"
+      tabIndex={-1}
+      value={1}
+    >
+      Team A
+    </li>
+    <li
+      className="MuiMenuItem-root MuiMenuItem-gutters MuiButtonBase-root css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root"
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      role="menuitem"
+      tabIndex={-1}
+      value={2}
+    >
+      Horde
+    </li>
+  </div>
+  <div
+    className="MuiBox-root css-1isemmb"
+  >
+    <DateRangeSelect
+      disabled={true}
+      from=""
+      onChange={[Function]}
+      to=""
+    />
+  </div>
+</div>
+`;

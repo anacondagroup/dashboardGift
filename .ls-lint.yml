@@ -1,0 +1,69 @@
+ls:
+  src:
+      .dir: PascalCase | camelCase | regex:(__snapshots__) | regex:(__mocks__) | regex:(tests)
+      .js: camelCase | PascalCase
+      .ts: camelCase | PascalCase
+      .tsx: PascalCase
+      .styles.ts: PascalCase
+
+      .constants.js: camelCase
+      .constants.ts: camelCase
+      .shape.js: camelCase
+      .shape.ts: camelCase
+      .types.js: camelCase
+      .types.ts: camelCase | PascalCase
+      .helpers.js: camelCase
+      .helpers.ts: camelCase
+      .service.js: camelCase
+      .service.ts: camelCase
+
+      .actions.js: camelCase
+      .actions.ts: camelCase
+      .reducer.js: camelCase
+      .reducer.ts: camelCase
+      .epics.js: camelCase
+      .epics.ts: camelCase
+      .selectors.js: camelCase
+      .selectors.ts: camelCase
+      .transformers.js: camelCase
+      .transformers.ts: camelCase
+      .schemas.js: camelCase
+      .schemas.ts: camelCase
+      .factory.js: camelCase
+
+      .spec.js: camelCase | PascalCase
+      .spec.ts: camelCase
+      .spec.tsx: PascalCase
+      .test.js: camelCase | PascalCase
+      .mock.js: camelCase
+      .mock.ts: camelCase
+      .mocks.ts: camelCase
+
+      .helpers.spec.js: camelCase
+      .helpers.spec.ts: camelCase
+      .service.spec.js: camelCase
+      .service.spec.ts: camelCase
+
+      .actions.spec.js: camelCase
+      .actions.spec.ts: camelCase
+      .reducer.spec.js: camelCase
+      .reducer.spec.ts: camelCase
+      .epics.spec.js: camelCase
+      .epics.spec.ts: camelCase
+      .selectors.spec.js: camelCase
+      .selectors.spec.ts: camelCase
+      .transformers.spec.js: camelCase
+      .transformers.spec.ts: camelCase
+
+      .d.ts: kebab-case | camelCase | PascalCase
+
+      hoc/*:
+          .dir: PascalCase | regex:(__snapshots__)
+
+ignore:
+  - .git
+  - .gitlab
+  - docs
+  - node_modules
+  - src/assets
+  - src/styles

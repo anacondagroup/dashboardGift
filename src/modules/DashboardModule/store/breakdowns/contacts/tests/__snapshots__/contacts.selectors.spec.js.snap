@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`contacts selector buildApiUrl Should build url 1`] = `"/enterprise/dashboard/breakdown/recipients?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`contacts selector buildReportUrl Should build url 1`] = `"/enterprise/report/recipient_breakdown?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`contacts selector getReportFileName Should build name with all params 1`] = `"Contact breakdown-2019-03-22-2019-03-29.xlsx"`;
+
+exports[`contacts selector getReportFileName Should build name without params 1`] = `"Contact breakdown.xlsx"`;

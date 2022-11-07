@@ -1,0 +1,396 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamsBreakdown render while breakdown is loading 1`] = `
+<div
+  dir="desc"
+  isLoading={true}
+  items={Array []}
+  linkQueryParams="{\\"search\\":\\"\\",\\"updateObj\\":{\\"dateRangeFrom\\":\\"\\",\\"dateRangeTo\\":\\"\\"}}"
+  onPageChange={[Function]}
+  onSort={[Function]}
+  page={0}
+  sort=""
+>
+  <Grid
+    container={true}
+    direction="row"
+    wrap="nowrap"
+    xs={12}
+  >
+    <Grid
+      item={true}
+      xs={10}
+    >
+      <div
+        className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1dumpt7-MuiFormControl-root-MuiTextField-root"
+      >
+        <div
+          className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-xqzzw5-MuiInputBase-root-MuiOutlinedInput-root"
+          onClick={[Function]}
+        >
+          <div
+            className="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-ittuaa-MuiInputAdornment-root"
+          >
+            <span
+              className="notranslate"
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-search  css-1boqai1"
+              data-icon="search"
+              data-prefix="fas"
+              focusable="false"
+              onClick={[Function]}
+              role="img"
+              style={Object {}}
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+          </div>
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedStart css-1to944p-MuiInputBase-input-MuiOutlinedInput-input"
+            data-testid="search-teams"
+            disabled={false}
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Search teams"
+            required={false}
+            type="text"
+            value=""
+          />
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+          >
+            <legend
+              className="css-nnbavb"
+            >
+              <span
+                className="notranslate"
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "&#8203;",
+                  }
+                }
+              />
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+    </Grid>
+    <Grid
+      item={true}
+      xs={2}
+    >
+      <div
+        className="MuiBox-root css-7i6r7n"
+      >
+        <div
+          className="MuiFormControl-root makeStyles-dateRangeFilter-1 css-uo9nmu-MuiFormControl-root"
+        >
+          <label
+            className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1szc4y1-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink={true}
+            htmlFor="date-range-select"
+          >
+            Viewing
+          </label>
+          <div
+            className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary Mui-disabled MuiInputBase-formControl css-1rpyuhh-MuiInputBase-root-MuiOutlinedInput-root"
+            data-testid="DateRangeSelect"
+            onClick={[Function]}
+          >
+            <div
+              aria-disabled="true"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              className="MuiSelect-select MuiSelect-outlined Mui-disabled MuiOutlinedInput-input MuiInputBase-input Mui-disabled css-kath9a-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={null}
+              role="button"
+              tabIndex={null}
+            >
+              All Times
+            </div>
+            <input
+              aria-hidden={true}
+              className="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              disabled={true}
+              id="date-range-select"
+              onAnimationStart={[Function]}
+              onChange={[Function]}
+              required={false}
+              tabIndex={-1}
+              value={
+                Object {
+                  "custom": false,
+                  "empty": true,
+                  "label": "All Times",
+                  "value": Object {},
+                }
+              }
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined Mui-disabled css-hfutr2-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ExpandMoreIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden={true}
+              className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                className="css-1z7n62"
+              >
+                <span>
+                  Viewing
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </Grid>
+  </Grid>
+</div>
+`;
+
+exports[`TeamsBreakdown render with breakdown 1`] = `
+<div
+  dir="asc"
+  isLoading={false}
+  items={
+    Array [
+      Object {
+        "id": 0,
+        "prop": "value",
+      },
+    ]
+  }
+  linkQueryParams="{\\"search\\":\\"\\",\\"updateObj\\":{\\"dateRangeFrom\\":\\"2011-11-11\\",\\"dateRangeTo\\":\\"2012-12-12\\"}}"
+  onPageChange={[Function]}
+  onSort={[Function]}
+  page={0}
+  sort="someProperty"
+>
+  <Grid
+    container={true}
+    direction="row"
+    wrap="nowrap"
+    xs={12}
+  >
+    <Grid
+      item={true}
+      xs={10}
+    >
+      <div
+        className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1dumpt7-MuiFormControl-root-MuiTextField-root"
+      >
+        <div
+          className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart MuiInputBase-adornedEnd css-kgdphc-MuiInputBase-root-MuiOutlinedInput-root"
+          onClick={[Function]}
+        >
+          <div
+            className="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-ittuaa-MuiInputAdornment-root"
+          >
+            <span
+              className="notranslate"
+              dangerouslySetInnerHTML={
+                Object {
+                  "__html": "&#8203;",
+                }
+              }
+            />
+            <svg
+              aria-hidden="true"
+              className="svg-inline--fa fa-search  css-1boqai1"
+              data-icon="search"
+              data-prefix="fas"
+              focusable="false"
+              onClick={[Function]}
+              role="img"
+              style={Object {}}
+              viewBox="0 0 512 512"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"
+                fill="currentColor"
+                style={Object {}}
+              />
+            </svg>
+          </div>
+          <input
+            aria-invalid={false}
+            autoFocus={false}
+            className="MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputAdornedStart MuiInputBase-inputAdornedEnd css-tr2z7b-MuiInputBase-input-MuiOutlinedInput-input"
+            data-testid="search-teams"
+            disabled={false}
+            id="mui-2"
+            onAnimationStart={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="Search teams"
+            required={false}
+            type="text"
+            value="search"
+          />
+          <div
+            className="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
+          >
+            <div
+              className="MuiBox-root css-rcmis8"
+            >
+              <svg
+                aria-hidden="true"
+                className="svg-inline--fa fa-times Text-Pointer css-1hbp0r0"
+                data-icon="times"
+                data-prefix="fas"
+                focusable="false"
+                onClick={[Function]}
+                role="img"
+                style={Object {}}
+                viewBox="0 0 352 512"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"
+                  fill="currentColor"
+                  style={Object {}}
+                />
+              </svg>
+            </div>
+          </div>
+          <fieldset
+            aria-hidden={true}
+            className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+          >
+            <legend
+              className="css-nnbavb"
+            >
+              <span
+                className="notranslate"
+                dangerouslySetInnerHTML={
+                  Object {
+                    "__html": "&#8203;",
+                  }
+                }
+              />
+            </legend>
+          </fieldset>
+        </div>
+      </div>
+    </Grid>
+    <Grid
+      item={true}
+      xs={2}
+    >
+      <div
+        className="MuiBox-root css-7i6r7n"
+      >
+        <div
+          className="MuiFormControl-root makeStyles-dateRangeFilter-1 css-uo9nmu-MuiFormControl-root"
+        >
+          <label
+            className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary MuiFormLabel-filled css-1szc4y1-MuiFormLabel-root-MuiInputLabel-root"
+            data-shrink={true}
+            htmlFor="date-range-select"
+          >
+            Viewing
+          </label>
+          <div
+            className="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1rpyuhh-MuiInputBase-root-MuiOutlinedInput-root"
+            data-testid="DateRangeSelect"
+            onClick={[Function]}
+          >
+            <div
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              className="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input css-kath9a-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              
+          Nov 11, 2011
+           - 
+          Dec 12, 2012
+        
+            </div>
+            <input
+              aria-hidden={true}
+              className="MuiSelect-nativeInput css-yf8vq0-MuiSelect-nativeInput"
+              disabled={false}
+              id="date-range-select"
+              onAnimationStart={[Function]}
+              onChange={[Function]}
+              required={false}
+              tabIndex={-1}
+              value={
+                Object {
+                  "custom": true,
+                  "label": "Custom Range",
+                  "value": Object {
+                    "from": "",
+                    "to": "",
+                  },
+                }
+              }
+            />
+            <svg
+              aria-hidden={true}
+              className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiSelect-icon MuiSelect-iconOutlined css-hfutr2-MuiSvgIcon-root-MuiSelect-icon"
+              data-testid="ExpandMoreIcon"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z"
+              />
+            </svg>
+            <fieldset
+              aria-hidden={true}
+              className="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+            >
+              <legend
+                className="css-1z7n62"
+              >
+                <span>
+                  Viewing
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </Grid>
+  </Grid>
+</div>
+`;

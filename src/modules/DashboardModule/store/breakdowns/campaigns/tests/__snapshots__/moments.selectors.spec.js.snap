@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Campaigns selector buildApiUrl Should get api url 1`] = `"/enterprise/dashboard/breakdown/campaigns?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector buildApiUrl Should get api url with team and member ids 1`] = `"/enterprise/dashboard/breakdown/teams/1/members/4/campaigns?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector buildApiUrl Should get api url with team id 1`] = `"/enterprise/dashboard/breakdown/teams/1/campaigns?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector buildReportUrl Should get api url 1`] = `"/enterprise/report/campaign_breakdown?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector buildReportUrl Should get api url with team and member ids 1`] = `"/enterprise/report/teams/1/members/4/campaign_breakdown?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector buildReportUrl Should get api url with team id 1`] = `"/enterprise/report/teams/1/campaign_breakdown?search=asd&sort_column=name&sort_direction=asc"`;
+
+exports[`Campaigns selector getReportFileName Should build name with all params 1`] = `"Campaigns breakdown-WEX: sales dep-Team-Shyanne Borer-2019-03-22-2019-03-24.xlsx"`;
+
+exports[`Campaigns selector getReportFileName Should build name without params 1`] = `"Campaigns breakdown.xlsx"`;

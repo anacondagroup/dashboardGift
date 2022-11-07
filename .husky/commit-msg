@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Hook that prepend ticket identifier to commit messages
+
+# Get the current branch name
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+# Check it matches the pattern "AB-1234"
+if [ $(echo $BRANCH_NAME | grep -cEi "^(PD|QAI)-[0-9]+$") -eq 1 ]; then
+	# Trim it to get the ticket identifier
+	TICKET=$(
+		echo $BRANCH_NAME \
+		| sed -e 'y/abcdefghijklmnopqrstuvwxyz/ABCDEFGHIJKLMNOPQRSTUVWXYZ/'
+	)
+fi
+
+# Prepend the ticket identifier to the commit message
+if [ -n "$BRANCH_NAME" ] && [ -n "$TICKET" ] && [ $(grep -cFEi "^$TICKET" $1) -eq 0 ]; then
+	OUT_FILE=$1
+	sed -i.bak -e "1s/^/$TICKET: /" $OUT_FILE
+fi

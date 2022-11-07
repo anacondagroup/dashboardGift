@@ -1,0 +1,685 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TeamsBreakdownTable render while items are loading 1`] = `
+Array [
+  <div
+    data-toolbar=""
+  />,
+  <Table
+    padding="none"
+  >
+    <TableHead>
+      <TableRow>
+        <TableCell>
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            team name
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts sent
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts viewed
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts accepted
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            meeting booked
+          </TableSortLabel>
+        </TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      <TableRow
+        style={
+          Object {
+            "height": 480,
+          }
+        }
+      >
+        <TableCell
+          colSpan={12}
+        />
+      </TableRow>
+    </TableBody>
+  </Table>,
+]
+`;
+
+exports[`TeamsBreakdownTable render with teams 1`] = `
+Array [
+  <div
+    data-toolbar=""
+  />,
+  <Table
+    padding="none"
+  >
+    <TableHead>
+      <TableRow>
+        <TableCell>
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            team name
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts sent
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts viewed
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            gifts accepted
+          </TableSortLabel>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <TableSortLabel
+            active={false}
+            direction="asc"
+            onClick={[Function]}
+          >
+            meeting booked
+          </TableSortLabel>
+        </TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-4 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/0?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-6 MuiBox-root css-mqotvu"
+          >
+            giftsSent0
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-8 MuiBox-root css-mqotvu"
+          >
+            giftsViewed0
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-10 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted0
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-12 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked0
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-14 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/1?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-16 MuiBox-root css-mqotvu"
+          >
+            giftsSent1
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-18 MuiBox-root css-mqotvu"
+          >
+            giftsViewed1
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-20 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted1
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-22 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked1
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-24 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/2?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-26 MuiBox-root css-mqotvu"
+          >
+            giftsSent2
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-28 MuiBox-root css-mqotvu"
+          >
+            giftsViewed2
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-30 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted2
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-32 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked2
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-34 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/3?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-36 MuiBox-root css-mqotvu"
+          >
+            giftsSent3
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-38 MuiBox-root css-mqotvu"
+          >
+            giftsViewed3
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-40 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted3
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-42 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked3
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-44 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/4?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-46 MuiBox-root css-mqotvu"
+          >
+            giftsSent4
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-48 MuiBox-root css-mqotvu"
+          >
+            giftsViewed4
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-50 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted4
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-52 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked4
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-54 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/5?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-56 MuiBox-root css-mqotvu"
+          >
+            giftsSent5
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-58 MuiBox-root css-mqotvu"
+          >
+            giftsViewed5
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-60 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted5
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-62 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked5
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-64 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/6?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-66 MuiBox-root css-mqotvu"
+          >
+            giftsSent6
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-68 MuiBox-root css-mqotvu"
+          >
+            giftsViewed6
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-70 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted6
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-72 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked6
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-74 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/7?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-76 MuiBox-root css-mqotvu"
+          >
+            giftsSent7
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-78 MuiBox-root css-mqotvu"
+          >
+            giftsViewed7
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-80 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted7
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-82 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked7
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-84 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/8?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-86 MuiBox-root css-mqotvu"
+          >
+            giftsSent8
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-88 MuiBox-root css-mqotvu"
+          >
+            giftsViewed8
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-90 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted8
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-92 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked8
+          </div>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          component="th"
+          scope="row"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-94 MuiBox-root css-1wizxrd"
+          >
+            <RouterLick
+              onClick={[Function]}
+              to="/teams/9?param=123"
+            />
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-96 MuiBox-root css-mqotvu"
+          >
+            giftsSent9
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-98 MuiBox-root css-mqotvu"
+          >
+            giftsViewed9
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-100 MuiBox-root css-mqotvu"
+          >
+            giftsAccepted9
+          </div>
+        </TableCell>
+        <TableCell
+          align="right"
+        >
+          <div
+            className="makeStyles-cell-2 makeStyles-cell-102 MuiBox-root css-mqotvu"
+          >
+            meetingsBooked9
+          </div>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+    <TableFooter>
+      <TableRow>
+        <TablePagination
+          SelectProps={
+            Object {
+              "native": true,
+            }
+          }
+          colSpan={12}
+          count={0}
+          onPageChange={[Function]}
+          page={0}
+          rowsPerPage={10}
+          rowsPerPageOptions={
+            Array [
+              10,
+            ]
+          }
+        />
+      </TableRow>
+    </TableFooter>
+  </Table>,
+]
+`;

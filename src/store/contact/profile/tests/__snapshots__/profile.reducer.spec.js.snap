@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Profile reducer load success Should rename keys 1`] = `
+Object {
+  "avatar": "http://alyce.site/images/avatar.png",
+  "company": "Cmp Ltd.",
+  "countryId": 1,
+  "currentGift": null,
+  "discoveryNotes": "",
+  "education": "",
+  "email": "barr_tim@grandhotels.com",
+  "employment": "SVP, Administration and Finance, Grand Hotels & Resorts Ltd",
+  "error": null,
+  "firstName": "Bler",
+  "fullName": "Bler Barr",
+  "id": 1429,
+  "isLoading": false,
+  "lastName": "Barr",
+  "latestGift": null,
+  "location": "US asa 123 US",
+  "phoneNumber": "",
+  "researchTags": Array [],
+  "statistic": Object {
+    "accepted": 0,
+    "created": 0,
+    "meetings": 0,
+    "sent": 0,
+  },
+}
+`;

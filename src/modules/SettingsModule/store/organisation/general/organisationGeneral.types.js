@@ -1,0 +1,6 @@
+import { createRequestTypes } from '@alycecom/utils';
+
+export const ORGANISATION_SETTINGS = createRequestTypes('ORGANISATION_SETTINGS');
+export const ORGANISATION_SETTINGS_UPDATE_NAME = createRequestTypes('ORGANISATION_SETTINGS_UPDATE_NAME');
+export const ORGANISATION_SETTINGS_UPDATE_LOGO = createRequestTypes('ORGANISATION_SETTINGS_UPDATE_LOGO');
+export const ORGANISATION_SETTINGS_REMOVE_LOGO = createRequestTypes('ORGANISATION_SETTINGS_REMOVE_LOGO');

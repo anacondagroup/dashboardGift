@@ -1,0 +1,26 @@
+services:
+  node:
+    build:
+      context: .
+      dockerfile: .docker/node/Dockerfile
+    container_name: dashboard-node
+    volumes:
+      - ./:/app
+      - node-modules:/app/node_modules
+    networks:
+      - alyce-local
+    labels:
+      - traefik.http.routers.dashboard.rule=Host(`dashboard.alyce.test`)
+      - traefik.http.services.dashboard.loadbalancer.server.port=3000
+      - traefik.http.routers.dashboard-secure.rule=Host(`dashboard.alyce.test`)
+      - traefik.http.routers.dashboard-secure.tls=true
+      - traefik.http.routers.dashboard-secure.entrypoints=secure
+
+volumes:
+  node-modules:
+
+networks:
+  ### You should create that network externally
+  ### example: `docker network create -d bridge alyce-local`
+  alyce-local:
+    external: true

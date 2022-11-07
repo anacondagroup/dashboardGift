@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`teams reducer teamsLoadSuccess Should transform breakdown data to app format 1`] = `
+Object {
+  "breakdown": Array [
+    Object {
+      "giftsAccepted": 0,
+      "giftsSent": 0,
+      "giftsViewed": 0,
+      "id": 1,
+      "meetingsBooked": 0,
+      "name": "WEX",
+    },
+  ],
+  "error": null,
+  "isLoaded": true,
+  "isLoading": false,
+  "isReportLoading": false,
+  "pagination": Object {
+    "current_page": 1,
+  },
+}
+`;

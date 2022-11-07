@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`history reducer success Should transform gifts 1`] = `
+Object {
+  "error": null,
+  "gifts": Array [
+    Object {
+      "campaign": null,
+      "history": Array [
+        Object {
+          "action_date": "12/19/2017 @ 01:32 pm",
+          "label": "Gift created",
+          "status_string": null,
+        },
+        Object {
+          "action_date": "12/19/2017 @ 01:32 pm",
+          "label": "Options ready",
+          "status_string": "Alyce has completed its research and gift options ready to be choosen!",
+        },
+        Object {
+          "action_date": "12/19/2017 @ 01:32 pm",
+          "label": "Invite delivered",
+          "status_string": null,
+        },
+        Object {
+          "action_date": "12/19/2017 @ 01:32 pm",
+          "label": "Invite expired",
+          "status_string": null,
+        },
+      ],
+      "id": 2061,
+      "meeting": null,
+      "product": Object {
+        "image": "https://s3.amazonaws.com/cdn-dev.alyce.co/images/products/p11071_image1_25753.jpg",
+        "name": "Signature Messenger - Blue",
+      },
+      "sentAs": null,
+      "sentBy": Object {
+        "avatar": "http://alyce.site/images/avatar.png",
+        "email": "admin@gmail.com",
+        "full_name": "Super Admin",
+        "id": 1045,
+      },
+      "shippingInfo": null,
+      "statusId": 80,
+    },
+  ],
+  "isLoading": false,
+}
+`;

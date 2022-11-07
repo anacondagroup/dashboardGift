@@ -1,0 +1,121 @@
+{
+  "extends": [
+    "react-app",
+    "airbnb",
+    "prettier",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:jest-dom/recommended"
+  ],
+  "plugins": [
+    "prettier",
+    "import",
+    "react-hooks",
+    "testing-library",
+    "jest-dom",
+    "unused-imports"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    /* React rules */
+    "react/jsx-filename-extension": ["warn", { "extensions": [".js", ".jsx", ".tsx", ".ts"] }],
+    "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
+    "react/jsx-one-expression-per-line": ["off", {"declaration": false, "assignment": false}],
+    "react/jsx-props-no-spreading": "off",
+    "react/jsx-curly-newline": "off",
+    "react/jsx-indent-props": ["error", "first"],
+    "react/forbid-prop-types": "error",
+    /* React hook rules */
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    /* Import rules */
+    "import/extensions": ["error", { "js": "never", "jsx": "never", "ts": "never", "tsx": "never" }],
+    "import/order": ["error", {
+      "groups": ["external", "builtin", "internal", "parent", "sibling", "index"],
+      "newlines-between": "always"
+    }],
+    /* a11 rules */
+    "jsx-a11y/label-has-associated-control": ["error", {
+      "controlComponents": ["Button"],
+      "depth": 3
+    }],
+    /* Other rules */
+    "import/prefer-default-export": ["off"],
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+    "arrow-parens": ["error", "as-needed"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "always-multiline"
+    }],
+    /* Jest rules */
+    "jest-dom/prefer-enabled-disabled": "error",
+    "@typescript-eslint/no-explicit-any": ["error", {"ignoreRestArgs": true}],
+    "@typescript-eslint/no-non-null-assertion": ["error"],
+    "no-use-before-define": ["off"],
+    "@typescript-eslint/no-use-before-define": ["warn"],
+    // disable the rule for all files
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    // autoremove of unused imports
+    "no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "error",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "react/no-unused-prop-types": "off",
+  },
+  "overrides": [
+    {
+      "files": ["*.spec.js", "*.spec.ts", "*.spec.tsx", "*.test.js", "*.test.ts", "*.test.tsx"],
+      "extends": [
+        "react-app",
+        "airbnb",
+        "prettier",
+        "plugin:import/errors",
+        "plugin:import/warnings",
+        "plugin:import/typescript",
+        "plugin:jest-dom/recommended",
+        "plugin:testing-library/react"
+      ],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "react/forbid-prop-types": "off",
+        "react/prop-types": "off",
+        "import/extensions": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react/jsx-filename-extension": "off",
+        "no-use-before-define": "off",
+        // TODO: turn on after fixing tests.
+        "testing-library/no-container": "off",
+        "testing-library/no-node-access": "off",
+        "testing-library/prefer-screen-queries": "off",
+        "testing-library/no-render-in-setup": "off",
+        "testing-library/render-result-naming-convention": "off",
+        "testing-library/no-wait-for-multiple-assertions": "off"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "no-undef": "off",
+        "@typescript-eslint/explicit-module-boundary-types": ["error"],
+        // note you must disable the base rule as it can report incorrect errors
+        "semi": "off",
+        "@typescript-eslint/semi": ["error"],
+        "@typescript-eslint/member-delimiter-style": ["error"],
+        // note you must disable the base rule as it can report incorrect errors
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["error"],
+        // note you must disable the base rule as it can report incorrect errors
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error"],
+        "react/require-default-props": "off",
+        "react/prop-types": "off"
+      }
+    }
+  ]
+}

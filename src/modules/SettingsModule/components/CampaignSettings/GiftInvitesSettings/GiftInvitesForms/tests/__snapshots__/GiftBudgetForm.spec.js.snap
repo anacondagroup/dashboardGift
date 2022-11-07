@@ -1,0 +1,577 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GiftBudgetForm should be rendered with errors 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <Box
+    mt={1}
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+    >
+      Merchandise
+    </p>
+  </Box>
+  <Box
+    display="flex"
+    flexDirection="column"
+  >
+    <Box
+      alignItems="flex-start"
+      display="flex"
+      justifyContent="space-between"
+      width={360}
+    >
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={false}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_min_price-id"
+          inputRef={[Function]}
+          label="Min amount"
+          margin="normal"
+          name="enterprise_min_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Min amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={false}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_max_price-id"
+          inputRef={[Function]}
+          label="Max amount"
+          margin="normal"
+          name="enterprise_max_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Max amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+    </Box>
+    <Box
+      mt={3}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift cards
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={false}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_gift_card_price-id"
+        inputRef={[Function]}
+        label="Gift card price"
+        margin="normal"
+        name="enterprise_gift_card_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Gift card price"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <a
+      className="MuiTypography-root MuiTypography-inherit local_giftCardPreviewLink MuiLink-root MuiLink-underlineAlways css-1iwtne7-MuiTypography-root-MuiLink-root"
+      href="/marketplace/campaign?giftCardPrice=100&types=6"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      target="_blank"
+    >
+      Preview Gift Card Marketplace
+    </a>
+    <Box
+      mt={1}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift donation 
+        <span
+          className="Body-Regular-Left-Static"
+        >
+          - available in 
+          $
+           only
+        </span>
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={false}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_donation_price-id"
+        inputRef={[Function]}
+        label="Amount"
+        margin="normal"
+        name="enterprise_donation_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Amount"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      mt={2}
+      width={1}
+    >
+      <Button
+        className="local_button"
+        disabled={true}
+        type="submit"
+      >
+        Save
+      </Button>
+    </Box>
+  </Box>
+</form>
+`;
+
+exports[`GiftBudgetForm should be rendered without errors 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <Box
+    mt={1}
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+    >
+      Merchandise
+    </p>
+  </Box>
+  <Box
+    display="flex"
+    flexDirection="column"
+  >
+    <Box
+      alignItems="flex-start"
+      display="flex"
+      justifyContent="space-between"
+      width={360}
+    >
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={false}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_min_price-id"
+          inputRef={[Function]}
+          label="Min amount"
+          margin="normal"
+          name="enterprise_min_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Min amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={false}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_max_price-id"
+          inputRef={[Function]}
+          label="Max amount"
+          margin="normal"
+          name="enterprise_max_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Max amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+    </Box>
+    <Box
+      mt={3}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift cards
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={false}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_gift_card_price-id"
+        inputRef={[Function]}
+        label="Gift card price"
+        margin="normal"
+        name="enterprise_gift_card_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Gift card price"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <a
+      className="MuiTypography-root MuiTypography-inherit local_giftCardPreviewLink MuiLink-root MuiLink-underlineAlways css-1iwtne7-MuiTypography-root-MuiLink-root"
+      href="/marketplace/campaign?giftCardPrice=100&types=6"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      target="_blank"
+    >
+      Preview Gift Card Marketplace
+    </a>
+    <Box
+      mt={1}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift donation 
+        <span
+          className="Body-Regular-Left-Static"
+        >
+          - available in 
+          $
+           only
+        </span>
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={false}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_donation_price-id"
+        inputRef={[Function]}
+        label="Amount"
+        margin="normal"
+        name="enterprise_donation_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Amount"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      mt={2}
+      width={1}
+    >
+      <Button
+        className="local_button"
+        disabled={true}
+        type="submit"
+      >
+        Save
+      </Button>
+    </Box>
+  </Box>
+</form>
+`;
+
+exports[`GiftBudgetForm should be show loading state 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <Box
+    mt={1}
+  >
+    <p
+      className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+    >
+      Merchandise
+    </p>
+  </Box>
+  <Box
+    display="flex"
+    flexDirection="column"
+  >
+    <Box
+      alignItems="flex-start"
+      display="flex"
+      justifyContent="space-between"
+      width={360}
+    >
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={true}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_min_price-id"
+          inputRef={[Function]}
+          label="Min amount"
+          margin="normal"
+          name="enterprise_min_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Min amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+      <Box
+        width={160}
+      >
+        <TextField
+          InputProps={
+            Object {
+              "startAdornment": <InputAdornment
+                position="start"
+              >
+                $
+              </InputAdornment>,
+            }
+          }
+          disabled={true}
+          error={false}
+          fullWidth={true}
+          id="field-enterprise_max_price-id"
+          inputRef={[Function]}
+          label="Max amount"
+          margin="normal"
+          name="enterprise_max_price"
+          onBlur={[Function]}
+          onChange={[Function]}
+          placeholder="Max amount"
+          required={true}
+          type="number"
+          variant="outlined"
+        />
+      </Box>
+    </Box>
+    <Box
+      mt={3}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift cards
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={true}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_gift_card_price-id"
+        inputRef={[Function]}
+        label="Gift card price"
+        margin="normal"
+        name="enterprise_gift_card_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Gift card price"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <a
+      className="MuiTypography-root MuiTypography-inherit local_giftCardPreviewLink MuiLink-root MuiLink-underlineAlways css-1iwtne7-MuiTypography-root-MuiLink-root"
+      href="/marketplace/campaign?giftCardPrice=100&types=6"
+      onBlur={[Function]}
+      onFocus={[Function]}
+      target="_blank"
+    >
+      Preview Gift Card Marketplace
+    </a>
+    <Box
+      mt={1}
+    >
+      <p
+        className="MuiTypography-root MuiTypography-body1 Body-Regular-Left-Static-Bold css-ahj2mt-MuiTypography-root"
+      >
+        Gift donation 
+        <span
+          className="Body-Regular-Left-Static"
+        >
+          - available in 
+          $
+           only
+        </span>
+      </p>
+    </Box>
+    <Box
+      width={160}
+    >
+      <TextField
+        InputProps={
+          Object {
+            "startAdornment": <InputAdornment
+              position="start"
+            >
+              $
+            </InputAdornment>,
+          }
+        }
+        disabled={true}
+        error={false}
+        fullWidth={true}
+        id="field-enterprise_donation_price-id"
+        inputRef={[Function]}
+        label="Amount"
+        margin="normal"
+        name="enterprise_donation_price"
+        onBlur={[Function]}
+        onChange={[Function]}
+        placeholder="Amount"
+        required={true}
+        type="number"
+        variant="outlined"
+      />
+    </Box>
+    <Box
+      display="flex"
+      justifyContent="space-between"
+      mt={2}
+      width={1}
+    >
+      <Button
+        className="local_button"
+        disabled={true}
+        type="submit"
+      >
+        Save
+      </Button>
+    </Box>
+  </Box>
+</form>
+`;

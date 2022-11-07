@@ -1,0 +1,179 @@
+include:
+  - project: "alycecom/cicd-lib"
+    ref: master
+    file:
+      - /alyce-platform/deploy-mr.yaml
+      - /common/deploy.yaml
+      - /common/build.yaml
+      - /common/autotag.yaml
+      - /common/premerge-checks.yaml
+      - /tests/selenide-at/selenide-at.yaml
+      - /tests/start-tests/start-tests.yaml
+
+stages:
+  - Autotag
+  - Init
+  - QA
+  - BuildDocker
+  - Deploy
+  - DeployMR
+  - Rollbar
+  - StartTests
+  - SelenideAT
+
+########################################################################################################################
+Dependencies:load:
+  stage: Init
+  image: docker.alycedev.com/alycecom/frontend/node-img:v1.5
+  only:
+    - branches
+    - tags
+  before_script:
+    - printf "\n//gitlab.alycedev.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+  script:
+    - yarn config set network-timeout 600000 -g
+    - yarn install
+  cache:
+    paths:
+      - node_modules
+    key: ${CI_COMMIT_REF_SLUG}-node-modules
+    policy: push
+
+########################################################################################################################
+.TemplateQA:
+  stage: QA
+  image: docker.alycedev.com/alycecom/frontend/node-img:v1.5
+  only:
+    - branches
+    - tags
+  before_script:
+    - printf "\n//gitlab.alycedev.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - yarn config set network-timeout 600000 -g
+    - yarn install
+  cache:
+    paths:
+      - node_modules
+    key: ${CI_COMMIT_REF_SLUG}-node-modules
+    policy: pull
+
+QA:Prettier:
+  extends: .TemplateQA
+  script:
+    - yarn prettier:check
+
+QA:Eslint:
+  extends: .TemplateQA
+  script:
+    - yarn lint:js
+
+QA:lintLs:
+  extends: .TemplateQA
+  script:
+    - yarn lint:ls
+
+QA:Unit:
+  extends: .TemplateQA
+  script:
+    - yarn test
+
+########################################################################################################################
+Build:Nginx:
+  stage: BuildDocker
+  extends: .BuildDocker:Template
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:latest || true
+    - printf "\n//gitlab.alycedev.com/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - sed -i '/^node_modules$/d' .dockerignore
+  script:
+    - docker build
+      --build-arg DOCKERFILE_DIR=".gitlab/docker/nginx"
+      --tag "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:$CI_COMMIT_SHA"
+      --tag "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:latest"
+      --file .gitlab/docker/nginx/Dockerfile .
+    - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:$CI_COMMIT_SHA"
+    - docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:latest"
+  cache:
+    paths:
+      - node_modules
+    key: ${CI_COMMIT_REF_SLUG}-node-modules
+    policy: pull
+
+
+########################################################################################################################
+Rollbar:UploadSourceMap:
+  stage: Rollbar
+  image:
+    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG/nginx:$CI_COMMIT_SHA
+    entrypoint: [""]
+  interruptible: true
+  before_script:
+    - apk add curl
+  script:
+    - bash .gitlab/scripts/rollbar.sh
+  only:
+    - tags
+  secrets:
+    ROLLBAR_TOKEN:
+      vault: "${CI_PROJECT_PATH}/ROLLBAR_TOKEN@secrets-gitlab-projects-global"
+      file: false
+
+### Trigger AlycePlatform CI/CD on Merge Request
+DeployMR:
+  extends: .TemplateDeployMR
+  variables:
+    GITLAB_PROJECT_NAME: dashboard-spa
+
+DeployQA:
+  extends: .TemplateDeployMR
+  variables:
+    GITLAB_PROJECT_NAME: dashboard-spa
+    ENV_ID: qa
+  only:
+    refs:
+      - /^master$/
+    variables:
+      - $CI_COMMIT_REF_NAME
+
+DeployStaging:
+  extends: .DeployStagingDeployDistribLib:Template
+  stage: Deploy
+  variables:
+    CLOUDFLARE_PURGE_CACHE: "1"
+    ROLLBAR_DISABLED: "1"
+  secrets:
+    CLOUDFLARE_API_TOKEN:
+      vault: "${CI_PROJECT_ROOT_NAMESPACE}/global/CLOUDFLARE_API_TOKEN@secrets-gitlab-projects-global" # CF sa-devops account, token sa-cache-purge
+      file: false
+
+DeploySandbox:
+  extends: .DeploySandboxDeployDistribLib:Template
+  stage: Deploy
+  variables:
+    CLOUDFLARE_PURGE_CACHE: "1"
+    ROLLBAR_DISABLED: "1"
+  secrets:
+    CLOUDFLARE_API_TOKEN:
+      vault: "${CI_PROJECT_ROOT_NAMESPACE}/global/CLOUDFLARE_API_TOKEN@secrets-gitlab-projects-global" # CF sa-devops account, token sa-cache-purge
+      file: false
+
+DeployProduction:
+  extends: .DeployProductionDeployDistribLib:Template
+  stage: Deploy
+  when: manual
+  variables:
+    CLOUDFLARE_PURGE_CACHE: "1"
+    ROLLBAR_DISABLED: "1"
+  secrets:
+    CLOUDFLARE_API_TOKEN:
+      vault: "${CI_PROJECT_ROOT_NAMESPACE}/global/CLOUDFLARE_API_TOKEN@secrets-gitlab-projects-global" # CF sa-devops account, token sa-cache-purge
+      file: false
+
+# Starts tests
+StartTests:
+  extends: .TemplateStartTests
+
+SelenideAT:
+  extends: .TemplateSelenideAT
+  variables:
+    GITLAB_PROJECT_NAME: dashboard-spa

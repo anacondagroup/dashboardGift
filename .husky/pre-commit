@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+[ -x "$(command -v yalc)" ] && yalc retreat --all && git add package.json
+yarn install --check-files
+yarn run precommit

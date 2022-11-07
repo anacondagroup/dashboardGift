@@ -1,0 +1,18 @@
+ul.appcues-widget-list {
+    border-bottom: hidden;
+}
+.appcues-widget-dropdown {
+    width: 260px !important;
+    border-radius: 3px;
+    margin: 10px 0 auto -130px !important;
+}
+.appcues-widget-content {
+    overflow-y: auto !important;
+}
+a[data-itemid] time {
+    display: none;
+}
+a[data-itemid] {
+    font-size: 14px;
+    color: #5C6996;
+}

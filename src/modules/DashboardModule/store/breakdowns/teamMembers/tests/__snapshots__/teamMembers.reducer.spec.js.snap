@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`team members reducer teamsLoadSuccess Should transform breakdown data to app format 1`] = `
+Object {
+  "breakdown": Array [
+    Object {
+      "avatar": "https://s3.amazonaws.com/cdn-dev.alyce.co/images/users/u2_33201.jpg",
+      "firstName": "Greg",
+      "giftsAccepted": 0,
+      "giftsSent": 0,
+      "giftsViewed": 0,
+      "id": 2,
+      "lastName": "Segall",
+      "meetingsBooked": 0,
+    },
+    Object {
+      "avatar": "http://alyce.site/images/avatar.png",
+      "firstName": "Valentin",
+      "giftsAccepted": 0,
+      "giftsSent": 0,
+      "giftsViewed": 0,
+      "id": 13,
+      "lastName": "Belorustcev",
+      "meetingsBooked": 0,
+    },
+  ],
+  "error": null,
+  "isLoaded": true,
+  "isLoading": false,
+  "isReportLoading": false,
+  "pagination": Object {
+    "current_page": 1,
+  },
+}
+`;
