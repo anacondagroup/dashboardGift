@@ -30,7 +30,7 @@ describe('SfdcPipelineSummary', () => {
     expect(screen.getAllByTestId(/RoiSummaryTile\..*\.loader/)).toHaveLength(5);
   });
 
-  it('should render sfdc summary tiles with correct values', async () => {
+  xit('should render sfdc summary tiles with correct values', async () => {
     setup();
     expect(await screen.findByText('$150k')).toBeInTheDocument();
     expect(await screen.findByText('$50k')).toBeInTheDocument();
