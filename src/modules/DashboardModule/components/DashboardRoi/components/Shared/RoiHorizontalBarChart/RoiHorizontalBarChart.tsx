@@ -195,6 +195,7 @@ const RoiHorizontalBarChart = <T extends object>({
               dy: '0.33em',
               fill: colors.common.black,
             })}
+            tickValues={yScale.domain()}
           />
         </Group>
       </svg>
