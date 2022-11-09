@@ -39,8 +39,11 @@ import {
   IOperationType,
   getTypes,
   setCurrentPage,
+  getSelectedTypes,
+  getTotalWithdrawalsOnPage,
+  getTotalWithdrawalsOnDateRange,
 } from '../../../store/operations';
-import { getHierarchyIsLoading, getSelectedAccount } from '../../../store/customerOrg';
+import { getHierarchyIsLoading, getSelectedAccount, getRemainingDeposit } from '../../../store/customerOrg';
 import { IOperation } from '../../../types';
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
 import { tabsKeys } from '../../../../../constants/sidebarTabs.constants';
@@ -73,6 +76,10 @@ const Operations = () => {
   const selectedAccount = useSelector(getSelectedAccount);
   const hierarchyIsLoading = useSelector(getHierarchyIsLoading);
   const isDownloadingReport = useSelector(getOperationsReportDownloading);
+  const remainingDeposit = useSelector(getRemainingDeposit);
+  const totalWithdrawalsOnPage = useSelector(getTotalWithdrawalsOnPage);
+  const totalWithdrawalsForDateRange = useSelector(getTotalWithdrawalsOnDateRange);
+  const selectedTypes = useSelector(getSelectedTypes);
 
   const isLoading = operationsIsLoading || hierarchyIsLoading;
   const isTableEmpty = !isLoading && operations.length === 0;
@@ -90,8 +97,7 @@ const Operations = () => {
     );
   }, [types]);
 
-  // hide the Remaining Deposit column
-  const showRemainingDeposit = false;
+  const showRemainingDeposit = selectedTypes.length === types.length;
 
   const rows = useMemo(() => fakeItemsFactory(operations, isLoading, id => ({ id: String(id) })) as TRowData[], [
     isLoading,
@@ -256,6 +262,23 @@ const Operations = () => {
                 />
               )}
             </Box>
+          </Box>
+
+          <Box mt={2}>
+            <Typography data-testid="DepositLedger.BillingOperations.RemainingDeposit">
+              Remaining deposit: <NumberFormat format="$0,0.00">{remainingDeposit}</NumberFormat>
+            </Typography>
+          </Box>
+          <Box>
+            <Typography data-testid="DepositLedger.BillingOperations.TotalWithdrawalsOnPage">
+              Gift total on this page: <NumberFormat format="$0,0.00">{totalWithdrawalsOnPage}</NumberFormat>
+            </Typography>
+          </Box>
+          <Box>
+            <Typography data-testid="DepositLedger.BillingOperations.TotalWithdrawalsOnDateRange">
+              Gift total for this date range:{' '}
+              <NumberFormat format="$0,0.00">{totalWithdrawalsForDateRange}</NumberFormat>
+            </Typography>
           </Box>
 
           {isTableEmpty ? (

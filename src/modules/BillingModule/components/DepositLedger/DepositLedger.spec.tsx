@@ -40,7 +40,7 @@ describe('DepositLedger', () => {
 
     expect(document.querySelector('[data-testid^="DepositLedger.Hierarchy"]')).not.toBeInTheDocument();
     expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
-    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(27);
+    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(32);
   });
 
   test('Should render loading labels while operations are loading', () => {
@@ -58,7 +58,7 @@ describe('DepositLedger', () => {
     );
 
     expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
-    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(25);
+    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(30);
   });
 
   test('Should request hierarchy and types', () => {

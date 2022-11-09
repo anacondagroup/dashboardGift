@@ -1,13 +1,14 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
-import { catchError, flatMap, mapTo, switchMap, map, tap } from 'rxjs/operators';
-import { IListResponse, handleError, handlers, MessageType } from '@alycecom/services';
+import { catchError, flatMap, mapTo, switchMap, map, tap, mergeMap } from 'rxjs/operators';
+import { IListResponse, handleError, handlers, MessageType, IListResponseWithPagination } from '@alycecom/services';
 import qs from 'query-string';
 
-import { getSelectedAccount } from '../customerOrg';
+import { getSelectedAccount, getOrg } from '../customerOrg';
 import { IOperation } from '../../types';
 
 import {
+  loadGiftWithdrawalOnDateRange,
   loadOperationsFail,
   loadOperationsRequest,
   loadOperationsSuccess,
@@ -21,7 +22,7 @@ import {
   downloadDepositLedgerReportSuccess,
   downloadDepositLedgerReportFail,
 } from './operations.actions';
-import { IOperationType, IPagination } from './operations.types';
+import { TGiftWithdrawalTotal, IOperationType, IPagination } from './operations.types';
 import { getDateRange, getSelectedTypes, getPagination } from './operations.selectors';
 
 export const loadOperationsEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
@@ -48,8 +49,57 @@ export const loadOperationsEpic: Epic = (action$, state$, { apiService, messages
       return apiService
         .get(`/api/v1/reporting/resources/deposits/${accountId}/operations?${qs.stringify(params)}`, {}, true)
         .pipe(
-          map((response: { data: IOperation[]; pagination: IPagination }) => loadOperationsSuccess(response)),
+          mergeMap((response: { data: IOperation[]; pagination: IPagination }) => [
+            loadOperationsSuccess(response),
+            loadGiftWithdrawalOnDateRange.pending(),
+          ]),
           catchError(errorHandler({ callbacks: loadOperationsFail })),
+        );
+    }),
+  );
+
+export const loadGiftWithdrawalOnDateRangeEpic: Epic = (
+  action$,
+  state$,
+  { apiService, messagesService: { showGlobalMessage } },
+) =>
+  action$.pipe(
+    ofType(loadGiftWithdrawalOnDateRange.pending),
+    switchMap(() => {
+      const { id: orgId } = getOrg(state$.value);
+      const { accountId } = getSelectedAccount(state$.value);
+      const { from, to } = getDateRange(state$.value);
+      const operationTypes = getSelectedTypes(state$.value);
+      const params: Record<string, string | boolean | number | qs.Stringifiable[]> = {};
+      const { perPage, currentPage } = getPagination(state$.value);
+      if (from) {
+        params['filters[operatedAt][from]'] = from;
+        params['filters[operated][fromIncluded]'] = true;
+      }
+      if (to) {
+        params['filters[operatedAt][to]]'] = to;
+        params['filters[operated][toIncluded]'] = true;
+      }
+      params['operationTypes[]'] = operationTypes;
+      params.perPage = perPage;
+      params.page = currentPage;
+
+      return apiService
+        .get(
+          `/api/v1/reporting/resources/billing/${orgId}/${accountId}/gift-withdrawals?${qs.stringify(params)}`,
+          {},
+          true,
+        )
+        .pipe(
+          map((response: IListResponseWithPagination<TGiftWithdrawalTotal>) =>
+            loadGiftWithdrawalOnDateRange.fulfilled(response),
+          ),
+          catchError(
+            handleError(
+              handlers.handleAnyError(loadGiftWithdrawalOnDateRange.rejected()),
+              handlers.handleErrorsAsText((text: string) => showGlobalMessage({ text, type: MessageType.Error })),
+            ),
+          ),
         );
     }),
   );
@@ -120,4 +170,5 @@ export default [
   loadTypesEpic,
   setPageEpic,
   depositLedgerOperationsReportEpic,
+  loadGiftWithdrawalOnDateRangeEpic,
 ];

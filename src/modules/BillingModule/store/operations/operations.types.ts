@@ -1,3 +1,5 @@
+import { IMoney } from '../giftDeposits/giftDeposits.types';
+
 export interface IDateRange {
   from: string;
   to: string;
@@ -15,3 +17,12 @@ export interface IPagination {
   total: number;
   totalPages: number;
 }
+
+export type TGiftWithdrawalDetail = {
+  accountId: string;
+  money: IMoney;
+};
+
+export type TGiftWithdrawalTotal = {
+  giftingWithdrawalTotal: TGiftWithdrawalDetail[];
+};
