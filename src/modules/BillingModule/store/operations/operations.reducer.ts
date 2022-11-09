@@ -4,9 +4,11 @@ import moment from 'moment';
 import { StateStatus } from '../../../../store/stateStatuses.types';
 import { IOperation } from '../../types';
 import { setSelectedAccount } from '../customerOrg/customerOrg.actions';
+import { OperationType } from '../../constants/operations.constants';
 
 import { IDateRange, IOperationType, IPagination } from './operations.types';
 import {
+  loadGiftWithdrawalOnDateRange,
   loadOperationsFail,
   loadOperationsRequest,
   loadOperationsSuccess,
@@ -24,6 +26,8 @@ import {
 export interface IOperationsState {
   operations: {
     isLoading: boolean;
+    totalWithdrawalsOnPage: number;
+    totalWithdrawalOnDateRange: number;
     list: IOperation[];
     pagination: IPagination;
   };
@@ -39,6 +43,8 @@ export interface IOperationsState {
 export const initialState: IOperationsState = {
   operations: {
     isLoading: false,
+    totalWithdrawalsOnPage: 0,
+    totalWithdrawalOnDateRange: 0,
     list: [],
     pagination: {
       total: 0,
@@ -67,15 +73,24 @@ export const operations = createReducer({}, initialState)
       isLoading: true,
     },
   }))
-  .on(loadOperationsSuccess, (state, payload) => ({
-    ...state,
-    operations: {
-      ...state.operations,
-      isLoading: false,
-      list: payload.data,
-      pagination: payload.pagination,
-    },
-  }))
+  .on(loadOperationsSuccess, (state, payload) => {
+    const totalWithdrawalsOnPage = payload.data.reduce((total, operation) => {
+      if (operation.typeId === OperationType.GiftingWithdrawal) {
+        return (total * 100 + Math.abs(operation.amount.amount) * 100) / 100;
+      }
+      return total;
+    }, 0);
+    return {
+      ...state,
+      operations: {
+        ...state.operations,
+        isLoading: false,
+        list: payload.data,
+        pagination: payload.pagination,
+        totalWithdrawalsOnPage,
+      },
+    };
+  })
   .on(loadOperationsFail, state => ({
     ...state,
     operations: {
@@ -83,7 +98,32 @@ export const operations = createReducer({}, initialState)
       isLoading: false,
     },
   }))
-
+  .on(loadGiftWithdrawalOnDateRange.pending, state => ({
+    ...state,
+    operations: {
+      ...state.operations,
+      isLoading: true,
+    },
+  }))
+  .on(loadGiftWithdrawalOnDateRange.fulfilled, (state, payload) => ({
+    ...state,
+    operations: {
+      ...state.operations,
+      isLoading: false,
+      totalWithdrawalOnDateRange:
+        payload?.data[0]?.giftingWithdrawalTotal?.reduce(
+          (acc, accountInfo) => (acc * 100 + Math.abs(accountInfo.money.amount) * 100) / 100,
+          0,
+        ) || 0,
+    },
+  }))
+  .on(loadGiftWithdrawalOnDateRange.rejected, state => ({
+    ...state,
+    operations: {
+      ...state.operations,
+      isLoading: false,
+    },
+  }))
   .on(setDateRange, (state, payload) => ({
     ...state,
     operations: {

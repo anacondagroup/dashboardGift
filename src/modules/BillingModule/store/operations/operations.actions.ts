@@ -1,8 +1,10 @@
 import { createAction } from 'redux-act';
+import { IListResponseWithPagination } from '@alycecom/services';
+import { createAsyncAction } from '@alycecom/utils';
 
 import { IOperation } from '../../types';
 
-import { IDateRange, IOperationType, IPagination } from './operations.types';
+import { IDateRange, IOperationType, IPagination, TGiftWithdrawalTotal } from './operations.types';
 
 const PREFIX = 'BILLING/OPERATIONS';
 
@@ -26,3 +28,7 @@ export const downloadDepositLedgerReportRequest = createAction<{ total: number; 
 );
 export const downloadDepositLedgerReportSuccess = createAction(`${PREFIX}/DOWNLOAD_OPERATIONS_REPORT_SUCCESS`);
 export const downloadDepositLedgerReportFail = createAction(`${PREFIX}DOWNLOAD_OPERATIONS_REPORT_FAIL`);
+
+export const loadGiftWithdrawalOnDateRange = createAsyncAction<void, IListResponseWithPagination<TGiftWithdrawalTotal>>(
+  `${PREFIX}/LOAD_GIFT_WITHDRAWAL_ON_DATE_RANGE`,
+);

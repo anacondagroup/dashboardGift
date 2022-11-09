@@ -20,3 +20,10 @@ export const getOperationsReportDownloading = pipe(
   getOperationsState,
   state => state.downloadReportStatus === StateStatus.Pending,
 );
+
+export const getTotalWithdrawalsOnPage = pipe(getOperationsState, state => state.operations.totalWithdrawalsOnPage);
+
+export const getTotalWithdrawalsOnDateRange = pipe(
+  getOperationsState,
+  state => state.operations.totalWithdrawalOnDateRange,
+);

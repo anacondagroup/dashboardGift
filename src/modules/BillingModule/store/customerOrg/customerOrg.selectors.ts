@@ -20,3 +20,5 @@ export const getSelectedAccount = pipe(getCustomerOrgState, state => state.hiera
 
 export const getLastInvoice = pipe(getCustomerOrgState, state => state.lastInvoice.data);
 export const getLastInvoiceIsLoading = pipe(getCustomerOrgState, state => state.lastInvoice.isLoading);
+
+export const getRemainingDeposit = pipe(getCustomerOrgState, state => state.resources.remainingDeposit);
