@@ -17,9 +17,6 @@ import { RoiDealTypesFilter, StyledRoiSectionTitle } from '../../../Shared';
 import { RoiTooltipRow } from '../../../Shared/RoiChartTooltip';
 
 const styles = {
-  card: {
-    mb: 5.5,
-  },
   header: {
     display: 'flex',
     alignItems: 'start',
@@ -90,7 +87,7 @@ const SfdcRoiInfluencedARR = (): JSX.Element => {
   }, [setSelectedDealTypes, dealTypesListResponse]);
 
   return (
-    <Card sx={styles.card}>
+    <Card>
       <CardContent>
         <Box sx={styles.header}>
           <StyledRoiSectionTitle sx={styles.title}>Influenced ARR by Deal Type</StyledRoiSectionTitle>

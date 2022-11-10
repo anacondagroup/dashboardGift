@@ -8,8 +8,8 @@ import SfdcRoiReporting from './SfdcRoiReporting/SfdcRoiReporting';
 
 const SfdcRoiDashboard = (): JSX.Element => (
   <Switch>
-    <Route exact path={ROI_ROUTES.REPORTING} component={SfdcRoiReporting} />
     <Route exact path={ROI_ROUTES.FUNNEL} component={SfdcRoiFunnel} />
+    <Route path={ROI_ROUTES.REPORTING} component={SfdcRoiReporting} />
   </Switch>
 );
 

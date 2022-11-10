@@ -1,10 +1,9 @@
 import React from 'react';
 import { Avatar, Box, TableRow } from '@mui/material';
 
-import { defaultRowStyles } from '../../../Shared';
-import type { IRoiTableRowProps } from '../../../Shared';
-import RoiTableCell from '../../../Shared/RoiTable/RoiTableCell';
-import { getAvatarLetters } from '../../../../utils';
+import { IRoiTableRowProps, styles as defaultRowStyles } from '../RoiTable/RoiTableRow';
+import RoiTableCell from '../RoiTable/RoiTableCell';
+import { getAvatarLetters } from '../../../utils';
 
 const styles = {
   avatarWrapper: {

@@ -2,13 +2,11 @@ import React, { useCallback } from 'react';
 import { TInfluencedAccounts, useGetInfluencedAccountsQuery } from '@alycecom/services';
 import { useHistory } from 'react-router-dom';
 
-import { RoiTable, TRoiColumn } from '../../../Shared';
+import { RoiTable, RoiTableClickableRow, TRoiColumn } from '../../../Shared';
 import { IRoiTableProps } from '../../../Shared/RoiTable/RoiTable';
 import { useRoiTable } from '../../../../hooks';
 import { NumberFormattingOptions, toDateFromNow, toFormattedPrice } from '../../../../utils';
 import { ROI_ROUTES } from '../../../../routePaths';
-
-import InfluencedAccountTableRow from './InfluencedAccountTableRow';
 
 const columns: TRoiColumn<TInfluencedAccounts>[] = [
   {
@@ -106,7 +104,7 @@ const InfluencedAccountsTable = (): JSX.Element => {
         onFiltersChange: handleTableFiltersChange,
       }}
       renderRow={({ data: rowData }) => (
-        <InfluencedAccountTableRow
+        <RoiTableClickableRow
           key={`row-${getRowId(rowData)}`}
           data={rowData}
           columns={columns}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Skeleton, Typography } from '@mui/material';
+import { Box, Skeleton, Theme, Typography } from '@mui/material';
 
 import { StyledRoiSectionTitle } from '../Styled';
 
@@ -12,9 +12,10 @@ const styles = {
     fontSize: '24px',
     display: 'flex',
     alignItems: 'center',
+    ml: 1,
   },
   clickableTitle: {
-    color: 'link.main',
+    color: ({ palette }: Theme) => palette.link.main,
     cursor: 'pointer',
 
     '&:hover': {
@@ -23,8 +24,9 @@ const styles = {
   },
   totalPlaceholder: {
     display: 'inline-block',
-    mr: 1,
-    width: 30,
+    mt: 1.8,
+    mb: 1.8,
+    width: 300,
     height: 8,
   },
 } as const;
@@ -45,14 +47,15 @@ const RoiTableTitle = ({
   onParentClick = () => {},
 }: IRoiTableTitleProps): JSX.Element => (
   <StyledRoiSectionTitle sx={styles.tableHeader}>
-    <Box sx={[styles.title, !!parentTitle && styles.clickableTitle]} onClick={() => onParentClick()}>
-      {isLoading ? <Skeleton sx={styles.totalPlaceholder} /> : total}&nbsp;
-      {parentTitle || title}
-    </Box>
-    {parentTitle && (
-      <Typography sx={styles.title}>
-        &nbsp; {'>'} &nbsp;{title}
-      </Typography>
+    {isLoading ? (
+      <Skeleton sx={styles.totalPlaceholder} />
+    ) : (
+      <>
+        <Box sx={[styles.title, !!parentTitle && styles.clickableTitle]} onClick={() => onParentClick()}>
+          {`${total} ${parentTitle || title}`}
+        </Box>
+        {parentTitle && <Typography sx={styles.title}>{`> ${title}`}</Typography>}
+      </>
     )}
   </StyledRoiSectionTitle>
 );
