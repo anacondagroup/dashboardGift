@@ -8,3 +8,4 @@ export * from './RoiDashboardHeader';
 export * from './RoiFilters';
 export * from './RoiWelcomeDialog';
 export * from './Styled';
+export * from './GiftsByAccountTableRow';

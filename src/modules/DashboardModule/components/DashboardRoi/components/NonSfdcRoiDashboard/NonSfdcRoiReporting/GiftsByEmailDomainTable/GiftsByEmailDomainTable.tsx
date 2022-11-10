@@ -9,8 +9,7 @@ import RoiTable from '../../../Shared/RoiTable/RoiTable';
 import { useRoiTable } from '../../../../hooks';
 import type { TRoiColumn } from '../../../Shared';
 import { ROI_ROUTES } from '../../../../routePaths';
-
-import GiftsByAccountTableRow from './GiftsByAccountTableRow';
+import { GiftsByAccountTableRow } from '../../../Shared';
 
 const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
   {
@@ -50,7 +49,7 @@ const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
   },
 ];
 
-const GiftsByAccountTable = (): JSX.Element => {
+const GiftsByEmailDomainTable = (): JSX.Element => {
   const {
     params: { emailDomain },
   } = useRouteMatch<{ emailDomain: string }>();
@@ -100,4 +99,4 @@ const GiftsByAccountTable = (): JSX.Element => {
   );
 };
 
-export default GiftsByAccountTable;
+export default GiftsByEmailDomainTable;
