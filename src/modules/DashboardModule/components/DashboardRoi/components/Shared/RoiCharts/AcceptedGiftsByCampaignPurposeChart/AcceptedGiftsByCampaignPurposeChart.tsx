@@ -6,19 +6,20 @@ import {
   TAcceptedGiftByCampaignPurpose,
   useGetAcceptedGiftsByCampaignPurposeQuery,
 } from '@alycecom/services';
+import { ParentSize } from '@visx/responsive';
 
+import { RoiHorizontalBarChart } from '../../RoiHorizontalBarChart';
 import { StyledRoiSectionTitle } from '../../index';
-import { RoiHorizontalBarChartWrapper } from '../../RoiHorizontalBarChartWrapper';
 import { TRoiChartAxisTypes } from '../../../../utils/roiTypes';
 import { getRoiFilters } from '../../../../store/filters/filters.selectors';
 import { NumberFormattingOptions, toFormattedPrice } from '../../../../utils';
 import { RoiTooltipRow } from '../../RoiChartTooltip';
+import { RoiDownloadImage } from '../../RoiDownloadImage/RoiDownloadImage';
 
-const styles = {
-  title: { margin: '4px 0 32px 16px' },
-  container: { height: '940px', marginBottom: 7 },
-} as const;
+import { styles } from './AcceptedGiftsByCampaignPurposeChart.styles';
 
+const CHART_TITLE = 'Accepted Gifts by Campaign Purpose';
+const svgContainerId = 'accepted-gifts-svg';
 const DEFAULT_CHART_DATA = ROI_CAMPAIGN_PURPOSES.map(({ value }) => ({
   campaignPurpose: value,
   gifts: 0,
@@ -50,18 +51,34 @@ const AcceptedGiftsByCampaignPurposeChart = (): JSX.Element => {
 
   return (
     <>
-      <Box mb={7}>
-        <StyledRoiSectionTitle sx={styles.title}>Accepted Gifts by Campaign Purpose</StyledRoiSectionTitle>
+      <Box sx={styles.titleContainer}>
+        <StyledRoiSectionTitle sx={styles.title}>{CHART_TITLE}</StyledRoiSectionTitle>
+        <RoiDownloadImage svgContainerId={svgContainerId} imageTitle={CHART_TITLE} />
       </Box>
       <Box sx={styles.container}>
-        <RoiHorizontalBarChartWrapper
-          data={acceptedGiftsByCampaignPurpose}
-          XGetter={getSentGiftsNumber}
-          YGetter={getCampaignPurposeLabel}
-          tooltipRender={renderTooltip}
-          isLoading={isFetching}
-          axisTicksFormat={{ type: TRoiChartAxisTypes.Numerical }}
-        />
+        <ParentSize>
+          {({ width, height, top }) => (
+            <RoiHorizontalBarChart
+              data={acceptedGiftsByCampaignPurpose}
+              XGetter={getSentGiftsNumber}
+              YGetter={getCampaignPurposeLabel}
+              width={width}
+              height={height}
+              margin={{
+                top: 20,
+                right: width * 0.2,
+                bottom: 0,
+                left: width * 0.1,
+              }}
+              labelWidth={width * 0.1}
+              topOffset={top}
+              tooltipRender={renderTooltip}
+              isLoading={isFetching}
+              axisTicksFormat={{ type: TRoiChartAxisTypes.Numerical }}
+              svgContainerId={svgContainerId}
+            />
+          )}
+        </ParentSize>
       </Box>
     </>
   );
