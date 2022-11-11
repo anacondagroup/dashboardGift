@@ -85,9 +85,13 @@ const RoiHorizontalBar = <T,>({
   return (
     <>
       <AnimatedBar
-        style={{
-          filter: `drop-shadow(0px 10px 40px rgba(51, 69, 124, ${isTooltipActive ? 0.25 : 0}))`,
-        }}
+        style={
+          isTooltipActive
+            ? {
+                filter: `drop-shadow(0px 10px 40px rgba(51, 69, 124, 0.25))`,
+              }
+            : undefined
+        }
         radius={4}
         right
         x={x}
@@ -109,7 +113,7 @@ const RoiHorizontalBar = <T,>({
                 barLabelWidth: labelWidth + gapBetweenLabelAndBar + gapBetweenLabelEndAndTooltipArrow,
               },
             },
-            tooltipTop: topOffset + y,
+            tooltipTop: topOffset + y + margin.top,
             tooltipLeft: width,
           });
         }}

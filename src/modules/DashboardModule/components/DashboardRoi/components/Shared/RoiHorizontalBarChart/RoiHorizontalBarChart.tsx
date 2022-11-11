@@ -37,6 +37,7 @@ interface IRoiHorizontalBarChartProps<T> {
   barsColor?: string;
   barsOnHoverColor?: string;
   topOffset?: number;
+  svgContainerId?: string;
   tooltipRender?: (tooltipData: T | Partial<T>) => React.ReactNode;
   getBarLabel?: (args: TGetBarLabelInChartArgs) => string;
 }
@@ -54,6 +55,7 @@ const RoiHorizontalBarChart = <T extends object>({
   barsColor,
   barsOnHoverColor,
   topOffset = 0,
+  svgContainerId = '',
   tooltipRender,
   getBarLabel,
 }: IRoiHorizontalBarChartProps<T>): JSX.Element => {
@@ -113,9 +115,13 @@ const RoiHorizontalBarChart = <T extends object>({
 
   return (
     <Box position="relative">
-      <svg width="100%" height={height + 10}>
-        <rect x={0} y={0} width="100%" height={height + 10} fill="url(#teal)" rx={14} />
-        <Group top={margin.top} left={margin.left + labelWidth} style={{ transformOrigin: 'bottom center' }}>
+      <svg width="100%" height={height + 10} id={svgContainerId} fill={colors.common.white}>
+        <rect x={0} y={0} width="100%" height={height + 10} />
+        <Group
+          top={margin.top}
+          left={margin.left + labelWidth}
+          style={{ transformOrigin: 'bottom center', fontFamily: 'Lato' }}
+        >
           <GridColumns
             top={20}
             scale={xScale}
@@ -187,6 +193,7 @@ const RoiHorizontalBarChart = <T extends object>({
               fontSize: 16,
               textAnchor: 'end',
               dy: '0.33em',
+              fill: colors.common.black,
             })}
           />
         </Group>
