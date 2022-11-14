@@ -262,12 +262,18 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
 
       <StepSectionFooter
         backButton={
-          <Button startIcon={<Icon icon="arrow-left" />} onClick={handleBack}>
+          <Button startIcon={<Icon icon="arrow-left" />} onClick={handleBack} data-testid="TeamBudgetForm.Back">
             Back
           </Button>
         }
         cancelButton={
-          <Button sx={styles.cancelButton} variant="outlined" disabled={isBudgetLoading} onClick={handleCancel}>
+          <Button
+            sx={styles.cancelButton}
+            variant="outlined"
+            disabled={isBudgetLoading}
+            onClick={handleCancel}
+            data-testid="TeamBudgetForm.Cancel"
+          >
             Cancel
           </Button>
         }
@@ -277,6 +283,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
             type="submit"
             variant="contained"
             disabled={isBudgetLoading || isUsersLoading}
+            data-testid="TeamBudgetForm.Save"
           >
             Save
           </Button>

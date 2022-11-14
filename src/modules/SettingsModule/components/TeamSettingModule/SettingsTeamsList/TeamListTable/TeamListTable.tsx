@@ -224,7 +224,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
           </TableHead>
           <TableBody>
             {itemsToShow.map(team => (
-              <TableRow key={team.id}>
+              <TableRow key={team.id} data-testid="TeamListTable.Row">
                 <TableCell>
                   <TableLoadingLabel
                     isLoading={isLoading}
