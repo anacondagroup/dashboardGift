@@ -105,18 +105,24 @@ const ToolbarUserBudget = ({
       arrow
       placement="bottom"
     >
-      <Box sx={styles.container}>
+      <Box sx={styles.container} data-testid="ToolbarUserBudget">
         <Box sx={styles.budgetsContainer}>
           <Box sx={styles.budgetLine}>
             <Typography sx={styles.text}>Available Budget</Typography>
-            <Typography sx={styles.emphasizedText}>{availableBudget}</Typography>
+            <Typography sx={styles.emphasizedText} data-testid="ToolbarUserBudget.AvailableBudget">
+              {availableBudget}
+            </Typography>
           </Box>
           <Box sx={styles.budgetLine}>
             <Typography sx={styles.text}>Pending gift costs</Typography>
-            <Typography sx={styles.emphasizedText}>{pendingGiftCosts}</Typography>
+            <Typography sx={styles.emphasizedText} data-testid="ToolbarUserBudget.PendingGiftCosts">
+              {pendingGiftCosts}
+            </Typography>
           </Box>
         </Box>
-        {shouldShowZeroBudgetWarning && <Box sx={styles.warningDot} />}
+        {shouldShowZeroBudgetWarning && (
+          <Box sx={styles.warningDot} data-testid="ToolbarUserBudget.ZeroBudgetWarning" />
+        )}
       </Box>
     </Tooltip>
   );

@@ -251,8 +251,8 @@ const TeamMembersBudgetTable = ({
                             inputProps={{
                               min: 0,
                               styles: [styles.tableParameter],
+                              'data-testid': 'TeamMembersBudget.TeamMemberBudget',
                             }}
-                            data-testid="TeamMembersBudget.TeamMemberBudget"
                           />
                         )}
                       />

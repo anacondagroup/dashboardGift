@@ -44,7 +44,9 @@ export interface IHeaderContentProps {
 const HeaderContent = ({ text, onClose }: IHeaderContentProps): JSX.Element => (
   <Box sx={styles.container}>
     <Box sx={styles.textContainer}>
-      <Typography variant="h4">{text}</Typography>
+      <Typography data-testid="TeamManagement.Sidebar.Header" variant="h4">
+        {text}
+      </Typography>
     </Box>
     <IconButton sx={styles.closeButton} onClick={onClose} data-testid="TeamManagement.Sidebar.Close" size="large">
       <Icon icon={['far', 'times']} />
