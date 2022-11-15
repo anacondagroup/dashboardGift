@@ -79,7 +79,7 @@ const AppBar = () => {
     {
       userId,
     },
-    { refetchOnMountOrArgChange: true, skip: !hasBudgetManagementLimit },
+    { skip: !hasBudgetManagementLimit },
   );
 
   const budgetUtilizations = useMemo(() => {

@@ -9,7 +9,6 @@ import brandingReducer, { IBrandingState } from './branding/branding.reducer';
 import emailBrandingReducer, { IEmailBrandingState } from './emailBranding/emailBranding.reducer';
 import managersReducer, { IManagersState } from './managers/managers.reducer';
 import { TTeamOperationState, teamOperation } from './teamOperation/teamOperation.reducer';
-import { budgetCreate, IBudgetCreateState } from './budgetCreate/budgetCreate.reducer';
 import { TBudgetState, reducer as budgetReducer } from './budgets/budgets.reducer';
 import { TTeamState, reducer as teamReducer } from './team/team.reducer';
 
@@ -24,7 +23,6 @@ export interface ITeamsSettingsState {
   branding: IBrandingState;
   emailBranding: IEmailBrandingState;
   managers: IManagersState;
-  budgetCreate: IBudgetCreateState;
   teamOperation: TTeamOperationState;
   team: TTeamState;
   budgets: TBudgetState;
@@ -40,7 +38,6 @@ export const reducer = combineReducers<ITeamsSettingsState>({
   emailBranding: emailBrandingReducer,
   managers: managersReducer,
   team: teamReducer,
-  budgetCreate,
   teamOperation,
   budgets: budgetReducer,
 });

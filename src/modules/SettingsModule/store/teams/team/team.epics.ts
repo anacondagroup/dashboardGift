@@ -7,6 +7,7 @@ import { Auth, Features } from '@alycecom/modules';
 import { setTeamSidebarStep } from '../teamOperation/teamOperation.actions';
 import { loadTeamsSettingsRequest } from '../teams/teams.actions';
 import { TeamSidebarStep } from '../teamOperation/teamOperation.types';
+import { loadTeamsRequest } from '../../../../../store/teams/teams.actions';
 
 import { renameTeam, createTeam } from './team.actions';
 
@@ -28,6 +29,7 @@ export const createTeamEpic: Epic = (action$, state$, { apiService, messagesServ
             createTeam.fulfilled(),
             setTeamSidebarStep({ step: sideBarStep, teamId: data.teamId }),
             loadTeamsSettingsRequest(),
+            loadTeamsRequest(),
             TrackEvent.actions.trackEvent({
               name: 'New team — created',
               payload: { adminId },

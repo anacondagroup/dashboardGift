@@ -7,7 +7,6 @@ import { emailBrandingEpics } from './emailBranding/emailBranding.epics';
 import { managersEpics } from './managers/managers.epics';
 import { teamOperationEpics } from './teamOperation/teamOperation.epics';
 import { budgetEpics } from './budgets/budgets.epics';
-import { budgetCreateEpics } from './budgetCreate/budgetCreate.epics';
 import { teamEpics } from './team/team.epics';
 
 export const teamSettingsEpics = [
@@ -20,6 +19,5 @@ export const teamSettingsEpics = [
   ...managersEpics,
   ...teamOperationEpics,
   ...budgetEpics,
-  ...budgetCreateEpics,
   ...teamEpics,
 ];

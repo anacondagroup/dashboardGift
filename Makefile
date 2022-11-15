@@ -23,7 +23,7 @@ rebuild: env
 	&& docker-compose logs -f
 
 env:
-	test -e .env || cp .env.example .env
+	test -e .env || cp .env.sample .env
 
 clean:
 	rm -rf node_modules

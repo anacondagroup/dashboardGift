@@ -3,10 +3,9 @@ import { Box, Theme, Typography } from '@mui/material';
 import { Tooltip, Icon, Divider, palette, SearchField } from '@alycecom/ui';
 import { Control } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetTeamMembersQuery } from '@alycecom/services';
+import { RefreshPeriod, TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
 
 import { TEAM_MEMBERS_TOOLTIP_MESSAGE } from '../../../../../constants/budget.constants';
-import { RefreshPeriod, TBudgetCreateParams } from '../../../../../store/teams/budgetCreate/budgetCreate.types';
 import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
 import { loadTeamBudgetUtilization } from '../../../../../../../store/budgetUtilization/budgetUtilization.actions';
