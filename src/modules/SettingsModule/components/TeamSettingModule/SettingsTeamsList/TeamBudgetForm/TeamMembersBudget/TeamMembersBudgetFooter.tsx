@@ -2,8 +2,8 @@ import React from 'react';
 import { Table, TableCell, TableFooter, TableRow, Theme, Typography, TableContainer, Box } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import { Tooltip } from '@alycecom/ui';
+import { RefreshPeriod } from '@alycecom/services';
 
-import { RefreshPeriod } from '../../../../../store/teams/budgetCreate/budgetCreate.types';
 import { UTILIZATION_INCLUDES_REMOVED_USERS } from '../../../../../constants/budget.constants';
 
 const styles = {

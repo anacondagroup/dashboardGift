@@ -1,15 +1,9 @@
 import { array, boolean, number, object, string } from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { BudgetCreateField, BudgetType, PauseGiftingOnOption, TBudgetCreateParams } from '@alycecom/services';
 
 import { MAX_BUDGET } from '../../../constants/teamSidebarProgress.constants';
-
-import {
-  BudgetCreateField,
-  BudgetType,
-  PauseGiftingOnOption,
-  TBudgetCreateParams,
-  RefreshPeriod,
-} from './budgetCreate.types';
+import { RefreshPeriod } from '../budgets/budgets.types';
 
 const idSchema = number();
 const amountSchema = number();

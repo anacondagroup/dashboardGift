@@ -2,12 +2,7 @@ import React, { memo } from 'react';
 import { FormControl, FormHelperText, MenuItem, Select, Theme } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import {
-  BudgetCreateField,
-  BudgetType,
-  TBudgetCreateParams,
-} from '../../../../../store/teams/budgetCreate/budgetCreate.types';
+import { BudgetCreateField, BudgetType, TBudgetCreateParams } from '@alycecom/services';
 
 const styles = {
   select: {

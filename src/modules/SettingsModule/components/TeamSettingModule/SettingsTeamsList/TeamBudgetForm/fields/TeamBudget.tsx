@@ -2,8 +2,8 @@ import React, { memo } from 'react';
 import ReactNumberFormat from 'react-number-format';
 import { TextField } from '@mui/material';
 import { Control, Controller } from 'react-hook-form';
+import { BudgetCreateField, TBudgetCreateParams } from '@alycecom/services';
 
-import { BudgetCreateField, TBudgetCreateParams } from '../../../../../store/teams/budgetCreate/budgetCreate.types';
 import {
   BUDGET_SELECT_MAX_RANGE,
   BUDGET_SELECT_MIN_RANGE,

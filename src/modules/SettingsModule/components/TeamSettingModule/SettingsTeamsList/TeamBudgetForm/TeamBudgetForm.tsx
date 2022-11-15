@@ -3,28 +3,30 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Grid, Theme, Typography } from '@mui/material';
 import { Divider, GlobalFonts, Icon, Tooltip } from '@alycecom/ui';
 import { useForm } from 'react-hook-form';
-import { useExternalErrors } from '@alycecom/hooks';
+import {
+  BudgetCreateField,
+  BudgetType,
+  ITeamMemberBudget,
+  MessageType,
+  PauseGiftingOnOption,
+  showGlobalMessage,
+  TBudgetCreateParams,
+  useCreateTeamBudgetMutation,
+  useEditTeamBudgetMutation,
+} from '@alycecom/services';
 
 import StepSectionFooter from '../StepSectionFooter/StepSectionFooter';
 import { setTeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.actions';
 import { TeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.types';
 import {
-  BudgetCreateField,
-  BudgetType,
-  ITeamMemberBudget,
-  PauseGiftingOnOption,
-  TBudgetCreateParams,
-} from '../../../../store/teams/budgetCreate/budgetCreate.types';
-import {
   teamBudgetFormDefaultValues,
   teamBudgetFormResolver,
 } from '../../../../store/teams/budgetCreate/budgetCreate.schemas';
-import { getIsBudgetCreateLoading, getErrors } from '../../../../store/teams/budgetCreate/budgetCreate.selectors';
 import { getIsLoading } from '../../../../../UsersManagement/store/users/users.selectors';
-import { createBudget, editBudget } from '../../../../store/teams/budgetCreate/budgetCreate.actions';
 import { TEAM_BUDGET_TOOLTIP_MESSAGE } from '../../../../constants/budget.constants';
 import { getBudgetByTeamId } from '../../../../store/teams/budgets/budgets.selectors';
-import { getTeamById } from '../../../../store/teams/teams/teams.selectors';
+import { getTeamById, getTeamIds } from '../../../../store/teams/teams/teams.selectors';
+import { loadBudgets } from '../../../../store/teams/budgets/budgets.actions';
 
 import TeamBudget from './fields/TeamBudget';
 import RefreshPeriodSelector from './fields/RefreshPeriod';
@@ -117,19 +119,17 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
   const {
     handleSubmit,
     formState: { errors },
-    setError,
     control,
     setValue,
     watch,
     reset,
   } = methods;
 
-  const isLoading = useSelector(getIsBudgetCreateLoading);
   const isUsersLoading = useSelector(getIsLoading);
-  const externalErrors = useSelector(getErrors);
   const teamBudgets: ITeamMemberBudget[] = watch('teamMembers');
   const sumOfMemberBudgets = teamBudgets.reduce((prev, curr) => prev + curr.budget, 0);
-  const team = useSelector(getTeamById(teamId));
+  const team = useSelector(useMemo(() => getTeamById(teamId), [teamId]));
+  const teamIds = useSelector(getTeamIds);
 
   const refreshPeriod = watch('period');
 
@@ -141,27 +141,71 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
     dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamInfo, team, teamId }));
   }, [dispatch, team, teamId]);
 
+  const [
+    createTeamBudget,
+    { isLoading: isCreateBudgetLoading, isSuccess: isCreateSuccessfull, error: createBudgetError },
+  ] = useCreateTeamBudgetMutation();
+  const [
+    setTeamBudget,
+    { isLoading: isEditBudgetLoading, isSuccess: isEditSuccessfull, error: editBudgetError },
+  ] = useEditTeamBudgetMutation();
+  const isBudgetLoading = isEditBudgetLoading || isCreateBudgetLoading;
+
   const handleCreateBudget = useCallback(
     (data: TBudgetCreateParams) => {
-      dispatch(createBudget({ data, teamId }));
+      createTeamBudget({ teamId, body: data });
     },
-    [dispatch, teamId],
+    [createTeamBudget, teamId],
   );
 
   const handleEditBudget = useCallback(
     (data: TBudgetCreateParams) => {
-      dispatch(editBudget({ data, teamId }));
+      setTeamBudget({ teamId, body: data });
     },
-    [dispatch, teamId],
+    [setTeamBudget, teamId],
   );
+
+  useEffect(() => {
+    if (isCreateSuccessfull || isEditSuccessfull) {
+      dispatch(setTeamSidebarStep({ step: null, teamId: undefined }));
+      dispatch(loadBudgets({ teamIds }));
+    }
+
+    if (isCreateSuccessfull) {
+      dispatch(
+        showGlobalMessage({
+          text: 'Success! You created a budget for your team.',
+          type: MessageType.Success,
+        }),
+      );
+    }
+
+    if (isEditSuccessfull) {
+      dispatch(
+        showGlobalMessage({
+          text: 'Update Saved Succesfully!',
+          type: MessageType.Success,
+        }),
+      );
+    }
+  }, [isCreateSuccessfull, isEditSuccessfull, teamIds, dispatch]);
+
+  useEffect(() => {
+    if (createBudgetError || editBudgetError) {
+      dispatch(
+        showGlobalMessage({
+          text: 'Something went wrong. Please try again later.',
+          type: MessageType.Error,
+        }),
+      );
+    }
+  }, [createBudgetError, editBudgetError, dispatch]);
 
   const onMemberBudgetDefinition = useCallback(() => {
     const totalBudget = teamBudgets.reduce((prev, curr) => prev + curr.budget, 0);
 
     setValue(BudgetCreateField.Amount, totalBudget);
   }, [setValue, teamBudgets]);
-
-  useExternalErrors<TBudgetCreateParams>(setError, externalErrors);
 
   const onSubmit = budget ? handleEditBudget : handleCreateBudget;
 
@@ -223,12 +267,17 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
           </Button>
         }
         cancelButton={
-          <Button sx={styles.cancelButton} variant="outlined" disabled={isLoading} onClick={handleCancel}>
+          <Button sx={styles.cancelButton} variant="outlined" disabled={isBudgetLoading} onClick={handleCancel}>
             Cancel
           </Button>
         }
         nextButton={
-          <Button sx={styles.submitButton} type="submit" variant="contained" disabled={isLoading || isUsersLoading}>
+          <Button
+            sx={styles.submitButton}
+            type="submit"
+            variant="contained"
+            disabled={isBudgetLoading || isUsersLoading}
+          >
             Save
           </Button>
         }

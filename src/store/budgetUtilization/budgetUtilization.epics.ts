@@ -1,7 +1,9 @@
-import { handlers } from '@alycecom/services';
+import { handlers, gatewayApi } from '@alycecom/services';
 import { ofType } from '@alycecom/utils';
-import { Epic } from 'redux-observable';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { Epic, ofType as nativeOfType } from 'redux-observable';
+import { catchError, delay, map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { CreateGift, Features, User } from '@alycecom/modules';
+import { giftUnexpire } from '@alycecom/modules/dist/CreateGift/store/gift/gift.actions';
 
 import { convertUtilizationsToDollars } from '../../helpers/budget.helpers';
 
@@ -20,4 +22,26 @@ const loadTeamBudgetUtilizationsEpic: Epic = (action$, _, { apiGateway }) =>
       ),
     ),
   );
-export const budgetUtilizationEpics = [loadTeamBudgetUtilizationsEpic];
+
+const giftSendSideEffect: Epic = (action$, state$) =>
+  action$.pipe(
+    nativeOfType(
+      CreateGift.actionTypes.GIFT_CREATE_SEND_SUCCESS,
+      CreateGift.actionTypes.GIFT_EXPIRE_SUCCESS,
+      CreateGift.actionTypes.GIFT_CANCEL_SUCCESS,
+      giftUnexpire.fulfilled.getType(),
+    ),
+    withLatestFrom(state$),
+    delay(1000),
+    map(([, state]) => {
+      const userId = User.selectors.getUserId(state);
+      const hasBudgetManagementLimit = Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP)(state);
+
+      return gatewayApi.endpoints.getBudgetUtilizationByUserId.initiate(
+        { userId },
+        { subscribe: false, forceRefetch: hasBudgetManagementLimit },
+      );
+    }),
+  );
+
+export const budgetUtilizationEpics = [loadTeamBudgetUtilizationsEpic, giftSendSideEffect];

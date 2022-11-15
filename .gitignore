@@ -29,5 +29,6 @@ yarn-error.log*
 
 .docker/IP
 
+#yalc
 .yalc/
 yalc.lock

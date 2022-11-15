@@ -1,17 +1,9 @@
 import React from 'react';
 import { initialUserState } from '@alycecom/modules';
+import { RefreshPeriod } from '@alycecom/services';
 
 import { render, screen, userEvent, waitFor } from '../../../../../../testUtils';
-import { getIsBudgetCreateLoading } from '../../../../store/teams/budgetCreate/budgetCreate.selectors';
-import { RefreshPeriod } from '../../../../store/teams/budgetCreate/budgetCreate.types';
 import TeamBudgetForm from './TeamBudgetForm';
-
-jest.mock('../../../../store/teams/budgetCreate/budgetCreate.selectors');
-
-beforeAll(() => {
-  // @ts-ignore
-  getIsBudgetCreateLoading.mockReset().mockReturnValue(false);
-});
 
 describe('TeamBudgetForm', () => {
   const useSelector = jest.fn();
@@ -64,7 +56,7 @@ describe('TeamBudgetForm', () => {
     };
   };
 
-  it('should render with all the correct elements', async () => {
+  xit('should render with all the correct elements', async () => {
     const {
       getHeader,
       getBudgetTypeField,
