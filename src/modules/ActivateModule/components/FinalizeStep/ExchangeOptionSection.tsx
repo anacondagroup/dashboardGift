@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Icon } from '@alycecom/ui';
-import { CampaignSettings, Features } from '@alycecom/modules';
+import { CampaignSettings } from '@alycecom/modules';
 
 import { GiftExchangeOptions } from '../../constants/exchange.constants';
 import MarketplaceSettings from '../GiftStep/MarketplaceSettings';
@@ -27,15 +27,12 @@ const ExchangeOptionSection = (): JSX.Element => {
   const customMarketplace = useSelector(
     useMemo(() => (marketplaceId ? getCustomMarketplaceById(marketplaceId) : () => null), [marketplaceId]),
   );
-  const isCustomMarketplaceEnabled = useSelector(
-    useMemo(() => Features.selectors.hasFeatureFlag(Features.FLAGS.CUSTOM_MARKETPLACES), []),
-  );
 
   useEffect(() => {
-    if (isCustomMarketplaceIdle && isCustomMarketplaceEnabled) {
+    if (isCustomMarketplaceIdle) {
       dispatch(fetchCustomMarketplaces());
     }
-  }, [isCustomMarketplaceIdle, isCustomMarketplaceEnabled, dispatch]);
+  }, [isCustomMarketplaceIdle, dispatch]);
 
   const handlePreviewCustomMarketplace = useCallback(() => {
     if (marketplaceId) {

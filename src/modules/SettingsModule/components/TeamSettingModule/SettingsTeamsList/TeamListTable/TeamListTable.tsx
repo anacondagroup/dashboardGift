@@ -102,7 +102,6 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
   const isBudgetsLoading = useSelector(getIsBudgetLoading);
   const errors = useSelector(getErrors);
 
-  const isCreateTeamFeatureEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.CREATE_A_TEAM));
   const hasBudgetManagementSetup = useSelector(
     Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP),
   );
@@ -176,19 +175,17 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
             value={search}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => onSearch(event.target.value)}
           />
-          {isCreateTeamFeatureEnabled && (
-            <Box minWidth={140} ml={2}>
-              <Button
-                className={classes.createButton}
-                variant="contained"
-                disabled={isLoading}
-                onClick={handleCreateTeam}
-                data-testid="TeamManagement.CreateTeam"
-              >
-                Create a team
-              </Button>
-            </Box>
-          )}
+          <Box minWidth={140} ml={2}>
+            <Button
+              className={classes.createButton}
+              variant="contained"
+              disabled={isLoading}
+              onClick={handleCreateTeam}
+              data-testid="TeamManagement.CreateTeam"
+            >
+              Create a team
+            </Button>
+          </Box>
         </Grid>
       </Box>
       {(!showTable || errors) && (

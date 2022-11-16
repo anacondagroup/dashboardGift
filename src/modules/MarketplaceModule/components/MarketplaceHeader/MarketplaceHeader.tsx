@@ -4,7 +4,7 @@ import { Button, Icon } from '@alycecom/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useFormContext } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { Features, HasFeature } from '@alycecom/modules';
+import { Features } from '@alycecom/modules';
 import { push } from 'connected-react-router';
 
 import HasPermission from '../../../../hoc/HasPermission/HasPermission';
@@ -109,13 +109,11 @@ const MarketplaceHeader = ({ onCreateMarketplaceClick }: IMarketplaceHeaderProps
         </Fade>
         <Box display="flex" flex={1} alignItems="center" justifyContent="flex-end">
           {!hasCampaign && (
-            <HasFeature featureKey={Features.FLAGS.CUSTOM_MARKETPLACES}>
-              <HasPermission permissionKey={PermissionKeys.EditTeams}>
-                <Button color="secondary" startIcon={<Icon icon="plus" />} onClick={onCreateMarketplaceClick}>
-                  Create New Marketplace
-                </Button>
-              </HasPermission>
-            </HasFeature>
+            <HasPermission permissionKey={PermissionKeys.EditTeams}>
+              <Button color="secondary" startIcon={<Icon icon="plus" />} onClick={onCreateMarketplaceClick}>
+                Create New Marketplace
+              </Button>
+            </HasPermission>
           )}
           <Box display="flex" alignItems="center">
             <HasPermission permissionKey={PermissionKeys.EditCampaigns}>

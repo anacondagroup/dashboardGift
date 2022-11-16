@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Box, Radio, RadioGroup, FormControlLabel, Collapse } from '@mui/material';
 import PropTypes from 'prop-types';
 import * as R from 'ramda';
-import { CampaignSettings, SettingsItem, Features } from '@alycecom/modules';
+import { CampaignSettings, SettingsItem } from '@alycecom/modules';
 import { Button, Icon } from '@alycecom/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { useModalState } from '@alycecom/hooks';
@@ -50,7 +50,6 @@ const GiftInvitesSettings = ({ campaign }) => {
   const dispatch = useDispatch();
   const data = useSelector(getSwagSelectCampaignBudgetData);
   const marketplaceData = useSelector(getSwagSelectCampaignMarketplaceData);
-  const isCustomMarketplaceEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.CUSTOM_MARKETPLACES));
   const { settings, isLoading, onSaveRequiredActions, errors } = useSwagInvitesSettings(campaign.id);
   const [defaultProduct, setDefaultProduct] = useState({
     productId: marketplaceData?.defaultProductId,
@@ -204,13 +203,11 @@ const GiftInvitesSettings = ({ campaign }) => {
             control={<Radio color="primary" />}
             label="Specify Gift Options"
           />
-          {isCustomMarketplaceEnabled && (
-            <FormControlLabel
-              value={ExchangeOptions.CustomMarketplace}
-              control={<Radio color="primary" />}
-              label="Choose a Custom Marketplace"
-            />
-          )}
+          <FormControlLabel
+            value={ExchangeOptions.CustomMarketplace}
+            control={<Radio color="primary" />}
+            label="Choose a Custom Marketplace"
+          />
         </RadioGroup>
         <Box mt={2}>
           <Collapse in={exchangeOption === ExchangeOptions.Budget} mountOnEnter unmountOnExit>
@@ -227,11 +224,7 @@ const GiftInvitesSettings = ({ campaign }) => {
               }
             />
           </Collapse>
-          <Collapse
-            in={exchangeOption === ExchangeOptions.CustomMarketplace && isCustomMarketplaceEnabled}
-            mounOnEnter
-            unmountOnExit
-          >
+          <Collapse in={exchangeOption === ExchangeOptions.CustomMarketplace} mounOnEnter unmountOnExit>
             <SwagSelectCustomMarketplaceForm
               teamId={campaign.team_id}
               defaultValues={data || {}}

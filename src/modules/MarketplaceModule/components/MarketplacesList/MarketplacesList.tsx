@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
 import { AlyceTheme, MultiAutocomplete } from '@alycecom/ui';
 import { useHistory } from 'react-router-dom';
-import { Features } from '@alycecom/modules';
 
 import {
   getCampaignId,
@@ -82,16 +81,11 @@ const MarketplacesList = () => {
   const campaignsLoading = useSelector(getCampaignsLoading);
   const customMarketplacesLoading = useSelector(getCustomMarketplacesLoading);
   const options = useSelector(getMarketplacesOptions);
-  const hasCustomMarketplaces = useSelector(
-    useMemo(() => Features.selectors.hasFeatureFlags(Features.FLAGS.CUSTOM_MARKETPLACES), []),
-  );
   const isLoading = campaignsLoading || customMarketplacesLoading;
 
   useEffect(() => {
-    if (hasCustomMarketplaces) {
-      dispatch(fetchCustomMarketplaces());
-    }
-  }, [dispatch, hasCustomMarketplaces]);
+    dispatch(fetchCustomMarketplaces());
+  }, [dispatch]);
 
   const handleChange = useCallback(
     newValue => {
