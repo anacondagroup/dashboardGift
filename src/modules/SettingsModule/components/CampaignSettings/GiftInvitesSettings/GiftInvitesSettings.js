@@ -70,9 +70,6 @@ const GiftInvitesSettings = ({
   const canOverrideGiftExpireSetting = useSelector(getCanOverrideGiftExpireInDaysSetting);
   const customMarketplaceId = useSelector(getCampaignCustomMarketplaceId);
   const customMarketplace = useSelector(makeGetCustomMarketplaceById(customMarketplaceId));
-  const isCustomMarketplacesEnabled = useSelector(
-    Features.selectors.hasFeatureFlag(Features.FLAGS.CUSTOM_MARKETPLACES),
-  );
 
   const isBudgetManagementLimitEnabled = useSelector(
     Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_LIMIT),
@@ -158,34 +155,30 @@ const GiftInvitesSettings = ({
   }, [dispatch, campaignId]);
 
   useEffect(() => {
-    if (isCustomMarketplacesEnabled) {
-      dispatch(fetchCustomMarketplaces());
-    }
-  }, [dispatch, isCustomMarketplacesEnabled]);
+    dispatch(fetchCustomMarketplaces());
+  }, [dispatch]);
 
   return (
     <>
-      {isCustomMarketplacesEnabled && (
-        <SettingsItem
-          title="Custom Marketplace"
-          value={customMarketplace?.name ?? 'None'}
-          description={
-            <>
-              Use a pre-configured Custom Marketplace (overrides Gift budget, Gift Types and Gift vendors settings
-              below). <br />
-              Currently is set to
-            </>
-          }
-          isLoading={isLoading}
-        >
-          <CustomMarketplaceForm
-            customMarketplaceId={customMarketplaceId}
-            campaignId={campaignId}
-            countryIds={getCampaignProp('countryIds')}
-            teamId={teamId}
-          />
-        </SettingsItem>
-      )}
+      <SettingsItem
+        title="Custom Marketplace"
+        value={customMarketplace?.name ?? 'None'}
+        description={
+          <>
+            Use a pre-configured Custom Marketplace (overrides Gift budget, Gift Types and Gift vendors settings below).{' '}
+            <br />
+            Currently is set to
+          </>
+        }
+        isLoading={isLoading}
+      >
+        <CustomMarketplaceForm
+          customMarketplaceId={customMarketplaceId}
+          campaignId={campaignId}
+          countryIds={getCampaignProp('countryIds')}
+          teamId={teamId}
+        />
+      </SettingsItem>
       <SettingsItem
         title="Gift budget"
         description="The current gift budget is set to"

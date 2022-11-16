@@ -1,8 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Divider } from '@alycecom/ui';
-import { Features } from '@alycecom/modules';
 import { Box } from '@mui/material';
 
 import CampaignSidebarSectionAvatar from '../../../../../CampaignSettings/CreateCampaignSidebar/CampaignSidebarSectionAvatar/CampaignSidebarSectionAvatar';
@@ -23,7 +22,6 @@ import ExchangeOption from './ExchangeOption';
 
 const SwagSelectExchangeOption = ({ title, order, status, data, isLoading, campaignId }) => {
   const dispatch = useDispatch();
-  const isCustomMarketplaceEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.CUSTOM_MARKETPLACES));
   const [exchangeOption, setExchangeOption] = useState(data.exchangeOption);
   const handleEdit = useCallback(() => {
     dispatch(swagSelectChangeStep({ current: undefined, next: SS_BUDGET_STEP }));
@@ -67,7 +65,7 @@ const SwagSelectExchangeOption = ({ title, order, status, data, isLoading, campa
       <Box pb={4} pl="52px" className="H4-Chambray">
         {title}
       </Box>
-      {!exchangeOption && isCustomMarketplaceEnabled && (
+      {!exchangeOption && (
         <Box mt={1} px={3}>
           <ExchangeOption
             title="Specify Gift Options"
@@ -82,15 +80,15 @@ const SwagSelectExchangeOption = ({ title, order, status, data, isLoading, campa
           />
         </Box>
       )}
-      {(exchangeOption === ExchangeOptions.Budget || !isCustomMarketplaceEnabled) && (
+      {exchangeOption === ExchangeOptions.Budget && (
         <SwagGiftBudgetSection
           isLoading={isLoading}
           data={data}
           campaignId={campaignId}
-          onBack={isCustomMarketplaceEnabled ? () => setExchangeOption(null) : undefined}
+          onBack={() => setExchangeOption(null)}
         />
       )}
-      {exchangeOption === ExchangeOptions.CustomMarketplace && isCustomMarketplaceEnabled && (
+      {exchangeOption === ExchangeOptions.CustomMarketplace && (
         <SwagSelectExchangeMarketplace onBack={() => setExchangeOption(null)} />
       )}
     </Box>

@@ -64,7 +64,6 @@ const GiftExchangeOptionsSection = ({ isMultiCountry }: IGiftExchangeOptionsSect
   const marketplaceSettings = useSelector(getExchangeMarketplaceSettings);
   const customMarketplaceId = useSelector(getSelectedCustomMarketplaceId);
   const isLoading = useSelector(getIsLoading);
-  const isCustomMarketplaceEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.CUSTOM_MARKETPLACES));
   const isAcceptOnlyEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.ACCEPT_ONLY));
   const isGiftTypesLoaded = useSelector(getIsGiftTypesLoaded);
   const isVendorsLoaded = useSelector(getIsGiftVendorsLoaded);
@@ -114,7 +113,6 @@ const GiftExchangeOptionsSection = ({ isMultiCountry }: IGiftExchangeOptionsSect
       value: GiftExchangeOptions.customMarketplace,
       disabled: !canChangeExchangeSettings,
       tooltip: disabledCustomMarketplaceTooltip,
-      hidden: !isCustomMarketplaceEnabled,
     },
     {
       label: 'Can accept or donate the value of leading gift to a charity of choice',
@@ -276,16 +274,14 @@ const GiftExchangeOptionsSection = ({ isMultiCountry }: IGiftExchangeOptionsSect
           )}
         </Collapse>
 
-        <HasFeature featureKey={Features.FLAGS.CUSTOM_MARKETPLACES}>
-          <Collapse in={exchangeOption === GiftExchangeOptions.customMarketplace} unmountOnExit mountOnEnter>
-            <Box my={2}>
-              <SelectCustomMarketplace />
-              <AsteriskText mt={1} invalid={!customMarketplaceId}>
-                * You must select a marketplace to continue
-              </AsteriskText>
-            </Box>
-          </Collapse>
-        </HasFeature>
+        <Collapse in={exchangeOption === GiftExchangeOptions.customMarketplace} unmountOnExit mountOnEnter>
+          <Box my={2}>
+            <SelectCustomMarketplace />
+            <AsteriskText mt={1} invalid={!customMarketplaceId}>
+              * You must select a marketplace to continue
+            </AsteriskText>
+          </Box>
+        </Collapse>
 
         <Collapse in={exchangeOption === GiftExchangeOptions.noExchange} unmountOnExit mountOnEnter>
           <Box my={2}>
