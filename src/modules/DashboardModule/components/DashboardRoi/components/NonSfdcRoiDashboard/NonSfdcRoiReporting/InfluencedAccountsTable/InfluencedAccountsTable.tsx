@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { TInfluencedAccounts, useGetInfluencedAccountsQuery } from '@alycecom/services';
+import { RoiReportTypes, TInfluencedAccounts, useGetInfluencedAccountsQuery } from '@alycecom/services';
 import { useHistory } from 'react-router-dom';
 
-import { RoiTable, RoiTableClickableRow, TRoiColumn } from '../../../Shared';
+import { RoiTable, RoiTableClickableRow, TRoiColumn, RoiSendReportButton } from '../../../Shared';
 import { IRoiTableProps } from '../../../Shared/RoiTable/RoiTable';
 import { useRoiTable } from '../../../../hooks';
 import { NumberFormattingOptions, toDateFromNow, toFormattedPrice } from '../../../../utils';
@@ -112,6 +112,9 @@ const InfluencedAccountsTable = (): JSX.Element => {
           onRowSelected={handleAccountSelected}
         />
       )}
+      headerControls={
+        <RoiSendReportButton reportType={RoiReportTypes.AcceptedGifts} disabled={isFetching} filters={filters} />
+      }
       onOffsetChange={handleOffsetChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onSortChange={handleSortChange}

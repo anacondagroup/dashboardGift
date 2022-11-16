@@ -9,3 +9,4 @@ export * from './RoiFilters';
 export * from './RoiWelcomeDialog';
 export * from './Styled';
 export * from './GiftsByAccountTableRow';
+export * from './RoiSendReportButtonProps';
