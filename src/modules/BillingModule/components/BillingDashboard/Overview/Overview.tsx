@@ -16,7 +16,11 @@ import DepositOverview from '../DepositOverview/DepositOverview';
 
 const BILLING_DATA_MIN_DATE = '2019-06-12T00:00:00Z';
 
-const BillingDashboard = () => {
+export interface IOverviewProps {
+  onTransactionDetailClick: () => void;
+}
+
+const Overview = ({ onTransactionDetailClick }: IOverviewProps) => {
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
@@ -63,7 +67,7 @@ const BillingDashboard = () => {
       <Grid container item xs={12}>
         <Grid item xs={6}>
           <Box mb={4}>
-            <DepositOverview />
+            <DepositOverview onTransactionDetailClick={onTransactionDetailClick} />
 
             <Box ml={4}>
               <Box mt={2} mb={2} />
@@ -115,4 +119,4 @@ const BillingDashboard = () => {
   );
 };
 
-export default memo(BillingDashboard);
+export default memo(Overview);

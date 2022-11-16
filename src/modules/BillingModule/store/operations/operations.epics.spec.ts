@@ -4,7 +4,7 @@ import { delay } from 'rxjs/operators';
 
 import { testEpic, waitFor } from '../../../../testUtils';
 import { initialState as customerOrgInitialState } from '../customerOrg/customerOrg.reducer';
-import { setSelectedAccount } from '../customerOrg';
+import { setSelectedHierarchyId } from '../customerOrg';
 
 import { initialState as operationsInitialState } from './operations.reducer';
 import { setDateRange } from './operations.actions';
@@ -78,12 +78,7 @@ describe.skip('operations.epics', () => {
       },
     };
     const { getState } = testEpic(
-      setSelectedAccount({
-        id: 2,
-        name: 'Team 2',
-        accountId: 'acc2',
-        level: 1,
-      }),
+      setSelectedHierarchyId('team-2'),
       {
         billing: {
           operations: {

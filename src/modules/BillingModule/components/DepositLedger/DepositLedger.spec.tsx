@@ -7,11 +7,13 @@ import {
   initialState as customerOrgInitialState,
 } from '../../store/customerOrg/customerOrg.reducer';
 import { initialState as operationsInitialState, IOperationsState } from '../../store/operations/operations.reducer';
-import { loadHierarchyRequest, setSelectedAccount } from '../../store/customerOrg';
+import { loadHierarchyRequest, setSelectedHierarchyId } from '../../store/customerOrg';
 import { loadTypesRequest, setSelectedTypes } from '../../store/operations';
 import { OperationType } from '../../constants/operations.constants';
 
 import DepositLedger from './DepositLedger';
+import { GroupsTeamsConstants } from '../../constants/groupsTeams.constants';
+import { AllGroupsAndTeamsOption, UngroupedTeamsOption } from '../../store/customerOrg/customerOrg.constants';
 
 describe('DepositLedger', () => {
   const setup = (customerOrgState: ICustomerOrgState, operationsState: IOperationsState) =>
@@ -38,9 +40,11 @@ describe('DepositLedger', () => {
       },
     );
 
-    expect(document.querySelector('[data-testid^="DepositLedger.Hierarchy"]')).not.toBeInTheDocument();
-    expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
-    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(32);
+    expect(screen.getByTestId('DepositLedger.GroupsAndTeams')).toBeInTheDocument();
+    expect(screen.getByTestId('DepositLedger.TypeSelect')).toBeInTheDocument();
+    expect(screen.getByTestId('DepositLedger.DateRange')).toBeInTheDocument();
+
+    expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(30);
   });
 
   test('Should render loading labels while operations are loading', () => {
@@ -57,7 +61,6 @@ describe('DepositLedger', () => {
       },
     );
 
-    expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
     expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(30);
   });
 
@@ -81,13 +84,9 @@ describe('DepositLedger', () => {
         ...customerOrgInitialState,
         hierarchy: {
           ...customerOrgInitialState.hierarchy,
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            level: 0,
-          },
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: 1110.79,
               },
@@ -160,15 +159,15 @@ describe('DepositLedger', () => {
       },
     );
 
-    expect(document.querySelector('[data-testid^="DepositLedger.Hierarchy"]')).toBeInTheDocument();
-    expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
     expect(screen.queryByTestId('TableLoadingLabel')).not.toBeInTheDocument();
 
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Name.ALLG&T')).toHaveTextContent(/^All Groups and Teams$/);
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Deposit.ALLG&T')).toHaveTextContent(/^\$1,110\.79$/);
+    userEvent.click(screen.getByLabelText('Groups and Teams'));
 
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Name.g1')).toHaveTextContent(/^Group 1$/);
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Deposit.g1')).toHaveTextContent(/^\$1,234\.00$/);
+    expect(
+      screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.${GroupsTeamsConstants.AllGroupsAndTeams}`),
+    ).toHaveTextContent(/^All Groups\$1,110.79$/);
+    expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.group-g1`)).toHaveTextContent(/^Group 1\$1,234.00$/);
+    expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.team-3`)).toHaveTextContent(/^Team 3\$0.00$/);
   });
 
   test('Should render hierarchy with grouped teams', () => {
@@ -177,13 +176,9 @@ describe('DepositLedger', () => {
         ...customerOrgInitialState,
         hierarchy: {
           ...customerOrgInitialState.hierarchy,
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            level: 0,
-          },
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: 1110.79,
               },
@@ -256,13 +251,13 @@ describe('DepositLedger', () => {
       },
     );
 
-    expect(document.querySelector('[data-testid^="DepositLedger.Hierarchy"]')).toBeInTheDocument();
-    expect(document.querySelector('[data-testid^="DepositLedger.List"]')).not.toBeInTheDocument();
     expect(screen.queryByTestId('TableLoadingLabel')).not.toBeInTheDocument();
 
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Name.1')).toHaveTextContent(/^Team 1$/);
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Name.2')).toHaveTextContent(/^Team 2$/);
-    expect(screen.getByTestId('DepositLedger.Hierarchy.Name.3')).toHaveTextContent(/^Team 3$/);
+    userEvent.click(screen.getByLabelText('Groups and Teams'));
+
+    expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.team-1`)).toHaveTextContent(/^Team 1$/);
+    expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.team-2`)).toHaveTextContent(/^Team 2-\$123.21$/);
+    expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.team-3`)).toHaveTextContent(/^Team 3\$0.00$/);
   });
 
   test('Should select account by click', async () => {
@@ -273,7 +268,7 @@ describe('DepositLedger', () => {
           ...customerOrgInitialState.hierarchy,
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: -246.42,
               },
@@ -312,11 +307,6 @@ describe('DepositLedger', () => {
               },
             ],
           },
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            accountId: 'acc1',
-            level: 0,
-          },
         },
       },
       {
@@ -324,9 +314,10 @@ describe('DepositLedger', () => {
       },
     );
 
-    userEvent.click(screen.getByTestId('DepositLedger.Hierarchy.Name.2'));
+    userEvent.click(screen.getByLabelText('Groups and Teams'));
+    userEvent.click(screen.getByTestId('DepositLedger.GroupsAndTeams.Option.team-2'));
 
-    expect(dispatch).toBeCalledWith(setSelectedAccount({ id: 2, name: 'Team 2', accountId: 'acc2', level: 1 }));
+    expect(dispatch).toBeCalledWith(setSelectedHierarchyId('team-2'));
   });
 
   test('Should request operations when types filter changed', async () => {
@@ -337,13 +328,13 @@ describe('DepositLedger', () => {
           ...customerOrgInitialState.hierarchy,
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: -123.21,
               },
             },
             remainingTeamsTotal: {
-              accountId: 'Ungrouped',
+              accountId: UngroupedTeamsOption.accountId,
               money: {
                 amount: 2500.84,
               },
@@ -364,11 +355,7 @@ describe('DepositLedger', () => {
               },
             ],
           },
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            accountId: 'acc1',
-            level: 1,
-          },
+          selectedHierarchyId: 'team-1',
         },
       },
       {
@@ -401,7 +388,7 @@ describe('DepositLedger', () => {
           ...customerOrgInitialState.hierarchy,
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: -123.21,
               },
@@ -428,11 +415,7 @@ describe('DepositLedger', () => {
               },
             ],
           },
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            accountId: 'acc1',
-            level: 0,
-          },
+          selectedHierarchyId: 'team-1',
         },
       },
       {
@@ -527,7 +510,7 @@ describe('DepositLedger', () => {
           ...customerOrgInitialState.hierarchy,
           data: {
             depositsTotal: {
-              accountId: '0',
+              accountId: AllGroupsAndTeamsOption.accountId,
               money: {
                 amount: -123.21,
               },
@@ -554,11 +537,7 @@ describe('DepositLedger', () => {
               },
             ],
           },
-          selectedAccount: {
-            ...customerOrgInitialState.hierarchy.selectedAccount,
-            accountId: 'acc1',
-            level: 1,
-          },
+          selectedHierarchyId: 'team-1',
         },
       },
       {

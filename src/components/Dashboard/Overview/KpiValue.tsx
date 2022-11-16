@@ -1,9 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import { AlyceTheme, LoadingLabel } from '@alycecom/ui';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
+import { LoadingLabel } from '@alycecom/ui';
+import { Box, SxProps, Theme } from '@mui/material';
 
-const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
+const styles = {
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
@@ -20,20 +19,18 @@ const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
     lineHeight: '1rem',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
-    color: palette.grey.main,
+    color: 'grey.main',
   },
-}));
+} as const;
 
 export interface IKpiValueProps {
   value: number | string | React.ReactElement;
   title: string;
   isLoading: boolean;
-  className?: string;
+  sx?: SxProps<Theme>;
 }
 
-const KpiValue = ({ value, title, isLoading, className }: IKpiValueProps) => {
-  const classes = useStyles();
-
+const KpiValue = ({ value, title, isLoading, sx }: IKpiValueProps) => {
   const formattedValue = useMemo(() => {
     if (isLoading) {
       return <LoadingLabel mt={2.5} width={36} height={4} />;
@@ -43,10 +40,10 @@ const KpiValue = ({ value, title, isLoading, className }: IKpiValueProps) => {
   }, [value, isLoading]);
 
   return (
-    <div className={classNames(classes.wrapper, className)} data-testid={`kpi-value-${title}`}>
-      <div className={classes.value}>{formattedValue}</div>
-      <div className={classes.title}>{title}</div>
-    </div>
+    <Box sx={[styles.wrapper, ...(Array.isArray(sx) ? sx : [sx])]} data-testid={`kpi-value-${title}`}>
+      <Box sx={styles.value}>{formattedValue}</Box>
+      <Box sx={styles.title}>{title}</Box>
+    </Box>
   );
 };
 

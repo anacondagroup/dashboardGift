@@ -161,11 +161,10 @@
     "stylelint": "^13.13.0",
     "stylelint-config-recommended": "^5.0.0"
   },
-  "overrides": {
-    "@types/react": "17.0.52"
-  },
   "resolutions": {
-    "@types/react": "17.0.52"
+    "@types/react": "17.0.52",
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
   },
   "jest": {
     "transformIgnorePatterns": [

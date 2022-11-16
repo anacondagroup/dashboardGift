@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useCallback, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Toolbar, Tabs, Tab, Paper, Box, Typography } from '@mui/material';
+import { useDispatch, useSelector, batch } from 'react-redux';
+import { Toolbar, Tabs, Tab, Paper, Box } from '@mui/material';
 import { Divider } from '@alycecom/ui';
 import { User } from '@alycecom/modules';
 
@@ -16,6 +16,7 @@ import { getGroupsListRequest } from '../../store/billingGroups';
 import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
 import TabPanel from '../../../../components/AppBar/TabPanel';
 import DepositLedger from '../DepositLedger/DepositLedger';
+import { tabsList, billingTabName } from '../../constants/billingTab.constants';
 
 import { BillingGroupSidebar } from './BillingGroups/BillingGroupSidebar';
 import BillingGroups from './BillingGroups/BillingGroups';
@@ -26,13 +27,11 @@ const tabProps = (index: number) => ({
   'aria-controls': `manage-billing-tabpanel-${index}`,
 });
 
-const tabsList = ['Overview', 'Billing groups', 'Deposit Ledger'];
-
 const BillingDashboard = () => {
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
-  const { id: orgId, name: orgName } = useSelector(getOrg);
+  const { id: orgId } = useSelector(getOrg);
   const userId = useSelector(User.selectors.getUserId);
 
   const [value, setValue] = useState(0);
@@ -45,14 +44,20 @@ const BillingDashboard = () => {
     [trackEvent],
   );
 
+  const handleTransactionDetailClick = useCallback(() => {
+    setValue(2);
+  }, []);
+
   useEffect(() => {
-    dispatch(customerOrgRequest());
-    dispatch(loadStatsRequest());
-    dispatch(loadResourcesRequest());
-    dispatch(loadLastInvoiceRequest());
-    dispatch(sentInvitesRequest());
-    dispatch(acceptedInvitesRequest());
-    dispatch(getGroupsListRequest({ isSearching: false }));
+    batch(() => {
+      dispatch(customerOrgRequest());
+      dispatch(loadStatsRequest());
+      dispatch(loadResourcesRequest());
+      dispatch(loadLastInvoiceRequest());
+      dispatch(sentInvitesRequest());
+      dispatch(acceptedInvitesRequest());
+      dispatch(getGroupsListRequest({ isSearching: false }));
+    });
   }, [dispatch]);
 
   useEffect(() => {
@@ -64,10 +69,6 @@ const BillingDashboard = () => {
   return (
     <>
       <Box ml={5} mr={5}>
-        <Box pt={3} pb={5}>
-          <Typography className="H2-Chambray">{`Manage Billing for ${orgName}`}</Typography>
-        </Box>
-
         <Paper elevation={2}>
           <Toolbar>
             <Tabs
@@ -77,14 +78,14 @@ const BillingDashboard = () => {
               indicatorColor="primary"
               textColor="primary"
             >
-              <Tab label="Overview" {...tabProps(0)} />
-              <Tab label="Billing Groups" {...tabProps(1)} />
-              <Tab label="Deposit Ledger" {...tabProps(2)} />
+              <Tab label={billingTabName.Overview} {...tabProps(0)} />
+              <Tab label={billingTabName.BillingGroups} {...tabProps(1)} />
+              <Tab label={billingTabName.Transactions} {...tabProps(2)} />
             </Tabs>
           </Toolbar>
-          <Divider mb={3} />
+          <Divider mb={1} />
           <TabPanel value={value} index={0}>
-            <Overview />
+            <Overview onTransactionDetailClick={handleTransactionDetailClick} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <BillingGroups />

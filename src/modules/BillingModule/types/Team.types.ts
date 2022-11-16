@@ -3,7 +3,7 @@ import { IAccountResources } from './AccountResources.types';
 export interface ITeamInfo {
   teamId: number;
   teamName: string;
-  groupId?: string;
+  groupId?: string | null;
 }
 
 export interface ITeam extends ITeamInfo {

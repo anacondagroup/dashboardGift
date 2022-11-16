@@ -7,7 +7,7 @@ import { getOperationsIsLoading } from '../operations';
 import { initialState as operationsInitialState } from '../operations/operations.reducer';
 
 import { loadHierarchyRequest } from './customerOrg.actions';
-import { getHierarchy, getHierarchyIsLoading, getSelectedAccount } from './customerOrg.selectors';
+import { getHierarchy, getHierarchyIsLoading, getSelectedGroupOrTeamId } from './customerOrg.selectors';
 import { initialState as customerOrgInitialState } from './customerOrg.reducer';
 
 describe.skip('customerOrg.epics', () => {
@@ -62,7 +62,7 @@ describe.skip('customerOrg.epics', () => {
       { interval: 10 },
     );
     expect(getHierarchy(getState()).groupGrouped).toHaveLength(1);
-    expect(getSelectedAccount(getState())).toEqual({
+    expect(getSelectedGroupOrTeamId(getState())).toEqual({
       id: 'g1',
       name: 'Group 1',
       accountId: undefined,
@@ -122,7 +122,7 @@ describe.skip('customerOrg.epics', () => {
       },
       { interval: 10 },
     );
-    expect(getSelectedAccount(getState())).toEqual({
+    expect(getSelectedGroupOrTeamId(getState())).toEqual({
       id: 2,
       name: 'Team 2',
       accountId: 'acc2',

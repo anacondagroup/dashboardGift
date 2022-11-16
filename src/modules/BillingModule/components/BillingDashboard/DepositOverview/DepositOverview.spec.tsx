@@ -10,7 +10,7 @@ import DepositOverview from './DepositOverview';
 
 describe('DepositOverview', () => {
   const setup = (customerOrgState: ICustomerOrgState, featuresState: Record<string, boolean>) =>
-    render(<DepositOverview />, {
+    render(<DepositOverview onTransactionDetailClick={() => {}} />, {
       initialState: {
         billing: {
           customerOrg: customerOrgState,

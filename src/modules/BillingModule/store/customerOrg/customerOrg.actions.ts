@@ -2,7 +2,7 @@ import { createAction } from 'redux-act';
 
 import { IAccountResources, IGroupInfo, IOperation, ITeamInfo } from '../../types';
 
-import { ICustomerStats, IOrgHierarchy, IOrgInfo, ISelectedAccount, ITeamsFilter } from './customerOrg.types';
+import { ICustomerStats, IOrgHierarchy, IOrgInfo, ITeamsFilter } from './customerOrg.types';
 
 const PREFIX = 'BILLING/CUSTOMER_ORG';
 
@@ -33,7 +33,7 @@ export const loadHierarchyRequest = createAction(`${PREFIX}/LOAD_HIERARCHY_REQUE
 export const loadHierarchySuccess = createAction<IOrgHierarchy>(`${PREFIX}/LOAD_HIERARCHY_SUCCESS`);
 export const loadHierarchyFail = createAction(`${PREFIX}/LOAD_HIERARCHY_FAIL`);
 
-export const setSelectedAccount = createAction<ISelectedAccount>(`${PREFIX}/SET_SELECTED_ACCOUNT`);
+export const setSelectedHierarchyId = createAction<string>(`${PREFIX}/SET_SELECTED_HIERARCHY_ID`);
 
 export const loadLastInvoiceRequest = createAction(`${PREFIX}/LOAD_LAST_INVOICE_REQUEST`);
 export const loadLastInvoiceSuccess = createAction<IOperation>(`${PREFIX}/LOAD_LAST_INVOICE_SUCCESS`);
