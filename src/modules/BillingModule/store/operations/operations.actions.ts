@@ -1,10 +1,9 @@
 import { createAction } from 'redux-act';
-import { IListResponseWithPagination } from '@alycecom/services';
 import { createAsyncAction } from '@alycecom/utils';
 
 import { IOperation } from '../../types';
 
-import { IDateRange, IOperationType, IPagination, TGiftWithdrawalTotal } from './operations.types';
+import { IDateRange, IOperationType, IPagination, TBalance } from './operations.types';
 
 const PREFIX = 'BILLING/OPERATIONS';
 
@@ -23,12 +22,8 @@ export const loadTypesFail = createAction(`${PREFIX}/LOAD_TYPES_FAIL`);
 
 export const setCurrentPage = createAction<number>(`${PREFIX}/SET_PAGE`);
 
-export const downloadDepositLedgerReportRequest = createAction<{ total: number; currentPage: number }>(
-  `${PREFIX}/DOWNLOAD_OPERATIONS_REPORT_REQUEST`,
-);
+export const downloadDepositLedgerReportRequest = createAction(`${PREFIX}/DOWNLOAD_OPERATIONS_REPORT_REQUEST`);
 export const downloadDepositLedgerReportSuccess = createAction(`${PREFIX}/DOWNLOAD_OPERATIONS_REPORT_SUCCESS`);
 export const downloadDepositLedgerReportFail = createAction(`${PREFIX}DOWNLOAD_OPERATIONS_REPORT_FAIL`);
 
-export const loadGiftWithdrawalOnDateRange = createAsyncAction<void, IListResponseWithPagination<TGiftWithdrawalTotal>>(
-  `${PREFIX}/LOAD_GIFT_WITHDRAWAL_ON_DATE_RANGE`,
-);
+export const fetchBalance = createAsyncAction<void, TBalance>(`${PREFIX}/FETCH_BALANCE`);

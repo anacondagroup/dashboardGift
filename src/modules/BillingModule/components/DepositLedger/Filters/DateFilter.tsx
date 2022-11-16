@@ -24,7 +24,7 @@ const DateFilter = () => {
       to={dateRange.to}
       onChange={handleChangeDateRange}
       format="YYYY-MM-DD"
-      label="Operated at date range"
+      label="Date range"
       fullWidth
       dataTestId="DepositLedger.DateRange"
     />

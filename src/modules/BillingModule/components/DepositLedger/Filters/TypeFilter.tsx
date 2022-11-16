@@ -50,7 +50,7 @@ const TypeFilter = () => {
         renderValue={renderValue as (selected: unknown) => string}
         disabled={isLoading}
         variant="outlined"
-        label="Operation types"
+        label="Operation type"
         IconComponent={ExpandMoreIcon}
         labelId="type-filter-label"
         data-testid="DepositLedger.TypeSelect"

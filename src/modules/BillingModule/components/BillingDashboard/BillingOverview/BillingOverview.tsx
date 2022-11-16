@@ -1,23 +1,20 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Tooltip, Grid } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { NumberFormat, AlyceTheme, Divider } from '@alycecom/ui';
+import { NumberFormat, Divider } from '@alycecom/ui';
 
 import KpiValue from '../../../../../components/Dashboard/Overview/KpiValue';
 import { getResources, getStats, getTeamsFilter } from '../../../store/customerOrg';
 import BreakdownHeader from '../BillingTableBreakdown/BreakdownHeader';
 
-const useStyles = makeStyles<AlyceTheme>(theme => ({
+const styles = {
   KPIValue: {
-    paddingRight: theme.spacing(2),
-    color: theme.palette.text.primary,
+    pr: 2,
+    color: 'text.primary',
   },
-}));
+} as const;
 
 const BillingOverview = () => {
-  const classes = useStyles();
-
   const stats = useSelector(getStats);
   const resources = useSelector(getResources);
   const { groupIds } = useSelector(getTeamsFilter);
@@ -47,22 +44,23 @@ const BillingOverview = () => {
         >
           <Box pl={0} pb={2}>
             <KpiValue
+              sx={styles.KPIValue}
               isLoading={stats.isLoading}
               title="Total users"
               value={<span data-testid="PlatformUsage.TotalUsers">{stats.users}</span>}
-              className={classes.KPIValue}
             />
           </Box>
           <Box pl={5} pb={2}>
             <KpiValue
+              sx={styles.KPIValue}
               isLoading={stats.isLoading}
               title="Total teams"
               value={<span data-testid="PlatformUsage.TotalTeams">{stats.teams}</span>}
-              className={classes.KPIValue}
             />
           </Box>
           <Box pl={5} pb={2}>
             <KpiValue
+              sx={styles.KPIValue}
               isLoading={resources.isLoading}
               title="Remaining Physical Invitations"
               value={
@@ -76,7 +74,6 @@ const BillingOverview = () => {
                   )}
                 </span>
               }
-              className={classes.KPIValue}
             />
           </Box>
         </Box>

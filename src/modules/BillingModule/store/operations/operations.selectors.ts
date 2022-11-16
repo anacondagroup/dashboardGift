@@ -1,12 +1,16 @@
 import { pipe } from 'ramda';
-import { StateStatus } from '@alycecom/utils';
 
 import { IRootState } from '../../../../store/root.types';
+import { StateStatus } from '../../../../store/stateStatuses.types';
 
 const getOperationsState = (state: IRootState) => state.billing.operations;
 
 export const getOperations = pipe(getOperationsState, state => state.operations.list);
 export const getOperationsIsLoading = pipe(getOperationsState, state => state.operations.isLoading);
+export const getHasOperations = pipe(
+  getOperationsState,
+  state => !state.operations.isLoading && state.operations.list.length > 0,
+);
 
 export const getDateRange = pipe(getOperationsState, state => state.dateRangeFilter);
 
@@ -21,9 +25,6 @@ export const getOperationsReportDownloading = pipe(
   state => state.downloadReportStatus === StateStatus.Pending,
 );
 
-export const getTotalWithdrawalsOnPage = pipe(getOperationsState, state => state.operations.totalWithdrawalsOnPage);
-
-export const getTotalWithdrawalsOnDateRange = pipe(
-  getOperationsState,
-  state => state.operations.totalWithdrawalOnDateRange,
-);
+export const getBalanceIsLoading = pipe(getOperationsState, state => state.balance.status === StateStatus.Pending);
+export const getAmountAtTheStart = pipe(getOperationsState, state => state.balance.amountAtTheStart);
+export const getAmountAtTheEnd = pipe(getOperationsState, state => state.balance.amountAtTheEnd);

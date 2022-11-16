@@ -1,8 +1,9 @@
 import { createReducer } from 'redux-act';
 
 import { IGroupInfo, IOperation, ITeamInfo } from '../../types';
+import { GroupsTeamsConstants } from '../../constants/groupsTeams.constants';
 
-import { ICustomerStats, IOrgHierarchy, IOrgInfo, ISelectedAccount, ITeamsFilter } from './customerOrg.types';
+import { ICustomerStats, IOrgHierarchy, IOrgInfo, ITeamsFilter } from './customerOrg.types';
 import {
   customerOrgFailure,
   customerOrgRequest,
@@ -25,10 +26,11 @@ import {
   orgTeamsFailure,
   orgTeamsRequest,
   orgTeamsSuccess,
-  setSelectedAccount,
+  setSelectedHierarchyId,
   setTeamsFilter,
   setCurrentGroupSelected,
 } from './customerOrg.actions';
+import { AllGroupsAndTeamsOption, UngroupedTeamsOption } from './customerOrg.constants';
 
 export interface ICustomerOrgState {
   org: IOrgInfo & { isLoading: boolean };
@@ -52,7 +54,7 @@ export interface ICustomerOrgState {
   hierarchy: {
     isLoading: boolean;
     data: IOrgHierarchy;
-    selectedAccount: ISelectedAccount;
+    selectedHierarchyId: string;
   };
   lastInvoice: {
     isLoading: boolean;
@@ -93,13 +95,13 @@ export const initialState: ICustomerOrgState = {
     isLoading: false,
     data: {
       depositsTotal: {
-        accountId: '0',
+        accountId: AllGroupsAndTeamsOption.accountId,
         money: {
           amount: 0,
         },
       },
       remainingTeamsTotal: {
-        accountId: 'Ungrouped',
+        accountId: UngroupedTeamsOption.accountId,
         money: {
           amount: 0,
         },
@@ -107,12 +109,7 @@ export const initialState: ICustomerOrgState = {
       groupGrouped: [],
       ungrouped: [],
     },
-    selectedAccount: {
-      id: 'ALLG&T',
-      name: 'All Groups and Teams',
-      accountId: '',
-      level: 0,
-    },
+    selectedHierarchyId: GroupsTeamsConstants.AllGroupsAndTeams,
   },
   lastInvoice: {
     isLoading: false,
@@ -272,10 +269,6 @@ export const customerOrg = createReducer({}, initialState)
           },
         },
       },
-      selectedAccount: {
-        ...state.hierarchy.selectedAccount,
-        accountId: payload.depositsTotal.accountId,
-      },
     },
   }))
   .on(loadHierarchyFail, state => ({
@@ -286,11 +279,11 @@ export const customerOrg = createReducer({}, initialState)
     },
   }))
 
-  .on(setSelectedAccount, (state, payload) => ({
+  .on(setSelectedHierarchyId, (state, payload) => ({
     ...state,
     hierarchy: {
       ...state.hierarchy,
-      selectedAccount: payload,
+      selectedHierarchyId: payload,
     },
   }))
 

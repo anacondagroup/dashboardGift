@@ -1,6 +1,6 @@
 import { ITeam } from './Team.types';
 
-type TGroupId = string | 'Ungrouped';
+export type TGroupId = string | 'Ungrouped';
 
 export interface IGroupInfo {
   groupId: TGroupId;

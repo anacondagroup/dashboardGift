@@ -1,41 +1,20 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
-import { Box, Typography, Grid } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { NumberFormat, AlyceTheme, Divider } from '@alycecom/ui';
-import classNames from 'classnames';
+import { Box, Button, Grid } from '@mui/material';
+import { Divider, NumberFormat } from '@alycecom/ui';
 import { Features, HasFeature } from '@alycecom/modules';
-import { Link } from 'react-router-dom';
 
 import BreakdownHeader from '../BillingTableBreakdown/BreakdownHeader';
 import KpiValue from '../../../../../components/Dashboard/Overview/KpiValue';
 import { getResources, getSelectedGroup } from '../../../store/customerOrg';
 
-const useStyles = makeStyles<AlyceTheme>(theme => ({
-  KPIValueBudget: {
-    paddingRight: theme.spacing(2),
-    color: theme.palette.green.dark,
-    '&:hover': {
-      color: theme.palette.green.dark,
-    },
-  },
-  negativeDeposit: {
-    color: theme.palette.red.main,
-    '&:hover': {
-      color: theme.palette.red.main,
-    },
-  },
-  linkText: {
-    color: theme.palette.grey.main,
-    '&:hover': {
-      color: theme.palette.grey.main,
-    },
-  },
-}));
+import { styles } from './DepositeOverview.styles';
 
-const DepositOverview = () => {
-  const classes = useStyles();
+export interface IDepositOverviewProps {
+  onTransactionDetailClick: () => void;
+}
 
+const DepositOverview = ({ onTransactionDetailClick }: IDepositOverviewProps) => {
   const resources = useSelector(getResources);
   const groupName = useSelector(getSelectedGroup);
 
@@ -55,17 +34,18 @@ const DepositOverview = () => {
             </Box>
             <Box ml={4}>
               <KpiValue
+                sx={styles.KPIValueBudget}
                 isLoading={resources.isLoading}
                 title="Total gift budget"
                 value={
-                  <span
+                  <Box
+                    component="span"
                     data-testid="PlatformUsage.GiftDeposit"
-                    className={classNames({ [classes.negativeDeposit]: resources.remainingDeposit < 0 })}
+                    sx={resources.remainingDeposit < 0 ? styles.negativeDeposit : undefined}
                   >
                     <NumberFormat format="$0,0.00">{resources.remainingDeposit}</NumberFormat>
-                  </span>
+                  </Box>
                 }
-                className={classes.KPIValueBudget}
               />
             </Box>
           </Box>
@@ -86,19 +66,18 @@ const DepositOverview = () => {
               isLoading={resources.isLoading}
               title="Total gift budget"
               value={
-                <span
+                <Box
+                  component="span"
                   data-testid="PlatformUsage.GiftDeposit"
-                  className={resources.remainingDeposit < 0 ? classes.negativeDeposit : classes.KPIValueBudget}
+                  sx={resources.remainingDeposit < 0 ? styles.negativeDeposit : styles.KPIValueBudget}
                 >
                   <NumberFormat format="$0,0.00">{resources.remainingDeposit}</NumberFormat>
-                </span>
+                </Box>
               }
             />
-            <Typography className="Body-Small-Static">
-              <Link to="/billing/deposit-ledger" className={classes.linkText}>
-                Click here to see detailed info
-              </Link>
-            </Typography>
+            <Button sx={styles.button} onClick={onTransactionDetailClick}>
+              Click here to see detailed info
+            </Button>
           </Box>
         </Box>
       </HasFeature>

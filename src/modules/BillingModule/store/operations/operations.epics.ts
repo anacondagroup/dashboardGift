@@ -1,14 +1,14 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
-import { catchError, flatMap, mapTo, switchMap, map, tap, mergeMap } from 'rxjs/operators';
-import { IListResponse, handleError, handlers, MessageType, IListResponseWithPagination } from '@alycecom/services';
+import { catchError, mapTo, switchMap, map, tap, mergeMap } from 'rxjs/operators';
+import { IListResponse, handleError, handlers, MessageType, IResponse } from '@alycecom/services';
 import qs from 'query-string';
+import { omit } from 'ramda';
 
-import { getSelectedAccount, getOrg } from '../customerOrg';
 import { IOperation } from '../../types';
 
 import {
-  loadGiftWithdrawalOnDateRange,
+  fetchBalance,
   loadOperationsFail,
   loadOperationsRequest,
   loadOperationsSuccess,
@@ -22,81 +22,48 @@ import {
   downloadDepositLedgerReportSuccess,
   downloadDepositLedgerReportFail,
 } from './operations.actions';
-import { TGiftWithdrawalTotal, IOperationType, IPagination } from './operations.types';
-import { getDateRange, getSelectedTypes, getPagination } from './operations.selectors';
+import { IOperationType, IPagination, TBalance } from './operations.types';
+import { getQueryParamsFromState } from './operations.helpers';
 
 export const loadOperationsEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
   action$.pipe(
     ofType(loadOperationsRequest),
     switchMap(() => {
-      const { accountId } = getSelectedAccount(state$.value);
-      const dateRange = getDateRange(state$.value);
-      const operationTypes = getSelectedTypes(state$.value);
-      const params: Record<string, string | boolean | number | qs.Stringifiable[]> = {};
-      const { perPage, currentPage } = getPagination(state$.value);
-      if (dateRange.from) {
-        params['dateRange[from]'] = dateRange.from;
-        params['dateRange[fromIncluded]'] = true;
-      }
-      if (dateRange.to) {
-        params['dateRange[to]'] = dateRange.to;
-        params['dateRange[toIncluded]'] = true;
-      }
-      params['operationTypes[]'] = operationTypes;
-      params.perPage = perPage;
-      params.page = currentPage;
-
+      const { accountId, params } = getQueryParamsFromState({ state$ });
       return apiService
         .get(`/api/v1/reporting/resources/deposits/${accountId}/operations?${qs.stringify(params)}`, {}, true)
         .pipe(
-          mergeMap((response: { data: IOperation[]; pagination: IPagination }) => [
-            loadOperationsSuccess(response),
-            loadGiftWithdrawalOnDateRange.pending(),
-          ]),
+          map((response: { data: IOperation[]; pagination: IPagination }) => loadOperationsSuccess(response)),
           catchError(errorHandler({ callbacks: loadOperationsFail })),
         );
     }),
   );
 
-export const loadGiftWithdrawalOnDateRangeEpic: Epic = (
-  action$,
-  state$,
-  { apiService, messagesService: { showGlobalMessage } },
-) =>
+export const fetchBalanceEpic: Epic = (action$, state$, { apiService, messagesService: { showGlobalMessage } }) =>
   action$.pipe(
-    ofType(loadGiftWithdrawalOnDateRange.pending),
+    ofType(fetchBalance.pending),
     switchMap(() => {
-      const { id: orgId } = getOrg(state$.value);
-      const { accountId } = getSelectedAccount(state$.value);
-      const { from, to } = getDateRange(state$.value);
-      const operationTypes = getSelectedTypes(state$.value);
-      const params: Record<string, string | boolean | number | qs.Stringifiable[]> = {};
-      const { perPage, currentPage } = getPagination(state$.value);
-      if (from) {
-        params['filters[operatedAt][from]'] = from;
-        params['filters[operated][fromIncluded]'] = true;
-      }
-      if (to) {
-        params['filters[operatedAt][to]]'] = to;
-        params['filters[operated][toIncluded]'] = true;
-      }
-      params['operationTypes[]'] = operationTypes;
-      params.perPage = perPage;
-      params.page = currentPage;
+      const { accountId, balanceAccountId, params } = getQueryParamsFromState({
+        state$,
+        dateRangeFieldNames: {
+          fromName: 'filters[dateRange]',
+          toName: 'filters[dateRange]',
+        },
+      });
+
+      const requestParams = omit(
+        ['operationTypes[]', 'filters[dateRange][toIncluded]', 'filters[dateRange][fromIncluded]', 'perPage', 'page'],
+        params,
+      );
+      const resourceAccountId = balanceAccountId || accountId;
 
       return apiService
-        .get(
-          `/api/v1/reporting/resources/billing/${orgId}/${accountId}/gift-withdrawals?${qs.stringify(params)}`,
-          {},
-          true,
-        )
+        .get(`/api/v1/reporting/resources/${resourceAccountId}/balance?${qs.stringify(requestParams)}`, {}, true)
         .pipe(
-          map((response: IListResponseWithPagination<TGiftWithdrawalTotal>) =>
-            loadGiftWithdrawalOnDateRange.fulfilled(response),
-          ),
+          map((response: IResponse<TBalance>) => fetchBalance.fulfilled(response.data)),
           catchError(
             handleError(
-              handlers.handleAnyError(loadGiftWithdrawalOnDateRange.rejected()),
+              handlers.handleAnyError(fetchBalance.rejected()),
               handlers.handleErrorsAsText((text: string) => showGlobalMessage({ text, type: MessageType.Error })),
             ),
           ),
@@ -104,7 +71,11 @@ export const loadGiftWithdrawalOnDateRangeEpic: Epic = (
     }),
   );
 
-export const setDateRangeEpic: Epic = action$ => action$.pipe(ofType(setDateRange), mapTo(loadOperationsRequest()));
+export const setDateRangeEpic: Epic = action$ =>
+  action$.pipe(
+    ofType(setDateRange),
+    mergeMap(() => [loadOperationsRequest(), fetchBalance.pending()]),
+  );
 
 export const setSelectedTypesEpic: Epic = action$ =>
   action$.pipe(ofType(setSelectedTypes), mapTo(loadOperationsRequest()));
@@ -114,7 +85,7 @@ export const loadTypesEpic: Epic = (action$, state$, { apiService, messagesServi
     ofType(loadTypesRequest),
     switchMap(() =>
       apiService.get('/api/v1/reporting/resources/deposits/operations/category-types', {}, true).pipe(
-        flatMap((response: IListResponse<IOperationType>) => [loadTypesSuccess(response.data)]),
+        map((response: IListResponse<IOperationType>) => loadTypesSuccess(response.data)),
         catchError(errorHandler({ callbacks: loadTypesFail })),
       ),
     ),
@@ -129,22 +100,8 @@ export const depositLedgerOperationsReportEpic: Epic = (
 ) =>
   action$.pipe(
     ofType(downloadDepositLedgerReportRequest),
-    switchMap(({ payload }) => {
-      const { accountId } = getSelectedAccount(state$.value);
-      const dateRange = getDateRange(state$.value);
-      const operationTypes = getSelectedTypes(state$.value);
-      const params: Record<string, string | boolean | number | qs.Stringifiable[]> = {};
-      if (dateRange.from) {
-        params['dateRange[from]'] = dateRange.from;
-        params['dateRange[fromIncluded]'] = true;
-      }
-      if (dateRange.to) {
-        params['dateRange[to]'] = dateRange.to;
-        params['dateRange[toIncluded]'] = true;
-      }
-      params['operationTypes[]'] = operationTypes;
-      params.perPage = payload.total;
-      params.page = payload.currentPage;
+    switchMap(() => {
+      const { accountId, params } = getQueryParamsFromState({ state$, isFullList: true });
 
       return apiService
         .getFile(`/api/v1/reporting/resources/export-deposit-ledger/${accountId}/operations?${qs.stringify(params)}`)
@@ -170,5 +127,5 @@ export default [
   loadTypesEpic,
   setPageEpic,
   depositLedgerOperationsReportEpic,
-  loadGiftWithdrawalOnDateRangeEpic,
+  fetchBalanceEpic,
 ];

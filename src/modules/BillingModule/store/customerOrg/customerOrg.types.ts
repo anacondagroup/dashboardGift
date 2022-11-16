@@ -1,4 +1,4 @@
-import { IDeposit, IGroupInfo, ITeamInfo } from '../../types';
+import { IDeposit, IGroupInfo, ITeamInfo, TGroupId } from '../../types';
 
 export interface IOrgInfo {
   id: number;
@@ -15,26 +15,30 @@ export interface ICustomerStats {
   teams: number;
 }
 
+export type TGroupTeam = {
+  teamInfo: ITeamInfo;
+  deposits: IDeposit[];
+};
+
+export type TGroup = {
+  groupInfo: IGroupInfo;
+  deposits: IDeposit[];
+  teams: TGroupTeam[];
+};
+
 export interface IOrgHierarchy {
   depositsTotal: IDeposit;
   remainingTeamsTotal: IDeposit;
-  groupGrouped: {
-    groupInfo: IGroupInfo;
-    deposits: IDeposit[];
-    teams: {
-      teamInfo: ITeamInfo;
-      deposits: IDeposit[];
-    }[];
-  }[];
-  ungrouped: {
-    teamInfo: ITeamInfo;
-    deposits: IDeposit[];
-  }[];
+  groupGrouped: TGroup[];
+  ungrouped: TGroupTeam[];
 }
 
-export interface ISelectedAccount {
-  id: string | number;
+export type TGroupTeamNode = {
+  id: TGroupId | number;
+  hierarchyId: string;
   name: string;
-  accountId: string;
-  level: number | null;
-}
+  deposit: IDeposit;
+  balanceAccountId?: string;
+  level: number;
+  isUngrouped?: boolean;
+};

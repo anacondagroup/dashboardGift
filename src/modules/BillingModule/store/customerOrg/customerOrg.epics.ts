@@ -1,12 +1,12 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
-import { catchError, flatMap, mapTo, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, flatMap, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { IListResponse, IResponse, handleError, handlers } from '@alycecom/services';
 import qs from 'query-string';
 
 import { IAccountResources, IGroupInfo, IOperation, ITeamInfo } from '../../types';
 import { acceptedInvitesRequest, sentInvitesRequest } from '../breakdowns';
-import { loadOperationsRequest } from '../operations';
+import { fetchBalance, loadOperationsRequest } from '../operations';
 
 import {
   customerOrgFailure,
@@ -30,7 +30,7 @@ import {
   orgTeamsFailure,
   orgTeamsRequest,
   orgTeamsSuccess,
-  setSelectedAccount,
+  setSelectedHierarchyId,
   setTeamsFilter,
 } from './customerOrg.actions';
 import { ICustomerStats, IOrgHierarchy, IOrgInfo } from './customerOrg.types';
@@ -104,19 +104,26 @@ export const loadResourcesEpic: Epic = (action$, state$, { apiService, messagesS
     }),
   );
 
-export const loadHierachyEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
+export const loadHierarchyEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
   action$.pipe(
     ofType(loadHierarchyRequest),
     switchMap(() =>
       apiService.get(`/api/v1/reporting/resources/hierarchy-with-deposits-group-grouped`, {}, true).pipe(
-        flatMap((response: IResponse<IOrgHierarchy>) => [loadHierarchySuccess(response.data), loadOperationsRequest()]),
+        flatMap((response: IResponse<IOrgHierarchy>) => [
+          loadHierarchySuccess(response.data),
+          loadOperationsRequest(),
+          fetchBalance.pending(),
+        ]),
         catchError(errorHandler({ callbacks: loadHierarchyFail })),
       ),
     ),
   );
 
 export const setSelectedAccountEpic: Epic = action$ =>
-  action$.pipe(ofType(setSelectedAccount), mapTo(loadOperationsRequest()));
+  action$.pipe(
+    ofType(setSelectedHierarchyId),
+    mergeMap(() => [loadOperationsRequest(), fetchBalance.pending()]),
+  );
 
 const loadLastInvoiceEpic: Epic = (action$, state$, { apiService }) =>
   action$.pipe(
@@ -136,7 +143,7 @@ export default [
   changeTeamsFilterEpic,
   loadStatsEpic,
   loadResourcesEpic,
-  loadHierachyEpic,
+  loadHierarchyEpic,
   setSelectedAccountEpic,
   loadLastInvoiceEpic,
 ];

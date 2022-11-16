@@ -3,33 +3,35 @@ import moment from 'moment';
 
 import { StateStatus } from '../../../../store/stateStatuses.types';
 import { IOperation } from '../../types';
-import { setSelectedAccount } from '../customerOrg/customerOrg.actions';
-import { OperationType } from '../../constants/operations.constants';
+import { setSelectedHierarchyId } from '../customerOrg/customerOrg.actions';
 
 import { IDateRange, IOperationType, IPagination } from './operations.types';
 import {
-  loadGiftWithdrawalOnDateRange,
+  downloadDepositLedgerReportFail,
+  downloadDepositLedgerReportRequest,
+  downloadDepositLedgerReportSuccess,
+  fetchBalance,
   loadOperationsFail,
   loadOperationsRequest,
   loadOperationsSuccess,
   loadTypesFail,
   loadTypesRequest,
   loadTypesSuccess,
+  setCurrentPage,
   setDateRange,
   setSelectedTypes,
-  setCurrentPage,
-  downloadDepositLedgerReportRequest,
-  downloadDepositLedgerReportSuccess,
-  downloadDepositLedgerReportFail,
 } from './operations.actions';
 
 export interface IOperationsState {
   operations: {
     isLoading: boolean;
-    totalWithdrawalsOnPage: number;
-    totalWithdrawalOnDateRange: number;
     list: IOperation[];
     pagination: IPagination;
+  };
+  balance: {
+    status: StateStatus;
+    amountAtTheStart: number;
+    amountAtTheEnd: number;
   };
   dateRangeFilter: IDateRange;
   typesFilter: {
@@ -43,8 +45,6 @@ export interface IOperationsState {
 export const initialState: IOperationsState = {
   operations: {
     isLoading: false,
-    totalWithdrawalsOnPage: 0,
-    totalWithdrawalOnDateRange: 0,
     list: [],
     pagination: {
       total: 0,
@@ -52,6 +52,11 @@ export const initialState: IOperationsState = {
       currentPage: 1,
       totalPages: 0,
     },
+  },
+  balance: {
+    status: StateStatus.Idle,
+    amountAtTheStart: 0,
+    amountAtTheEnd: 0,
   },
   dateRangeFilter: {
     from: moment().utc().startOf('month').format('YYYY-MM-DD'),
@@ -73,24 +78,15 @@ export const operations = createReducer({}, initialState)
       isLoading: true,
     },
   }))
-  .on(loadOperationsSuccess, (state, payload) => {
-    const totalWithdrawalsOnPage = payload.data.reduce((total, operation) => {
-      if (operation.typeId === OperationType.GiftingWithdrawal) {
-        return (total * 100 + Math.abs(operation.amount.amount) * 100) / 100;
-      }
-      return total;
-    }, 0);
-    return {
-      ...state,
-      operations: {
-        ...state.operations,
-        isLoading: false,
-        list: payload.data,
-        pagination: payload.pagination,
-        totalWithdrawalsOnPage,
-      },
-    };
-  })
+  .on(loadOperationsSuccess, (state, payload) => ({
+    ...state,
+    operations: {
+      ...state.operations,
+      isLoading: false,
+      list: payload.data,
+      pagination: payload.pagination,
+    },
+  }))
   .on(loadOperationsFail, state => ({
     ...state,
     operations: {
@@ -98,30 +94,26 @@ export const operations = createReducer({}, initialState)
       isLoading: false,
     },
   }))
-  .on(loadGiftWithdrawalOnDateRange.pending, state => ({
+  .on(fetchBalance.pending, state => ({
     ...state,
-    operations: {
-      ...state.operations,
-      isLoading: true,
+    balance: {
+      ...state.balance,
+      status: StateStatus.Pending,
     },
   }))
-  .on(loadGiftWithdrawalOnDateRange.fulfilled, (state, payload) => ({
+  .on(fetchBalance.fulfilled, (state, { amountAtTheStart, amountAtTheEnd }) => ({
     ...state,
-    operations: {
-      ...state.operations,
-      isLoading: false,
-      totalWithdrawalOnDateRange:
-        payload?.data[0]?.giftingWithdrawalTotal?.reduce(
-          (acc, accountInfo) => (acc * 100 + Math.abs(accountInfo.money.amount) * 100) / 100,
-          0,
-        ) || 0,
+    balance: {
+      status: StateStatus.Fulfilled,
+      amountAtTheStart,
+      amountAtTheEnd,
     },
   }))
-  .on(loadGiftWithdrawalOnDateRange.rejected, state => ({
+  .on(fetchBalance.rejected, state => ({
     ...state,
-    operations: {
-      ...state.operations,
-      isLoading: false,
+    balance: {
+      ...state.balance,
+      status: StateStatus.Rejected,
     },
   }))
   .on(setDateRange, (state, payload) => ({
@@ -167,7 +159,7 @@ export const operations = createReducer({}, initialState)
       isLoading: false,
     },
   }))
-  .on(setSelectedAccount, state => ({
+  .on(setSelectedHierarchyId, state => ({
     ...state,
     operations: {
       ...state.operations,
