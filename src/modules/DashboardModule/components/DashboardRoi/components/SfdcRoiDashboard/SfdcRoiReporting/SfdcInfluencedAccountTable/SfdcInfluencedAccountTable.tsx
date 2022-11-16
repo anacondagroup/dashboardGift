@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { TInfluencedOpportunities, useGetInfluencedOpportunitiesQuery } from '@alycecom/services';
+import { RoiReportTypes, TInfluencedOpportunities, useGetInfluencedOpportunitiesQuery } from '@alycecom/services';
 import { Theme } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 
 import RoiTable, { IRoiTableProps } from '../../../Shared/RoiTable/RoiTable';
-import { RoiTableClickableRow, TRoiColumn } from '../../../Shared';
+import { RoiTableClickableRow, TRoiColumn, RoiSendReportButton } from '../../../Shared';
 import { NumberFormattingOptions, toDateFromNow, toFormattedPrice, toRoi } from '../../../../utils';
 import { useRoiTable } from '../../../../hooks';
 import { ROI_ROUTES } from '../../../../routePaths';
@@ -152,6 +152,9 @@ const SfdcInfluencedAccountTable = (): JSX.Element => {
           onRowSelected={handleAccountSelected}
         />
       )}
+      headerControls={
+        <RoiSendReportButton reportType={RoiReportTypes.AccountGifts} disabled={isFetching} filters={filters} />
+      }
       onOffsetChange={handleOffsetChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onSortChange={handleSortChange}

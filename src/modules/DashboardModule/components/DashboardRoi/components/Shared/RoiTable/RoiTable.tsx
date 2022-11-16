@@ -18,6 +18,9 @@ const styles = {
     padding: 3,
   },
   tableHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     paddingBottom: 2,
     fontSize: '24px',
   },
@@ -53,6 +56,7 @@ export interface IRoiTableProps<RowItem> extends IRoiTableHeadProps<RowItem> {
   onOffsetChange: (newPage: number) => void;
   onRowsPerPageChange: (newLimit: RowLimit) => void;
   toolbarProps?: IRoiTableToolsProps<RowItem>;
+  headerControls?: React.ReactElement;
 }
 
 const RoiTable = <RowItem,>({
@@ -73,6 +77,7 @@ const RoiTable = <RowItem,>({
   onRowsPerPageChange,
   onSortChange,
   toolbarProps,
+  headerControls,
 }: IRoiTableProps<RowItem>): JSX.Element => {
   const fakeItems = useMemo(() => generateFakeItems(limit), [limit]);
   const noData = rows.length === 0 && isLoading === false;
@@ -90,7 +95,9 @@ const RoiTable = <RowItem,>({
         parentTitle={parentTitle}
         isLoading={isLoading}
         onParentClick={onParentClick}
-      />
+      >
+        {headerControls}
+      </RoiTableTitle>
 
       {toolbarProps && <RoiTableTools {...toolbarProps} />}
 
