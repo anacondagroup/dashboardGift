@@ -47,9 +47,11 @@ const RoiTablePagination = ({
     event => {
       const value = parseInt(event.target.value, 10);
       setCurrentLimit(value);
+      setCurrentOffset(0);
+      onOffsetChange(0);
       onLimitChange(value);
     },
-    [onLimitChange],
+    [onLimitChange, onOffsetChange],
   );
 
   return (
