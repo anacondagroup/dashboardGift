@@ -67,7 +67,7 @@ export const useRoiTable = <BreakdownItem>(
 
   const handleRowsPerPageChange = useCallback<THandleRowsPerPageChange<BreakdownItem>>(
     newLimit => {
-      setFilters(currentFilters => ({ ...currentFilters, limit: newLimit, offset: 0 }));
+      setFilters(currentFilters => ({ ...currentFilters, limit: newLimit }));
     },
     [setFilters],
   );

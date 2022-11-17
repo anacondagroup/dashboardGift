@@ -160,23 +160,6 @@ describe('useRoiTable', () => {
       });
     });
 
-    it('should reset offset if limit has been changed', () => {
-      const { result } = setup();
-
-      act(() => {
-        result.current.handleOffsetChange(20);
-        result.current.handleRowsPerPageChange(RowLimit.Limit100);
-      });
-
-      runAllFakeTimers();
-
-      expect(result.current.filters).toStrictEqual({
-        ...defaultGlobalFilters,
-        ...defaultFilters,
-        limit: RowLimit.Limit100,
-      });
-    });
-
     it('should reset offset if table sort has been changed', () => {
       const { result } = setup();
 
