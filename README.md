@@ -1,86 +1,144 @@
-This project was bootstrapped with [Create React Dashboard](https://github.com/facebook/create-react-app).
+# Dashboard-spa
 
-## Backend setup
-create file .env.development.local
-- REACT_APP_PROXY your local backend host.
-- REACT_APP_API_HOST your local frontend host, default is http://localhost:3000 if you want to setup without proxy leave it as REACT_APP_PROXY
-- REACT_APP_DASHBOARD_HOST the same as REACT_APP_API_HOST but for different purpose
+---
 
-## Available Scripts
+## Table of contents
 
-In the project directory, you can run:
+| #   | Title                                                         |
+|-----|---------------------------------------------------------------|
+| 1   | [Prepare your environment](#prepare-your-environment)         |
+| 2   | [Connect to remote backend](#connect-to-remote-backend)       |
+| 3   | [Connect to local backend](#connect-to-local-backend)         |
+| 4   | [Local code validation](#local-code-validation)               |
+| 5   | [How to configure yalc](#how-to-configure-yalc)               |
+| 6   | [How to debug analytic events](#how-to-debug-analytic-events) |
 
-### `npm start`
+## Prepare your environment
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Docker Login
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+*Note: it's a one-time operation for all projects. No need to do it more than once*
 
-### `npm test`
+Prepare gitlab access token for you account with the following READ-ONLY permissions: `api, read_user, read_api, read_repository, read_registry`.  
+https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*Make sure to copy the access token value to your clipboard.*
 
-### `npm run build`
+Then run, using the acquired token
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## Development doc
-
-### Libraries
-- view — [react](https://reactjs.org/)
-- state — [redux](https://redux.js.org/)
-- side-effects — [redux-observable](https://redux-observable.js.org/)
-- styling — [material-ui](https://material-ui.com/)
-
-### Containers and components
-Containers — smart components which connected to redux state, implements side effects, contains routing. No styling.
-Components — implement layout, styling. No side effects or redux state connection.
-
-### Redux and rxjs
-Redux for state structure rxjs for actions flow management. Keep data in state, logic in epics. Each side effect should be injected as dependency in root epic.
-
-### Tests
-- component example — [DashboardHeader](./src/components/Dashboard/tests/dashboardHeader.spec.js)
-- container example — [Dashboard](src/modules/Dashboard/dashboard.spec.js)
-- epic example — [Auth](./src/store/auth/tests/auth.epic.spec.js)
-- reducer example — [Auth request](./src/store/auth/auth-request/tests/auth-request.reducer.spec.js)
-
-## CSS and styling
-Main theme is here — [Alyce theme](./src/styles/alyce-theme.js)
-Use vars from global theme. More about theme [here](https://material-ui.com/customization/themes/)
-Do not write your own base components or classes, everything defined in material UI, for example [Typography](https://material-ui.com/style/typography/)
-
-```
-const styles = theme => ({
-  root: {
-    padding: theme.spacing.unit,
-    background: theme.palette.primary.main,
-  }
-});
-
-const Header = ({ title, classes }) => (
-    <Paper className={classes.root}>
-        <Typography variant="h1">
-            { title }
-        </Typography>
-    </Paper>
-);
-
-export default withStyles(styles)(Header)
-
+```bash
+docker login https://docker.alycedev.com -u <email> -p <PersonalAccessToken>
 ```
 
-## Learn More
+### Related projects
 
-You can learn more in the [Create React Dashboard documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+It is required to have these projects deployed locally:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- https://gitlab.alycedev.com/alycecom/frontend-packages
+- https://gitlab.alycedev.com/alycecom/alyce-app
+- https://gitlab.alycedev.com/alycecom/api-gateway-svc
+- https://gitlab.alycedev.com/alycecom/contacts-svc
+- https://gitlab.alycedev.com/alycecom/traefik-svc
+
+Please follow the corresponding projects README for more information
+
+### Hosts
+
+Add the following hosts:
+
+- *For Linux/MacOS: edit the file in /etc/hosts*
+- *For Windows: edit the file in /Windows/System32/drivers/etc/hosts*
+
+```
+# dashboard-spa
+127.0.0.1   dashboard.alyce.test
+```
+
+### Running application
+
+#### Using docker environment
+
+```shell
+make rebuild
+```
+
+Then open `http://dashboard.alyce.test` in your browser
+
+#### Using local environment
+
+Requirements
+
+- [x] `Node.js` 16.13.0 LTS
+- [x] `npm@6.9.0` or later
+- [x] `yarn@1.21.1` or later
+- [x] `lerna` globally installed
+- [ ] `yalc` globally (optional) to work with SPA and packages on your local machine
+- [ ] `concurrently` globally (optional) to work with SPA and packages on your local machine
+- [ ] `nodemon` globally (optional) to work with SPA and packages on your local machine
+
+```shell
+sudo npm install -g npm@6.9.0 lerna yarn
+```
+
+```shell
+make env
+yarn install
+yarn start
+```
+
+Then open `http://dashboard.alyce.test:3000` in your browser.
+
+## Connect to remote backend
+
+### Setup .env variables
+
+Replace urls in .env to your instance
+
+e.g. your instance is - `qa.alycedev.com`,
+and following is how .env should be updated:
+```dotenv
+REACT_APP_API_HOST=https://qa.alycedev.com
+REACT_APP_PROXY=https://qa.alycedev.com
+```
+
+### Allow cors
+- Open alyce admin on your instance (e.g - https://qa.alycedev.com/admin)
+- Navigate to Admin > Setting
+- Add `http://dashboard.alyce.test:3000` in CORS ALLOWED ORIGINS field in API section
+- At this point your local frontend can be connected to a remote instance
+
+## Connect to local backend
+
+### Setup .env variables
+
+Replace urls in .env to the local backend urls
+
+```shell
+REACT_APP_API_HOST=http://alyce.test
+REACT_APP_PROXY=http://alyce.test
+```
+
+Start dashboard application
+
+```shell
+yarn install
+yarn start
+```
+
+### Open dashboard application with local backend
+- Copy gift link from remote instance alyce admin part
+- Paste this link in the browser url (it should be done in incognito mode or in the another browser)
+
+## Local code validation
+
+Run `make qa`. It will run the following commands sequentially:
+
+- yarn lint:js
+- yarn prettier:check
+- yarn test --watchAll=false
+
+## How to configure yalc
+[Read this guide to know how to do it](./docs/guides/how_to_configure_yalc.md).
+
+## How to debug analytic events
+[Read this guide to know how to do it](./docs/guides/how_to_debug_analytics_events.md).

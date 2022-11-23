@@ -1,5 +1,7 @@
 services:
   node:
+    environment:
+      - APP_DOMAIN=http://dashboard.alyce.test
     build:
       context: .
       dockerfile: .docker/node/Dockerfile
