@@ -1,4 +1,4 @@
-# Font-end packages documentation
+# Analytic events
 
 ## Table of Contents
 1. [Analytics](#analytics-segment)
@@ -115,10 +115,10 @@ const onSelectProduct = useCallback(
 1. Open [app.segment.com](https://app.segment.com/)
 and click on `Alyce` workspace
 2. Chose `Javascript` connection
-    ![Choose connection](./analytics/choose_connection.png)
+    ![Choose connection](../analytics/choose_connection.png)
 3. Choose a source where you want to check an event
-    ![Choose source](./analytics/choose_source.png)
+    ![Choose source](../analytics/choose_source.png)
 4. Proceed to `settings` and make sure the source enabled
-    ![Enable source](./analytics/enable_source.png)
+    ![Enable source](../analytics/enable_source.png)
 5. Proceed to `debug`.
-    ![Debug](./analytics/debugger.png)
+    ![Debug](../analytics/debugger.png)
