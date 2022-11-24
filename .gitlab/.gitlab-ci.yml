@@ -135,17 +135,6 @@ DeployQA:
     variables:
       - $CI_COMMIT_REF_NAME
 
-DeployStaging:
-  extends: .DeployStagingDeployDistribLib:Template
-  stage: Deploy
-  variables:
-    CLOUDFLARE_PURGE_CACHE: "1"
-    ROLLBAR_DISABLED: "1"
-  secrets:
-    CLOUDFLARE_API_TOKEN:
-      vault: "${CI_PROJECT_ROOT_NAMESPACE}/global/CLOUDFLARE_API_TOKEN@secrets-gitlab-projects-global" # CF sa-devops account, token sa-cache-purge
-      file: false
-
 DeploySandbox:
   extends: .DeploySandboxDeployDistribLib:Template
   stage: Deploy
