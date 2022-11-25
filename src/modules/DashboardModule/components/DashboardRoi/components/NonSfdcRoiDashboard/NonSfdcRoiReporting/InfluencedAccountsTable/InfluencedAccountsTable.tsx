@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
-import { RoiReportTypes, TInfluencedAccounts, useGetInfluencedAccountsQuery } from '@alycecom/services';
+import { RoiReportTypes, TInfluencedAccounts } from '@alycecom/services';
 import { useHistory } from 'react-router-dom';
 
-import { RoiTable, RoiTableClickableRow, TRoiColumn, RoiSendReportButton } from '../../../Shared';
-import { IRoiTableProps } from '../../../Shared/RoiTable/RoiTable';
+import { RoiTable, RoiTableClickableRow, TRoiColumn, RoiSendReportButton, IRoiTableProps } from '../../../Shared';
 import { useRoiTable } from '../../../../hooks';
 import { NumberFormattingOptions, toDateFromNow, toFormattedPrice } from '../../../../utils';
 import { ROI_ROUTES } from '../../../../routePaths';
+import { useGetInfluencedAccounts } from '../../../../hooks/useGetInfluencedAccounts';
 
 const columns: TRoiColumn<TInfluencedAccounts>[] = [
   {
@@ -63,17 +63,15 @@ const InfluencedAccountsTable = (): JSX.Element => {
   const { push } = useHistory();
 
   const {
-    filters: globalAndTableFilters,
+    filters,
     handleOffsetChange,
     handleRowsPerPageChange,
     handleSortChange,
     handleTableFiltersChange,
   } = useRoiTable<TInfluencedAccounts>();
-  const { field, direction, limit, offset, ...filters } = globalAndTableFilters;
-  const sort = { field, direction };
-  const pagination = { limit, offset };
+  const { field, direction, limit, offset } = filters;
 
-  const { data, currentData, isFetching } = useGetInfluencedAccountsQuery({ ...filters, sort, pagination });
+  const { data, currentData, isFetching, isWaitingForFilters } = useGetInfluencedAccounts(filters);
   const influencedAccounts = currentData?.data || [];
   const total = currentData?.pagination?.total || data?.pagination?.total || 0;
   const getRowId = useCallback<IRoiTableProps<typeof influencedAccounts[number]>['getRowId']>(
@@ -92,7 +90,7 @@ const InfluencedAccountsTable = (): JSX.Element => {
       title="Influenced Accounts"
       rows={influencedAccounts}
       columns={columns}
-      isLoading={isFetching}
+      isLoading={isWaitingForFilters || isFetching}
       total={total}
       limit={limit}
       offset={offset}

@@ -41,9 +41,12 @@ export type TRenderRowProps<RowItem> = {
   getRowId: (rowData: RowItem) => number | string;
 };
 
+export type TRenderTableHeaderProps = {};
+
 export interface IRoiTableProps<RowItem> extends IRoiTableHeadProps<RowItem> {
-  title: string;
-  parentTitle?: string;
+  title?: string;
+  header?: React.ReactElement;
+  renderTableHeader?: (props: TRenderTableHeaderProps) => JSX.Element;
   columns: TRoiColumn<RowItem>[];
   rows: RowItem[];
   isLoading?: boolean;
@@ -52,7 +55,6 @@ export interface IRoiTableProps<RowItem> extends IRoiTableHeadProps<RowItem> {
   offset: number;
   getRowId: (rowData: RowItem) => number | string;
   renderRow?: (props: TRenderRowProps<RowItem>) => JSX.Element;
-  onParentClick?: () => void;
   onOffsetChange: (newPage: number) => void;
   onRowsPerPageChange: (newLimit: RowLimit) => void;
   toolbarProps?: IRoiTableToolsProps<RowItem>;
@@ -60,8 +62,8 @@ export interface IRoiTableProps<RowItem> extends IRoiTableHeadProps<RowItem> {
 }
 
 const RoiTable = <RowItem,>({
-  title,
-  parentTitle,
+  title = '',
+  header,
   columns,
   rows,
   isLoading = false,
@@ -72,7 +74,6 @@ const RoiTable = <RowItem,>({
   direction,
   getRowId,
   renderRow,
-  onParentClick,
   onOffsetChange,
   onRowsPerPageChange,
   onSortChange,
@@ -89,15 +90,13 @@ const RoiTable = <RowItem,>({
 
   return (
     <Paper sx={styles.paper}>
-      <RoiTableTitle
-        title={title}
-        total={total}
-        parentTitle={parentTitle}
-        isLoading={isLoading}
-        onParentClick={onParentClick}
-      >
-        {headerControls}
-      </RoiTableTitle>
+      {header ? (
+        <Box>{header}</Box>
+      ) : (
+        <RoiTableTitle title={title} total={total} isLoading={isLoading}>
+          {headerControls}
+        </RoiTableTitle>
+      )}
 
       {toolbarProps && <RoiTableTools {...toolbarProps} />}
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Skeleton, Theme } from '@mui/material';
+import { Box, Skeleton } from '@mui/material';
 
 import { StyledRoiSectionTitle } from '../Styled';
 
@@ -11,27 +11,13 @@ const styles = {
     width: '100%',
   },
   tableHeader: {
-    paddingBottom: 2,
-    fontSize: '24px',
-  },
-  breadcrumbs: {
-    display: 'flex',
-    alignItems: 'center',
+    pb: 2,
   },
   title: {
-    fontSize: '24px',
     display: 'flex',
     alignItems: 'center',
+    fontSize: '24px',
     ml: 1,
-  },
-  clickableTitle: {
-    color: ({ palette }: Theme) => palette.link.main,
-    cursor: 'pointer',
-    mr: 1,
-
-    '&:hover': {
-      textDecoration: 'underline',
-    },
   },
   totalPlaceholder: {
     display: 'inline-block',
@@ -45,32 +31,14 @@ const styles = {
 export interface IRoiTableTitleProps {
   title: string;
   total?: number;
-  parentTitle?: string;
   isLoading: boolean;
-  onParentClick?: () => void;
   children?: React.ReactElement;
 }
 
-const RoiTableTitle = ({
-  title,
-  total,
-  parentTitle,
-  isLoading,
-  onParentClick = () => {},
-  children,
-}: IRoiTableTitleProps): JSX.Element => (
+const RoiTableTitle = ({ title, total, isLoading, children }: IRoiTableTitleProps): JSX.Element => (
   <StyledRoiSectionTitle sx={styles.tableHeader}>
     <Box sx={styles.wrapper}>
-      {isLoading ? (
-        <Skeleton sx={styles.totalPlaceholder} />
-      ) : (
-        <Box sx={styles.breadcrumbs}>
-          <Box sx={[styles.title, !!parentTitle && styles.clickableTitle]} onClick={() => onParentClick()}>
-            {`${total} ${parentTitle || title}`}
-          </Box>
-          {parentTitle && <Box sx={styles.title}>{`> ${title}`}</Box>}
-        </Box>
-      )}
+      {isLoading ? <Skeleton sx={styles.totalPlaceholder} /> : <Box sx={styles.title}>{`${total} ${title}`}</Box>}
       {children}
     </Box>
   </StyledRoiSectionTitle>
