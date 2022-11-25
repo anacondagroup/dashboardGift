@@ -15,37 +15,45 @@ const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
   {
     label: 'Contact Name',
     field: 'contactName',
+    isSortable: true,
   },
   {
     label: 'Gift',
     field: 'giftProduct',
+    isSortable: true,
   },
   {
     label: 'Campaign',
     field: 'campaignName',
+    isSortable: true,
   },
   {
     label: 'Sent By(As)',
     field: 'sentAs',
+    isSortable: true,
   },
   {
     label: 'Sent On',
     field: 'sentAt',
+    isSortable: true,
     getFormattedValue: data => moment(data.sentAt).format(DISPLAY_DATE_FORMAT),
   },
   {
     label: 'Accepted On',
     field: 'claimedAt',
-    getFormattedValue: data => moment(data.sentAt).format(DISPLAY_DATE_FORMAT),
+    isSortable: true,
+    getFormattedValue: data => moment(data.claimedAt).format(DISPLAY_DATE_FORMAT),
   },
   {
     label: 'Meeting Booked',
     field: 'meetingBooked',
+    isSortable: true,
     getFormattedValue: data => (data.meetingBooked ? 'Yes' : 'No'),
   },
   {
     label: 'Gift Status',
     field: 'state',
+    isSortable: true,
   },
 ];
 
