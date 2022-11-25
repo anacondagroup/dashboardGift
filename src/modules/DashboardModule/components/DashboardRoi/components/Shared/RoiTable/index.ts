@@ -1,4 +1,5 @@
 export { default as RoiTable } from './RoiTable';
+export type { IRoiTableProps, TRenderRowProps, TRenderTableHeaderProps } from './RoiTable';
 export { default as RoiTableCell } from './RoiTableCell';
 export { default as RoiTableNoData } from './RoiTableNoData';
 export { default as RoiTableRow, styles as defaultRowStyles } from './RoiTableRow';

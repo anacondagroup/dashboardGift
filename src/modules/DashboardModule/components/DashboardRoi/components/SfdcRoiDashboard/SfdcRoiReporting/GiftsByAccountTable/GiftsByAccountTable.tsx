@@ -1,15 +1,15 @@
 import React, { useCallback } from 'react';
-import { TAcceptedGiftByEmailDomain, useGetAcceptedGiftsByAccountQuery } from '@alycecom/services';
+import { TAcceptedGiftByEmailDomain } from '@alycecom/services';
 import { DISPLAY_DATE_FORMAT } from '@alycecom/ui';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import moment from 'moment';
 
-import type { IRoiTableProps } from '../../../Shared/RoiTable/RoiTable';
 import RoiTable from '../../../Shared/RoiTable/RoiTable';
-import { useRoiTable } from '../../../../hooks';
-import type { TRoiColumn } from '../../../Shared';
 import { ROI_ROUTES } from '../../../../routePaths';
-import { GiftsByAccountTableRow } from '../../../Shared';
+import { GiftsByAccountTableRow, GiftsByAccountTableTitle, IRoiTableProps, TRoiColumn } from '../../../Shared';
+import { useGetAcceptedGiftsByAccount } from '../../../../hooks/useGetAcceptedGiftsByAccount';
+import { useGetInfluencedOpportunities } from '../../../../hooks/useGetInfluencedOpportunities';
+import { useRoiTable } from '../../../../hooks';
 
 const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
   {
@@ -59,16 +59,22 @@ const GiftsByAccountTable = (): JSX.Element => {
     TAcceptedGiftByEmailDomain
   >();
   const { field, direction, limit, offset, ...filters } = globalAndTableFilters;
-  const sort = { field, direction };
-  const pagination = { limit, offset };
 
-  const { data, currentData, isFetching } = useGetAcceptedGiftsByAccountQuery({
-    filters: { ...filters, sort, pagination },
+  const { data: influencedOpportunity, isFetching: isInfluencedOpportunitiesLoading } = useGetInfluencedOpportunities({
+    ...filters,
+    limit: 10,
+    offset: 0,
+  });
+  const influencedOpportunityNumber = influencedOpportunity?.pagination?.total || 0;
+
+  const { data, currentData, isFetching, isWaitingForFilters } = useGetAcceptedGiftsByAccount({
     accountId,
+    filters: globalAndTableFilters,
   });
   const influencedOpportunities = currentData?.data || [];
   const accountName = currentData?.account.name || '';
   const total = currentData?.pagination?.total || data?.pagination?.total || 0;
+  const isLoading = isFetching || isWaitingForFilters || isInfluencedOpportunitiesLoading;
 
   const getRowId = useCallback<IRoiTableProps<TAcceptedGiftByEmailDomain>['getRowId']>(row => row.giftId, []);
 
@@ -78,11 +84,18 @@ const GiftsByAccountTable = (): JSX.Element => {
 
   return (
     <RoiTable
-      title={accountName}
-      parentTitle="Influenced Accounts"
+      header={
+        <GiftsByAccountTableTitle
+          total={influencedOpportunityNumber}
+          parentTitle="Influenced Accounts"
+          title={accountName}
+          isLoading={isLoading}
+          onParentClick={handleParentClick}
+        />
+      }
       rows={influencedOpportunities}
       columns={columns}
-      isLoading={isFetching}
+      isLoading={isWaitingForFilters || isFetching}
       total={total}
       limit={limit}
       offset={offset}
@@ -92,7 +105,6 @@ const GiftsByAccountTable = (): JSX.Element => {
       renderRow={({ data: rowData }) => (
         <GiftsByAccountTableRow key={`row-${getRowId(rowData)}`} data={rowData} columns={columns} getRowId={getRowId} />
       )}
-      onParentClick={handleParentClick}
       onOffsetChange={handleOffsetChange}
       onRowsPerPageChange={handleRowsPerPageChange}
       onSortChange={handleSortChange}

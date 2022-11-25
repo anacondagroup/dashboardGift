@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { RoiReportTypes, TInfluencedOpportunities, useGetInfluencedOpportunitiesQuery } from '@alycecom/services';
+import { RoiReportTypes, TInfluencedOpportunities } from '@alycecom/services';
 import { Theme } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 
@@ -8,6 +8,7 @@ import { RoiTableClickableRow, TRoiColumn, RoiSendReportButton } from '../../../
 import { NumberFormattingOptions, toDateFromNow, toFormattedPrice, toRoi } from '../../../../utils';
 import { useRoiTable } from '../../../../hooks';
 import { ROI_ROUTES } from '../../../../routePaths';
+import { useGetInfluencedOpportunities } from '../../../../hooks/useGetInfluencedOpportunities';
 
 const columns: TRoiColumn<TInfluencedOpportunities>[] = [
   {
@@ -104,17 +105,15 @@ const columns: TRoiColumn<TInfluencedOpportunities>[] = [
 const SfdcInfluencedAccountTable = (): JSX.Element => {
   const { push } = useHistory();
   const {
-    filters: globalAndTableFilters,
+    filters,
     handleOffsetChange,
     handleRowsPerPageChange,
     handleSortChange,
     handleTableFiltersChange,
   } = useRoiTable<TInfluencedOpportunities>();
-  const { field, direction, limit, offset, ...filters } = globalAndTableFilters;
-  const sort = { field, direction };
-  const pagination = { limit, offset };
+  const { field, direction, limit, offset } = filters;
 
-  const { data, currentData, isFetching } = useGetInfluencedOpportunitiesQuery({ ...filters, sort, pagination });
+  const { data, currentData, isFetching, isWaitingForFilters } = useGetInfluencedOpportunities(filters);
   const influencedOpportunities = currentData?.data || [];
   const total = currentData?.pagination?.total || data?.pagination?.total || 0;
 
@@ -132,7 +131,7 @@ const SfdcInfluencedAccountTable = (): JSX.Element => {
       title="Influenced Accounts"
       rows={influencedOpportunities}
       columns={columns}
-      isLoading={isFetching}
+      isLoading={isWaitingForFilters || isFetching}
       total={total}
       limit={limit}
       offset={offset}
