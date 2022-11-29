@@ -2,6 +2,7 @@ import { createAction } from 'redux-act';
 import { TErrors } from '@alycecom/services';
 
 import { IBrandingSettings, BgOptions, IUploadImageParams, TBrandingSettingsErrors } from '../emailBranding.types';
+import { EmailType } from '../emailTypes/emailTypes.types';
 
 const PREFIX = 'EMAIL_BRANDING/SETTINGS';
 
@@ -31,3 +32,5 @@ export const setBackgroundOption = createAction<BgOptions>(`${PREFIX}/SET_BACKGR
 export const setBrandingSettings = createAction<Partial<IBrandingSettings>>(`${PREFIX}/SET_BRANDING_SETTINGS`);
 export const resetBrandingSettings = createAction(`${PREFIX}/RESET_BRANDING_SETTINGS`);
 export const resetLogoImage = createAction(`${PREFIX}/RESET_LOGO_IMAGE`);
+
+export const setEmailTypeId = createAction<EmailType>(`${PREFIX}/SET_EMAIL_TYPE_ID`);

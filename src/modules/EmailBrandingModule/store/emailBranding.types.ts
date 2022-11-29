@@ -12,6 +12,8 @@ export interface IBrandingSettings {
   headerBackgroundColor: string;
   headerItemsColor: string;
   headerItemsOpacity: number;
+  preferencesUrl: string;
+  unsubscribeUrl: string;
 }
 
 export enum EmailBrandingFields {
@@ -26,6 +28,8 @@ export enum EmailBrandingFields {
   buttonBorderColor = 'buttonBorderColor',
   privacyPolicyUrl = 'privacyPolicyUrl',
   footerCopyrightInscription = 'footerCopyrightInscription',
+  preferencesUrl = 'preferencesUrl',
+  unsubscribeUrl = 'unsubscribeUrl',
 }
 
 export interface IUploadImageParams {

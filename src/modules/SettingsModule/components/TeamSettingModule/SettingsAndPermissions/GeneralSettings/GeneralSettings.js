@@ -6,7 +6,6 @@ import { useRouting } from '@alycecom/hooks';
 
 import { actions, selectors } from '../../../../store/teams/generalSettings';
 import TeamNameForm from '../Forms/TeamNameForm';
-import UnsubscribeLinkForm from '../Forms/UnsubscribeLinkForm';
 import RequireEmailIntegrationForm from '../Forms/RequireEmailIntegrationForm';
 import NameUsageInEmailsForm from '../Forms/NameUsageInEmailsForm';
 import BlockRemindersForm from '../Forms/BlockRemindersForm';
@@ -27,7 +26,6 @@ const GeneralSettings = ({ teamId }) => {
   const go = useRouting();
   const isLoading = useSelector(selectors.getIsLoading);
   const teamName = useSelector(selectors.getTeamName);
-  const unsubscribeUrl = useSelector(selectors.getOuterUnsubscribeUrl);
   const requireEmailIntegration = useSelector(selectors.getRequireEmailIntegration);
   const nameUsageInEmails = useSelector(selectors.getNameUsageInEmails);
   const isBlockReminders = useSelector(selectors.getIsBlockReminders);
@@ -104,14 +102,6 @@ const GeneralSettings = ({ teamId }) => {
         brandingOwner={hasEmailBranding ? 'Team' : ''}
         onChange={handleChangeEmailBranding}
       />
-      <SettingsItem
-        title="Unsubscribe link"
-        description="As recipient receive gifts, they may want to unsubscribe from your companies emails. The link that the recipient will be taken to is currently"
-        isLoading={isLoading}
-        value={unsubscribeUrl || 'none'}
-      >
-        <UnsubscribeLinkForm onSubmit={handleSubmit} />
-      </SettingsItem>
       <SettingsItem
         title={`Require ${integrationScope} integration`}
         description={`You can prompt a team member to connect their ${integrationScope} within the gifting flow if they have not yet integrated their email with Alyce. ${teamName} is currently set to`}

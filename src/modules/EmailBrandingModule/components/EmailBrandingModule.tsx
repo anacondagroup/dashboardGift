@@ -8,6 +8,7 @@ import { resetEmailBranding } from '../store/emailBranding.actions';
 
 import EmailBrandingSidebar from './EmailBrandingSidebar/EmailBrandingSidebar';
 import EmailPreview from './EmailPreview/EmailPreview';
+import SwitchEmailContentButton from './SwitchEmailContentButton/SwitchEmailContentButton';
 
 const EmailBrandingModule = () => {
   const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const EmailBrandingModule = () => {
   return (
     <Box minHeight="100vh" width={1} overflow="hidden">
       <EmailBrandingSidebar />
+      <SwitchEmailContentButton />
       <EmailPreview />
       <Box
         position="fixed"

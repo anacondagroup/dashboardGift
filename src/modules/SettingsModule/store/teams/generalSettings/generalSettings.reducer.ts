@@ -8,7 +8,6 @@ export interface IGeneralSettingsState {
   teamId: number | null;
   teamName: string;
   countryId: number | null;
-  outerUnsubscribeUrl: string | null;
   teamOwnerName: string;
   blockReminder: boolean;
   giftExpireInDays: number | null;
@@ -29,7 +28,6 @@ export const initialState: IGeneralSettingsState = {
   teamId: null,
   teamName: '',
   countryId: null,
-  outerUnsubscribeUrl: '',
   teamOwnerName: '',
   blockReminder: false,
   giftExpireInDays: null,

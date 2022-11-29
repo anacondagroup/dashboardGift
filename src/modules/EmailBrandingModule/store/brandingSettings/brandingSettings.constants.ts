@@ -12,4 +12,6 @@ export const EMPTY_BRANDING_SETTINGS = {
   headerBackgroundColor: '',
   headerItemsColor: '',
   headerItemsOpacity: 0,
+  preferencesUrl: '',
+  unsubscribeUrl: '',
 };

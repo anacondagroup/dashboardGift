@@ -14,10 +14,6 @@ export const getTeamId = pipe(pathToSettings, prop('teamId'));
 
 export const getTeamName = pipe(pathToSettings, prop('teamName'));
 
-export const getTeamOwnerName = pipe(pathToSettings, prop('teamOwnerName'));
-
-export const getOuterUnsubscribeUrl = pipe(pathToSettings, prop('outerUnsubscribeUrl'));
-
 export const getRequireEmailIntegration = pipe(pathToSettings, prop('requireEmailIntegration'));
 
 export const getNameUsageInEmails = pipe(pathToSettings, prop('nameUsageInEmails'));
