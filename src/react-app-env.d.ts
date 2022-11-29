@@ -16,6 +16,8 @@ interface Window {
     dashboardHost: string;
     tokenName: string;
     refreshTokenName: string;
+    rollbarAccessToken: string;
+    codeVersion: string;
   };
   Rollbar?: {
     configure: (config: IRollbarConfig) => void;
