@@ -1,33 +1,44 @@
 import React, { useEffect, memo, useRef } from 'react';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import {
   getBrandingSettings,
-  getIsLoaded,
-  getIsLoading,
+  getEmailTypeId,
+  getIsEmailTypeChanged,
+  getIsFulfilled,
+  getIsPending as getIsSettingsPending,
 } from '../../store/brandingSettings/brandingSettings.selectors';
 import { loadEmailPreviewRequest } from '../../store/emailPreview/emailPreview.actions';
-import { getContent } from '../../store/emailPreview/emailPreview.selectors';
+import { getContent, getIsPending } from '../../store/emailPreview/emailPreview.selectors';
+import { EmailType } from '../../store/emailTypes/emailTypes.types';
 
 import EmailPreviewSkeleton from './EmailPreviewSkeleton';
+import { styles } from './EmailPreview.styles';
 
 const EmailPreview = () => {
   const dispatch = useDispatch();
   const { teamId } = useParams<{ teamId: string }>();
   const contentWrapper = useRef<HTMLIFrameElement>(null);
 
-  const isLoaded = useSelector(getIsLoaded);
-  const isLoading = useSelector(getIsLoading);
+  const isSettingsPending = useSelector(getIsSettingsPending);
+  const isSettingsFulfilled = useSelector(getIsFulfilled);
+  const isEmailTypeChanged = useSelector(getIsEmailTypeChanged);
+
+  const isPreviewPending = useSelector(getIsPending);
+
   const settings = useSelector(getBrandingSettings);
+  const emailTypeId = useSelector(getEmailTypeId);
   const emailContent = useSelector(getContent);
 
+  const isIntegrationEmail = emailTypeId === EmailType.initialEmailByIntegration;
+
   useEffect(() => {
-    if (teamId && isLoaded) {
-      dispatch(loadEmailPreviewRequest({ teamId: Number(teamId), params: settings }));
+    if (teamId && isSettingsFulfilled) {
+      dispatch(loadEmailPreviewRequest({ teamId: Number(teamId), params: { ...settings, emailTypeId } }));
     }
-  }, [teamId, isLoaded, settings, dispatch]);
+  }, [teamId, isSettingsFulfilled, settings, emailTypeId, dispatch]);
 
   useEffect(() => {
     const { current } = contentWrapper;
@@ -40,21 +51,20 @@ const EmailPreview = () => {
     }
   }, [contentWrapper, emailContent]);
 
+  const isContentHidden = isPreviewPending && isEmailTypeChanged;
+  const isLoaderVisible = isSettingsPending || isContentHidden;
+
   return (
-    <Box
-      width="calc(100% - 320px)"
-      minHeight="100vh"
-      ml={40}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-    >
-      {isLoaded && (
-        <Box height="100vh" width="100%">
-          <iframe width="100%" height="100%" title="email-content" ref={contentWrapper} />
-        </Box>
+    <Box sx={styles.root}>
+      {isLoaderVisible && <EmailPreviewSkeleton />}
+      {isSettingsFulfilled && (
+        <Paper
+          elevation={4}
+          sx={[isIntegrationEmail ? styles.integration : styles.nonIntegration, isContentHidden && styles.hidden]}
+        >
+          <Box component="iframe" sx={styles.iframe} title="email-content" ref={contentWrapper} />
+        </Paper>
       )}
-      {!isLoaded && isLoading && <EmailPreviewSkeleton />}
     </Box>
   );
 };

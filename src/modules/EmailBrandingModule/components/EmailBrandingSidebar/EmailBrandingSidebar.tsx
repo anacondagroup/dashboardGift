@@ -19,7 +19,7 @@ import {
   setBrandingSettings,
   updateBrandingSettingsRequest,
 } from '../../store/brandingSettings/brandingSettings.actions';
-import { validationSchema } from '../../store/brandingSettings/brandingSettings.schemas';
+import { brandingSettingsDefaultValue, validationSchema } from '../../store/brandingSettings/brandingSettings.schemas';
 import EmailBrandingForm from '../EmailBrandingForm/EmailBrandingForm';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, zIndex }) => ({
@@ -55,17 +55,7 @@ const EmailBrandingSidebar = () => {
 
   const methods = useForm<IBrandingSettings>({
     mode: 'all',
-    defaultValues: {
-      [EmailBrandingFields.companyLogoUrl]: '',
-      [EmailBrandingFields.companyLogoWidth]: 0,
-      [EmailBrandingFields.headerBackgroundColor]: '',
-      [EmailBrandingFields.headerItemsColor]: '',
-      [EmailBrandingFields.headerItemsOpacity]: 0,
-      [EmailBrandingFields.buttonColor]: '',
-      [EmailBrandingFields.buttonTextColor]: '',
-      [EmailBrandingFields.privacyPolicyUrl]: '',
-      [EmailBrandingFields.footerCopyrightInscription]: '',
-    },
+    defaultValues: brandingSettingsDefaultValue,
     resolver: yupResolver(validationSchema),
   });
   const {
@@ -110,6 +100,8 @@ const EmailBrandingSidebar = () => {
         [EmailBrandingFields.buttonTextColor]: initialBranding.buttonTextColor,
         [EmailBrandingFields.privacyPolicyUrl]: initialBranding.privacyPolicyUrl,
         [EmailBrandingFields.footerCopyrightInscription]: initialBranding.footerCopyrightInscription,
+        [EmailBrandingFields.preferencesUrl]: initialBranding.preferencesUrl,
+        [EmailBrandingFields.unsubscribeUrl]: initialBranding.unsubscribeUrl,
       });
     }
   }, [reset, initialBranding]);

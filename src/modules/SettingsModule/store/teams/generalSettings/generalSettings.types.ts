@@ -7,7 +7,6 @@ export interface IGeneralSettingsChange {
   countryId: number;
   giftExpireInDays: number;
   nameUsageInEmails: string;
-  outerUnsubscribeUrl: string | null;
   requireEmailIntegration: string;
   teamName: string;
   teamOwnerName: string;

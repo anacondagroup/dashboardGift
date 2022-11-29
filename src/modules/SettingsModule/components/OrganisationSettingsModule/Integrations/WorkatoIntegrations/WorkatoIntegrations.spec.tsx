@@ -53,7 +53,7 @@ describe('WorkatoIntegrations', () => {
     expect(await findByText(/^Slack$/)).toBeInTheDocument();
     expect(await findByText(/^6sense$/)).toBeInTheDocument();
     expect(await findByText(/^Microsoft Teams$/)).toBeInTheDocument();
-  });
+  }, 20000);
 
   it('should display active integrations counter if there is at least one active integration', async () => {
     server.use(

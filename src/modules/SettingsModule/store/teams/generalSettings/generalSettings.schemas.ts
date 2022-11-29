@@ -3,10 +3,6 @@ import { equals, pipe } from 'ramda';
 
 const rUrlProtocol = /^((https?|ftp):)?\/\//i;
 
-export const unsubscribeFormSchema = yup.object().shape({
-  outerUnsubscribeUrl: yup.string().trim().url('The outer unsubscribe url format is invalid.'),
-});
-
 export const complianceSchema = yup.object().shape({
   complianceIsRequired: yup.boolean().transform(pipe(String, equals('true'))),
   compliancePromptText: yup.string().when('complianceIsRequired', {

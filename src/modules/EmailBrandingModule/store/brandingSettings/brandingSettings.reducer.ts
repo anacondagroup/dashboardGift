@@ -1,41 +1,47 @@
 import { createReducer } from 'redux-act';
 import { TErrors } from '@alycecom/services';
 import { propOr } from 'ramda';
+import { StateStatus } from '@alycecom/utils';
 
 import { BgOptions, IBrandingSettings } from '../emailBranding.types';
+import { EmailType } from '../emailTypes/emailTypes.types';
+import { loadEmailPreviewSuccess } from '../emailPreview/emailPreview.actions';
 
 import {
   loadBrandingSettingsFail,
   loadBrandingSettingsRequest,
   loadBrandingSettingsSuccess,
   resetBrandingSettings,
+  resetLogoImage,
   setBackgroundOption,
   setBrandingSettings,
-  uploadBrandingImageSuccess,
-  uploadBrandingImageFail,
-  resetLogoImage,
+  setEmailTypeId,
+  updateBrandingSettingsFail,
   updateBrandingSettingsRequest,
   updateBrandingSettingsSuccess,
-  updateBrandingSettingsFail,
+  uploadBrandingImageFail,
+  uploadBrandingImageSuccess,
 } from './brandingSettings.actions';
 import { EMPTY_BRANDING_SETTINGS } from './brandingSettings.constants';
 
 export interface IBrandingSettingsState {
-  isLoading: boolean;
-  isLoaded: boolean;
+  status: StateStatus;
   isSaveInProgress: boolean;
   settings: IBrandingSettings;
   initialSettings?: IBrandingSettings;
+  emailTypeId: EmailType;
+  isEmailTypeChanged: boolean;
   background: BgOptions;
   errors: TErrors;
 }
 
 export const initialState: IBrandingSettingsState = {
-  isLoading: false,
-  isLoaded: false,
+  status: StateStatus.Idle,
   isSaveInProgress: false,
   settings: EMPTY_BRANDING_SETTINGS,
   initialSettings: undefined,
+  emailTypeId: EmailType.initialEmailSenderToRecipient,
+  isEmailTypeChanged: true,
   background: BgOptions.empty,
   errors: {},
 };
@@ -45,21 +51,18 @@ const reducer = createReducer<IBrandingSettingsState>({}, initialState);
 reducer
   .on(loadBrandingSettingsRequest, state => ({
     ...state,
-    isLoading: true,
-    isLoaded: false,
+    status: StateStatus.Pending,
   }))
   .on(loadBrandingSettingsSuccess, (state, payload) => ({
     ...state,
-    isLoading: false,
-    isLoaded: true,
+    status: StateStatus.Fulfilled,
     settings: payload,
     initialSettings: payload,
     background: payload.headerItemsOpacity === 0 ? BgOptions.solid : BgOptions.alycePattern,
   }))
   .on(loadBrandingSettingsFail, state => ({
     ...state,
-    isLoading: false,
-    isLoaded: false,
+    status: StateStatus.Rejected,
   }));
 
 reducer
@@ -87,6 +90,12 @@ reducer.on(setBrandingSettings, (state, payload) => ({
     ...state.settings,
     ...payload,
   },
+}));
+
+reducer.on(setEmailTypeId, (state, payload) => ({
+  ...state,
+  emailTypeId: payload,
+  isEmailTypeChanged: true,
 }));
 
 reducer.on(resetBrandingSettings, state => ({
@@ -120,5 +129,10 @@ reducer
     isSaveInProgress: false,
     errors: payload,
   }));
+
+reducer.on(loadEmailPreviewSuccess, state => ({
+  ...state,
+  isEmailTypeChanged: false,
+}));
 
 export default reducer;

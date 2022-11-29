@@ -1,7 +1,6 @@
 import React, { ChangeEvent, memo, useCallback, useEffect } from 'react';
 import { Box, TextField, Tooltip, Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import { AlyceTheme, ColorPicker, Divider, FileInput, Icon } from '@alycecom/ui';
+import { ColorPicker, Divider, FileInput, Icon } from '@alycecom/ui';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -20,26 +19,25 @@ import { resetLogoImage, uploadBrandingImageRequest } from '../../store/branding
 import LogoFilePreview from './LogoFilePreview';
 import BackgroundOptions from './BackgroundOptions';
 
-const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
+const styles = {
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: palette.text.primary,
+    color: 'text.primary',
   },
   tooltipIcon: {
-    marginLeft: spacing(1),
+    ml: 1,
   },
   colorField: {
-    marginBottom: spacing(2),
+    mb: 2,
   },
-}));
+} as const;
 
 export interface IBrandingFormProps {
   onChangeField: (data: Partial<IBrandingSettings>) => void;
 }
 
 const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const {
     control,
@@ -80,10 +78,10 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
   return (
     <Box pb={3}>
       <Box display="flex" justifyContent="flex-start" alignItems="center" my={2}>
-        <Typography className={classes.sectionTitle}>Logo</Typography>
+        <Typography sx={styles.sectionTitle}>Logo</Typography>
         <Tooltip title="If you are using a dark background for your emails, please upload a transparent, light-treatment logo meant for dark backgrounds. You can alternately use a regular, transparent logo with a light-colored background.">
           <span>
-            <Icon className={classes.tooltipIcon} icon="exclamation-circle" color="grey.main" fontSize={1} />
+            <Icon sx={styles.tooltipIcon} icon="exclamation-circle" color="grey.main" fontSize={1} />
           </span>
         </Tooltip>
       </Box>
@@ -138,7 +136,7 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
       <BackgroundOptions onChangeField={onChangeField} />
       <Divider my={3} />
       <Box display="flex" justifyContent="flex-start" alignItems="center" my={2}>
-        <Typography className={classes.sectionTitle}>CTA Button</Typography>
+        <Typography sx={styles.sectionTitle}>CTA Button</Typography>
       </Box>
       <Box>
         <Controller
@@ -185,7 +183,7 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
       <Divider my={3} />
       <Box mt={2} mb={4}>
         <Box mb={3}>
-          <Typography className={classes.sectionTitle}>Footer Content</Typography>
+          <Typography sx={styles.sectionTitle}>Footer Content</Typography>
         </Box>
         <Box mb={2}>
           <Controller
@@ -224,6 +222,48 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
                 onChange={({ target }) => {
                   onChange(target.value);
                   onChangeField({ [EmailBrandingFields.footerCopyrightInscription]: target.value });
+                }}
+              />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Controller
+            control={control}
+            name={EmailBrandingFields.preferencesUrl}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                name={EmailBrandingFields.preferencesUrl}
+                variant="outlined"
+                value={value}
+                label="Manage Preferences Link"
+                fullWidth
+                error={!!errors.preferencesUrl}
+                helperText={errors.preferencesUrl && errors.preferencesUrl.message}
+                onChange={({ target }) => {
+                  onChange(target.value);
+                  onChangeField({ [EmailBrandingFields.preferencesUrl]: target.value });
+                }}
+              />
+            )}
+          />
+        </Box>
+        <Box mb={2}>
+          <Controller
+            control={control}
+            name={EmailBrandingFields.unsubscribeUrl}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                name={EmailBrandingFields.unsubscribeUrl}
+                variant="outlined"
+                value={value}
+                label="Unsubscribe Link"
+                fullWidth
+                error={!!errors.unsubscribeUrl}
+                helperText={errors.unsubscribeUrl && errors.unsubscribeUrl.message}
+                onChange={({ target }) => {
+                  onChange(target.value);
+                  onChangeField({ [EmailBrandingFields.unsubscribeUrl]: target.value });
                 }}
               />
             )}

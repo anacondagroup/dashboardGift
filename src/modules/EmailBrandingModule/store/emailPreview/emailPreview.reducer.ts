@@ -1,21 +1,20 @@
 import { createReducer } from 'redux-act';
+import { StateStatus } from '@alycecom/utils';
 
 import {
+  loadEmailPreviewFail,
   loadEmailPreviewRequest,
   loadEmailPreviewSuccess,
-  loadEmailPreviewFail,
   resetEmailPreview,
 } from './emailPreview.actions';
 
 export interface IEmailPreviewState {
-  isLoading: boolean;
-  isLoaded: boolean;
+  status: StateStatus;
   content: string;
 }
 
 export const initialState: IEmailPreviewState = {
-  isLoading: false,
-  isLoaded: false,
+  status: StateStatus.Idle,
   content: '',
 };
 
@@ -24,19 +23,16 @@ const reducer = createReducer<IEmailPreviewState>({}, initialState);
 reducer
   .on(loadEmailPreviewRequest, state => ({
     ...state,
-    isLoading: true,
-    isLoaded: false,
+    status: StateStatus.Pending,
   }))
   .on(loadEmailPreviewSuccess, (state, payload) => ({
     ...state,
-    isLoading: false,
-    isLoaded: true,
+    status: StateStatus.Fulfilled,
     content: payload,
   }))
   .on(loadEmailPreviewFail, state => ({
     ...state,
-    isLoading: false,
-    isLoaded: false,
+    status: StateStatus.Rejected,
   }));
 
 reducer.on(resetEmailPreview, state => ({
