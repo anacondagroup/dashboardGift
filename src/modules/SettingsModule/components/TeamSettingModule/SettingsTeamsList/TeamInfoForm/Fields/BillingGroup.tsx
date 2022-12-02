@@ -87,12 +87,18 @@ const BillingGroup = ({ control }: TBillingGroupProps): JSX.Element => {
             getOptionLabel={getOptionLabel}
             renderOption={(props, option) => (
               <li {...props}>
-                <Box whiteSpace="nowrap" textOverflow="ellipsis" overflow="hidden">
+                <Box
+                  whiteSpace="nowrap"
+                  textOverflow="ellipsis"
+                  overflow="hidden"
+                  data-testId={`TeamInfoForm.Option.${getOptionLabel(option)}`}
+                >
                   {getOptionLabel(option)}
                 </Box>
               </li>
             )}
             loading={isLoading}
+            data-testid="TeamInfoForm.BillingGroupSelector"
           />
           {error?.message && <FormHelperText>{error?.message}</FormHelperText>}
         </FormControl>

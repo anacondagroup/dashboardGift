@@ -131,12 +131,24 @@ const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
       </Box>
       <StepSectionFooter
         cancelButton={
-          <Button sx={styles.cancelButton} variant="outlined" disabled={isLoading} onClick={handleCancel}>
+          <Button
+            sx={styles.cancelButton}
+            variant="outlined"
+            disabled={isLoading}
+            onClick={handleCancel}
+            data-testId="TeamInfoForm.Cancel"
+          >
             Cancel
           </Button>
         }
         nextButton={
-          <Button sx={styles.submitButton} type="submit" variant="contained" disabled={isLoading}>
+          <Button
+            sx={styles.submitButton}
+            type="submit"
+            variant="contained"
+            disabled={isLoading}
+            data-testId="TeamInfoForm.Next"
+          >
             {hasBudgetManagementSetup ? 'Next' : 'Save'}
           </Button>
         }
