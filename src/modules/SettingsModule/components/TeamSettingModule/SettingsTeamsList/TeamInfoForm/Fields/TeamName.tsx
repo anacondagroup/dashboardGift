@@ -38,6 +38,7 @@ const TeamName = ({ control }: TTeamNameProps): JSX.Element => {
       helperText={error?.message}
       inputProps={{
         autoComplete: 'off',
+        'data-testid': 'TeamInfoForm.Name',
       }}
     />
   );
