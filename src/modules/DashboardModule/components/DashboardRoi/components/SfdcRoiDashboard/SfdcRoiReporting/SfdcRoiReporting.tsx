@@ -1,9 +1,9 @@
 import React from 'react';
 import { Grid } from '@mui/material';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 
 import SfdcPipelineSummary from '../SfdcPipelineSummary/SfdcPipelineSummary';
-import { ROI_ROUTES } from '../../../routePaths';
+import { ROI_ROOT, ROI_ROUTES } from '../../../routePaths';
 
 import SfdcRoiInfluencedARR from './SfdcRoiInfluencedArr/SfdcRoiInfluencedArr';
 import SfdcInfluencedAccountTable from './SfdcInfluencedAccountTable/SfdcInfluencedAccountTable';
@@ -21,6 +21,7 @@ const SfdcRoiReporting = (): JSX.Element => (
       <Switch>
         <Route exact path={ROI_ROUTES.REPORTING} component={SfdcInfluencedAccountTable} />
         <Route exact path={`${ROI_ROUTES.REPORTING}/:accountId/accepted-gifts`} component={GiftsByAccountTable} />
+        <Redirect from="*" to={`/${ROI_ROOT}`} />
       </Switch>
     </Grid>
   </Grid>
