@@ -42,3 +42,10 @@ export type TGroupTeamNode = {
   level: number;
   isUngrouped?: boolean;
 };
+
+export type TGroupNode = {
+  groupId: TGroupId;
+  groupName: string;
+  deposit: IDeposit;
+  teams: TGroupTeam[];
+};

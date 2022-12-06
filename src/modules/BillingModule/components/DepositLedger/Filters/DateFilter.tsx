@@ -4,6 +4,7 @@ import { DateRangeSelect } from '@alycecom/ui';
 
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
 import { getDateRange, setDateRange } from '../../../store/operations';
+import { BILLING_DATA_MIN_DATE } from '../../../constants/billing.constants';
 
 const DateFilter = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const DateFilter = () => {
       label="Date range"
       fullWidth
       dataTestId="DepositLedger.DateRange"
+      minDate={BILLING_DATA_MIN_DATE}
     />
   );
 };

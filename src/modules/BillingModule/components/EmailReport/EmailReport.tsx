@@ -5,8 +5,8 @@ import { makeStyles } from '@mui/styles';
 import { AlyceTheme, Icon } from '@alycecom/ui';
 import { Auth } from '@alycecom/modules';
 
-import { emailReportRequest } from '../../../store/breakdowns';
-import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
+import { emailReportRequest } from '../../store/breakdowns';
+import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
 
 const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
   emailReport: {

@@ -1,11 +1,11 @@
 import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector, batch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
 import { User } from '@alycecom/modules';
 
 import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
-import { customerOrgRequest, getOrg, loadHierarchyRequest } from '../../store/customerOrg';
-import { loadTypesRequest } from '../../store/operations';
+import { getHierarchyIsLoaded, getOrg } from '../../store/customerOrg';
+import { loadOperationsRequest, loadTypesRequest } from '../../store/operations';
 
 import Operations from './Operations/Operations';
 import Filters from './Filters';
@@ -17,14 +17,17 @@ const DepositLedger = () => {
 
   const { id: orgId } = useSelector(getOrg);
   const userId = useSelector(User.selectors.getUserId);
+  const hierarchyIsLoaded = useSelector(getHierarchyIsLoaded);
 
   useEffect(() => {
-    batch(() => {
-      dispatch(customerOrgRequest());
-      dispatch(loadHierarchyRequest());
-      dispatch(loadTypesRequest());
-    });
+    dispatch(loadTypesRequest());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (hierarchyIsLoaded && orgId !== 0) {
+      dispatch(loadOperationsRequest());
+    }
+  }, [dispatch, orgId, hierarchyIsLoaded]);
 
   useEffect(() => {
     if (orgId && userId) {

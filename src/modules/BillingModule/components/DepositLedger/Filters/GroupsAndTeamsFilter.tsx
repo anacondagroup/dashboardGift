@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { NumberFormat } from '@alycecom/ui';
+import { NumberFormat, AlyceTheme } from '@alycecom/ui';
 
 import {
   getHierarchyIsLoading,
@@ -20,10 +20,10 @@ const styles = {
     fontWeight: 'bold !important',
   },
   item: {
-    color: 'primary.main',
+    color: ({ palette }: AlyceTheme) => palette.primary.main,
   },
   negative: {
-    color: 'red.main',
+    color: ({ palette }: AlyceTheme) => palette.red.main,
   },
 } as const;
 

@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { LoadingLabel } from '@alycecom/ui';
+import { LoadingLabel, AlyceTheme } from '@alycecom/ui';
 import { Box, SxProps, Theme } from '@mui/material';
 
 const styles = {
@@ -19,7 +19,7 @@ const styles = {
     lineHeight: '1rem',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
-    color: 'grey.main',
+    color: ({ palette }: AlyceTheme) => palette.grey.main,
   },
 } as const;
 
@@ -28,9 +28,10 @@ export interface IKpiValueProps {
   title: string;
   isLoading: boolean;
   sx?: SxProps<Theme>;
+  sxTitle?: SxProps<Theme>;
 }
 
-const KpiValue = ({ value, title, isLoading, sx }: IKpiValueProps) => {
+const KpiValue = ({ value, title, isLoading, sx = [], sxTitle = [] }: IKpiValueProps) => {
   const formattedValue = useMemo(() => {
     if (isLoading) {
       return <LoadingLabel mt={2.5} width={36} height={4} />;
@@ -42,7 +43,7 @@ const KpiValue = ({ value, title, isLoading, sx }: IKpiValueProps) => {
   return (
     <Box sx={[styles.wrapper, ...(Array.isArray(sx) ? sx : [sx])]} data-testid={`kpi-value-${title}`}>
       <Box sx={styles.value}>{formattedValue}</Box>
-      <Box sx={styles.title}>{title}</Box>
+      <Box sx={[styles.title, ...(Array.isArray(sxTitle) ? sxTitle : [sxTitle])]}>{title}</Box>
     </Box>
   );
 };

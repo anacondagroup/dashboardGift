@@ -1,4 +1,3 @@
-import { StateObservable } from 'redux-observable';
 import qs from 'query-string';
 
 import { IRootState } from '../../../../store/root.types';
@@ -19,27 +18,27 @@ type TDateRangeNames = {
 };
 
 type TGetQueryParamsFromStateArgs = {
-  state$: StateObservable<IRootState>;
+  state: IRootState;
   dateRangeFieldNames?: TDateRangeNames;
   isFullList?: boolean;
 };
 
 export const getQueryParamsFromState = ({
-  state$,
+  state,
   dateRangeFieldNames = { fromName: 'dateRange', toName: 'dateRange' },
   isFullList = false,
 }: TGetQueryParamsFromStateArgs): TGetQueryParamsFromStateValue => {
   const params: Record<string, string | boolean | number | qs.Stringifiable[]> = {};
   const { fromName, toName } = dateRangeFieldNames;
 
-  const { id: orgId } = getOrg(state$.value);
+  const { id: orgId } = getOrg(state);
   const {
     deposit: { accountId },
     balanceAccountId,
-  } = getSelectedGroupOrTeam(state$.value);
-  const dateRange = getDateRange(state$.value);
-  const operationTypes = getSelectedTypes(state$.value);
-  const { perPage, currentPage, total } = getPagination(state$.value);
+  } = getSelectedGroupOrTeam(state);
+  const dateRange = getDateRange(state);
+  const operationTypes = getSelectedTypes(state);
+  const { perPage, currentPage, total } = getPagination(state);
   if (dateRange.from) {
     params[`${fromName}[from]`] = dateRange.from;
     params[`${toName}[fromIncluded]`] = true;

@@ -9,18 +9,13 @@ import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
 import BreakdownAcceptedGifts from '../BreakdownAcceptedGifts/BreakdownAcceptedGifts';
 import BreakdownSentInvites from '../BreakdownSentInvites/BreakdownSentInvites';
 import BreakdownHeader from '../BillingTableBreakdown/BreakdownHeader';
-import EmailReport from '../EmailReport/EmailReport';
+import EmailReport from '../../EmailReport/EmailReport';
 import BillingOverview from '../BillingOverview/BillingOverview';
 import TeamsFilter from '../TeamsFilter/TeamsFilter';
 import DepositOverview from '../DepositOverview/DepositOverview';
+import { BILLING_DATA_MIN_DATE } from '../../../constants/billing.constants';
 
-const BILLING_DATA_MIN_DATE = '2019-06-12T00:00:00Z';
-
-export interface IOverviewProps {
-  onTransactionDetailClick: () => void;
-}
-
-const Overview = ({ onTransactionDetailClick }: IOverviewProps) => {
+const Overview = (): JSX.Element => {
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
@@ -67,7 +62,7 @@ const Overview = ({ onTransactionDetailClick }: IOverviewProps) => {
       <Grid container item xs={12}>
         <Grid item xs={6}>
           <Box mb={4}>
-            <DepositOverview onTransactionDetailClick={onTransactionDetailClick} />
+            <DepositOverview />
 
             <Box ml={4}>
               <Box mt={2} mb={2} />

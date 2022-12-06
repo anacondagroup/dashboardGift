@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Grid } from '@mui/material';
 import { Divider, NumberFormat } from '@alycecom/ui';
 import { Features, HasFeature } from '@alycecom/modules';
@@ -7,16 +7,20 @@ import { Features, HasFeature } from '@alycecom/modules';
 import BreakdownHeader from '../BillingTableBreakdown/BreakdownHeader';
 import KpiValue from '../../../../../components/Dashboard/Overview/KpiValue';
 import { getResources, getSelectedGroup } from '../../../store/customerOrg';
+import { setBillingTab } from '../../../store/ui/tab/tab.reducer';
+import { BillingTab } from '../../../store/ui/tab/tab.types';
 
 import { styles } from './DepositeOverview.styles';
 
-export interface IDepositOverviewProps {
-  onTransactionDetailClick: () => void;
-}
+const DepositOverview = (): JSX.Element => {
+  const dispatch = useDispatch();
 
-const DepositOverview = ({ onTransactionDetailClick }: IDepositOverviewProps) => {
   const resources = useSelector(getResources);
   const groupName = useSelector(getSelectedGroup);
+
+  const handleClickDetailsInfo = () => {
+    dispatch(setBillingTab(BillingTab.Transactions));
+  };
 
   return (
     <HasFeature featureKey={Features.FLAGS.SHOW_REMAINING_DEPOSITS}>
@@ -75,7 +79,7 @@ const DepositOverview = ({ onTransactionDetailClick }: IDepositOverviewProps) =>
                 </Box>
               }
             />
-            <Button sx={styles.button} onClick={onTransactionDetailClick}>
+            <Button sx={styles.button} onClick={handleClickDetailsInfo}>
               Click here to see detailed info
             </Button>
           </Box>

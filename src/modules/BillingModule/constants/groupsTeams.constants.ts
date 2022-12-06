@@ -1,4 +1,4 @@
 export enum GroupsTeamsConstants {
-  Ungrouped = 'Ungrouped',
+  Ungrouped = 'ungrouped',
   AllGroupsAndTeams = 'all_groups_and_teams',
 }

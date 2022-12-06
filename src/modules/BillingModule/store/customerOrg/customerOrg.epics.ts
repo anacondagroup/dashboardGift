@@ -1,12 +1,12 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
-import { catchError, flatMap, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
 import { IListResponse, IResponse, handleError, handlers } from '@alycecom/services';
 import qs from 'query-string';
 
 import { IAccountResources, IGroupInfo, IOperation, ITeamInfo } from '../../types';
 import { acceptedInvitesRequest, sentInvitesRequest } from '../breakdowns';
-import { fetchBalance, loadOperationsRequest } from '../operations';
+import { loadOperationsRequest } from '../operations';
 
 import {
   customerOrgFailure,
@@ -41,7 +41,7 @@ export const customerOrgEpic: Epic = (action$, state$, { apiService, messagesSer
     ofType(customerOrgRequest),
     mergeMap(() =>
       apiService.get('/api/v1/organization', {}, true).pipe(
-        flatMap((response: IOrgInfo) => [customerOrgSuccess(response)]),
+        map((response: IOrgInfo) => customerOrgSuccess(response)),
         takeUntil(action$.ofType(customerOrgRequest)),
         catchError(errorHandler({ callbacks: customerOrgFailure })),
       ),
@@ -53,7 +53,7 @@ export const orgTeamsEpic: Epic = (action$, state$, { apiService, messagesServic
     ofType(orgTeamsRequest),
     mergeMap(() =>
       apiService.get('/api/v1/hierarchy/teams', {}, true).pipe(
-        flatMap((response: IListResponse<ITeamInfo>) => [orgTeamsSuccess(response.data)]),
+        map((response: IListResponse<ITeamInfo>) => orgTeamsSuccess(response.data)),
         takeUntil(action$.ofType(orgTeamsRequest)),
         catchError(errorHandler({ callbacks: orgTeamsFailure })),
       ),
@@ -65,7 +65,7 @@ export const orgGroupsEpic: Epic = (action$, state$, { apiService, messagesServi
     ofType(orgGroupsRequest),
     mergeMap(() =>
       apiService.get('/api/v1/groups', {}, true).pipe(
-        flatMap((response: IListResponse<IGroupInfo>) => [orgGroupsSuccess(response.data)]),
+        map((response: IListResponse<IGroupInfo>) => orgGroupsSuccess(response.data)),
         takeUntil(action$.ofType(orgGroupsRequest)),
         catchError(errorHandler({ callbacks: orgGroupsFailure })),
       ),
@@ -83,7 +83,7 @@ export const loadStatsEpic: Epic = (action$, state$, { apiService, messagesServi
     ofType(loadStatsRequest),
     switchMap(() =>
       apiService.get('/api/v1/statistic', {}, true).pipe(
-        flatMap((response: ICustomerStats) => [loadStatsSuccess(response)]),
+        map((response: ICustomerStats) => loadStatsSuccess(response)),
         catchError(errorHandler({ callbacks: loadStatsFail })),
       ),
     ),
@@ -98,7 +98,7 @@ export const loadResourcesEpic: Epic = (action$, state$, { apiService, messagesS
         'groupIds[]': groupIds,
       };
       return apiService.get(`/api/v1/resources?${qs.stringify(filters)}`, {}, true).pipe(
-        flatMap((response: IAccountResources) => [loadResourcesSuccess(response)]),
+        map((response: IAccountResources) => loadResourcesSuccess(response)),
         catchError(errorHandler({ callbacks: loadResourcesFail })),
       );
     }),
@@ -109,11 +109,7 @@ export const loadHierarchyEpic: Epic = (action$, state$, { apiService, messagesS
     ofType(loadHierarchyRequest),
     switchMap(() =>
       apiService.get(`/api/v1/reporting/resources/hierarchy-with-deposits-group-grouped`, {}, true).pipe(
-        flatMap((response: IResponse<IOrgHierarchy>) => [
-          loadHierarchySuccess(response.data),
-          loadOperationsRequest(),
-          fetchBalance.pending(),
-        ]),
+        map((response: IResponse<IOrgHierarchy>) => loadHierarchySuccess(response.data)),
         catchError(errorHandler({ callbacks: loadHierarchyFail })),
       ),
     ),
@@ -122,7 +118,7 @@ export const loadHierarchyEpic: Epic = (action$, state$, { apiService, messagesS
 export const setSelectedAccountEpic: Epic = action$ =>
   action$.pipe(
     ofType(setSelectedHierarchyId),
-    mergeMap(() => [loadOperationsRequest(), fetchBalance.pending()]),
+    mergeMap(() => [loadOperationsRequest()]),
   );
 
 const loadLastInvoiceEpic: Epic = (action$, state$, { apiService }) =>
@@ -130,7 +126,7 @@ const loadLastInvoiceEpic: Epic = (action$, state$, { apiService }) =>
     ofType(loadLastInvoiceRequest),
     switchMap(() =>
       apiService.get('/api/v1/reporting/resources/deposits/operations/latest-invoice', {}, true).pipe(
-        flatMap((response: IResponse<IOperation>) => [loadLastInvoiceSuccess(response.data)]),
+        map((response: IResponse<IOperation>) => loadLastInvoiceSuccess(response.data)),
         catchError(handleError(handlers.handleAnyError(loadLastInvoiceFail))),
       ),
     ),

@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { render, screen, userEvent } from '../../../../../testUtils';
-import { initialState } from '../../../store/breakdowns/breakdowns.reducer';
-import { emailReportRequest } from '../../../store/breakdowns';
+import { render, screen, userEvent } from '../../../../testUtils';
+import { initialState } from '../../store/breakdowns/breakdowns.reducer';
+import { emailReportRequest } from '../../store/breakdowns';
 
 import EmailReport from './EmailReport';
 

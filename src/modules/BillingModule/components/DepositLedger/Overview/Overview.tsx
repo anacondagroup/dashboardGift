@@ -1,18 +1,12 @@
 import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
-import { NumberFormat } from '@alycecom/ui';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useLazyGetTransactionsReportQuery } from '@alycecom/services';
 
-import {
-  downloadDepositLedgerReportRequest,
-  getAmountAtTheEnd,
-  getAmountAtTheStart,
-  getBalanceIsLoading,
-  getHasOperations,
-  getOperationsReportDownloading,
-} from '../../../store/operations';
-import KpiValue from '../../../../../components/Dashboard/Overview/KpiValue';
+import { getDateRange, getHasOperations, getPagination, getSelectedTypes } from '../../../store/operations';
 import DownloadLink from '../../../../../components/Shared/DownloadLink';
+import AccountBalance from '../../AccountBalance';
+import { getSelectedGroupOrTeam } from '../../../store/customerOrg';
 
 const styles = {
   root: {
@@ -21,86 +15,48 @@ const styles = {
     width: 1,
     mb: 1,
   },
-  kpiWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
   linkWrapper: {
     display: 'flex',
     alignItems: 'center',
   },
-  kpiItem: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    mx: 3,
-  },
-  totalKpi: {
-    fontSize: 32,
-    color: 'primary.main',
-  },
-  dateKpi: {
-    fontSize: 24,
-    color: 'primary.main',
-  },
-  negative: {
-    color: 'red.main',
-  },
 } as const;
 
 const Overview = (): JSX.Element => {
-  const dispatch = useDispatch();
-
-  const isLoading = useSelector(getBalanceIsLoading);
-  const isDownloadingReport = useSelector(getOperationsReportDownloading);
-
-  const amountAtTheStart = useSelector(getAmountAtTheStart);
-  const amountAtTheEnd = useSelector(getAmountAtTheEnd);
-
+  const {
+    deposit: { accountId },
+    balanceAccountId,
+  } = useSelector(getSelectedGroupOrTeam);
+  const { from, to } = useSelector(getDateRange);
+  const operationTypes = useSelector(getSelectedTypes);
+  const { total } = useSelector(getPagination);
   const hasOperations = useSelector(getHasOperations);
 
+  const [downloadTransactionsReport, { isFetching }] = useLazyGetTransactionsReportQuery();
+
   const handleDownloadReport = useCallback(() => {
-    dispatch(downloadDepositLedgerReportRequest());
-  }, [dispatch]);
+    downloadTransactionsReport({
+      accountId,
+      filters: {
+        dateRange: from && to ? { from, to, toIncluded: true, fromIncluded: true } : undefined,
+        operationTypes,
+        page: 1,
+        perPage: total,
+      },
+    });
+  }, [downloadTransactionsReport, accountId, from, to, operationTypes, total]);
+
+  const resourceAccountId = balanceAccountId || accountId;
 
   return (
     <Box sx={styles.root}>
-      <Box sx={styles.kpiWrapper}>
-        <KpiValue
-          sx={styles.kpiItem}
-          isLoading={isLoading}
-          title="At the start"
-          value={
-            <Box
-              component="span"
-              sx={[styles.dateKpi, amountAtTheStart < 0 && styles.negative]}
-              data-testid="DepositLedger.BillingOperations.RemainingDeposit"
-            >
-              <NumberFormat format="$0,0.00">{amountAtTheStart}</NumberFormat>
-            </Box>
-          }
-        />
-        <KpiValue
-          sx={styles.kpiItem}
-          isLoading={isLoading}
-          title="At the end"
-          value={
-            <Box
-              component="span"
-              sx={[styles.dateKpi, amountAtTheEnd < 0 && styles.negative]}
-              data-testid="DepositLedger.BillingOperations.RemainingDeposit"
-            >
-              <NumberFormat format="$0,0.00">{amountAtTheEnd}</NumberFormat>
-            </Box>
-          }
-        />
-      </Box>
+      <AccountBalance accountId={resourceAccountId} fromDate={from} toDate={to} />
       {hasOperations && (
         <Box sx={styles.linkWrapper}>
           <DownloadLink
             onDownloadClick={handleDownloadReport}
             label="Download report"
             iconName="file-download"
-            isLoading={isDownloadingReport}
+            isLoading={isFetching}
           />
         </Box>
       )}
