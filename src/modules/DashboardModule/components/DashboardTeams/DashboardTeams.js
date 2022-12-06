@@ -20,7 +20,14 @@ const DashboardTeams = () => {
   useTrackPage('Enterprise Dashboard — visit teams page');
   useScrollTop();
 
-  const { campaignId, teamsSearch, teamsSort, teamsDirection, dateRangeFrom, dateRangeTo } = useUrlQuery([
+  const {
+    campaignId,
+    teamsSearch,
+    teamsSort = 'name',
+    teamsDirection = 'asc',
+    dateRangeFrom,
+    dateRangeTo,
+  } = useUrlQuery([
     'campaignId',
     'teamsSearch',
     'teamsSort',

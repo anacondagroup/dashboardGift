@@ -2,14 +2,14 @@
 
 exports[`TeamsBreakdown render while breakdown is loading 1`] = `
 <div
-  dir="desc"
+  dir="asc"
   isLoading={true}
   items={Array []}
   linkQueryParams="{\\"search\\":\\"\\",\\"updateObj\\":{\\"dateRangeFrom\\":\\"\\",\\"dateRangeTo\\":\\"\\"}}"
   onPageChange={[Function]}
   onSort={[Function]}
   page={0}
-  sort=""
+  sort="name"
 >
   <Grid
     container={true}
