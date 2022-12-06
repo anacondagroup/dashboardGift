@@ -20,8 +20,8 @@ const TeamsBreakdown = ({ breakdown, isLoading, onChangeDateRange }) => {
   const classes = useStyles();
 
   const {
-    teamsSort = '',
-    teamsDirection = 'desc',
+    teamsSort = 'name',
+    teamsDirection = 'asc',
     teamsSearch = '',
     teamsPage = '0',
     dateRangeFrom = '',
