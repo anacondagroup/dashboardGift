@@ -1,4 +1,5 @@
 import { createReducer } from 'redux-act';
+import { StateStatus } from '@alycecom/utils';
 
 import { IGroupInfo, IOperation, ITeamInfo } from '../../types';
 import { GroupsTeamsConstants } from '../../constants/groupsTeams.constants';
@@ -26,11 +27,12 @@ import {
   orgTeamsFailure,
   orgTeamsRequest,
   orgTeamsSuccess,
+  setCurrentGroupSelected,
   setSelectedHierarchyId,
   setTeamsFilter,
-  setCurrentGroupSelected,
 } from './customerOrg.actions';
 import { AllGroupsAndTeamsOption, UngroupedTeamsOption } from './customerOrg.constants';
+import { makeGroupHierarchyId } from './customerOrg.helpers';
 
 export interface ICustomerOrgState {
   org: IOrgInfo & { isLoading: boolean };
@@ -52,7 +54,7 @@ export interface ICustomerOrgState {
     remainingDeposit: number;
   };
   hierarchy: {
-    isLoading: boolean;
+    status: StateStatus;
     data: IOrgHierarchy;
     selectedHierarchyId: string;
   };
@@ -92,7 +94,7 @@ export const initialState: ICustomerOrgState = {
     remainingDeposit: 0,
   },
   hierarchy: {
-    isLoading: false,
+    status: StateStatus.Idle,
     data: {
       depositsTotal: {
         accountId: AllGroupsAndTeamsOption.accountId,
@@ -109,7 +111,7 @@ export const initialState: ICustomerOrgState = {
       groupGrouped: [],
       ungrouped: [],
     },
-    selectedHierarchyId: GroupsTeamsConstants.AllGroupsAndTeams,
+    selectedHierarchyId: makeGroupHierarchyId(GroupsTeamsConstants.AllGroupsAndTeams),
   },
   lastInvoice: {
     isLoading: false,
@@ -248,14 +250,14 @@ export const customerOrg = createReducer({}, initialState)
     ...state,
     hierarchy: {
       ...state.hierarchy,
-      isLoading: true,
+      status: StateStatus.Pending,
     },
   }))
   .on(loadHierarchySuccess, (state, payload) => ({
     ...state,
     hierarchy: {
       ...state.hierarchy,
-      isLoading: false,
+      status: StateStatus.Fulfilled,
       data: {
         ...payload,
         remainingTeamsTotal: {
@@ -275,7 +277,7 @@ export const customerOrg = createReducer({}, initialState)
     ...state,
     hierarchy: {
       ...state.hierarchy,
-      isLoading: false,
+      status: StateStatus.Rejected,
     },
   }))
 

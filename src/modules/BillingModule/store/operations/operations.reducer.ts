@@ -1,16 +1,12 @@
 import { createReducer } from 'redux-act';
 import moment from 'moment';
 
-import { StateStatus } from '../../../../store/stateStatuses.types';
 import { IOperation } from '../../types';
 import { setSelectedHierarchyId } from '../customerOrg/customerOrg.actions';
+import { TDateRange } from '../billing.types';
 
-import { IDateRange, IOperationType, IPagination } from './operations.types';
+import { IOperationType, IPagination } from './operations.types';
 import {
-  downloadDepositLedgerReportFail,
-  downloadDepositLedgerReportRequest,
-  downloadDepositLedgerReportSuccess,
-  fetchBalance,
   loadOperationsFail,
   loadOperationsRequest,
   loadOperationsSuccess,
@@ -28,18 +24,12 @@ export interface IOperationsState {
     list: IOperation[];
     pagination: IPagination;
   };
-  balance: {
-    status: StateStatus;
-    amountAtTheStart: number;
-    amountAtTheEnd: number;
-  };
-  dateRangeFilter: IDateRange;
+  dateRangeFilter: TDateRange;
   typesFilter: {
     isLoading: boolean;
     items: IOperationType[];
     selected: string[];
   };
-  downloadReportStatus: StateStatus;
 }
 
 export const initialState: IOperationsState = {
@@ -53,11 +43,6 @@ export const initialState: IOperationsState = {
       totalPages: 0,
     },
   },
-  balance: {
-    status: StateStatus.Idle,
-    amountAtTheStart: 0,
-    amountAtTheEnd: 0,
-  },
   dateRangeFilter: {
     from: moment().utc().startOf('month').format('YYYY-MM-DD'),
     to: moment().utc().endOf('day').format('YYYY-MM-DD'),
@@ -67,7 +52,6 @@ export const initialState: IOperationsState = {
     items: [],
     selected: [],
   },
-  downloadReportStatus: StateStatus.Idle,
 };
 
 export const operations = createReducer({}, initialState)
@@ -92,28 +76,6 @@ export const operations = createReducer({}, initialState)
     operations: {
       ...state.operations,
       isLoading: false,
-    },
-  }))
-  .on(fetchBalance.pending, state => ({
-    ...state,
-    balance: {
-      ...state.balance,
-      status: StateStatus.Pending,
-    },
-  }))
-  .on(fetchBalance.fulfilled, (state, { amountAtTheStart, amountAtTheEnd }) => ({
-    ...state,
-    balance: {
-      status: StateStatus.Fulfilled,
-      amountAtTheStart,
-      amountAtTheEnd,
-    },
-  }))
-  .on(fetchBalance.rejected, state => ({
-    ...state,
-    balance: {
-      ...state.balance,
-      status: StateStatus.Rejected,
     },
   }))
   .on(setDateRange, (state, payload) => ({
@@ -175,17 +137,4 @@ export const operations = createReducer({}, initialState)
         currentPage: payload,
       },
     },
-  }))
-
-  .on(downloadDepositLedgerReportRequest, state => ({
-    ...state,
-    downloadReportStatus: StateStatus.Pending,
-  }))
-  .on(downloadDepositLedgerReportSuccess, state => ({
-    ...state,
-    downloadReportStatus: StateStatus.Fulfilled,
-  }))
-  .on(downloadDepositLedgerReportFail, state => ({
-    ...state,
-    downloadReportStatus: StateStatus.Rejected,
   }));

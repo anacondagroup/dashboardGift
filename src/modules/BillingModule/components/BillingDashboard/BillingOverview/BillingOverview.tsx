@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Tooltip, Grid } from '@mui/material';
-import { NumberFormat, Divider } from '@alycecom/ui';
+import { NumberFormat, Divider, AlyceTheme } from '@alycecom/ui';
 
 import KpiValue from '../../../../../components/Dashboard/Overview/KpiValue';
 import { getResources, getStats, getTeamsFilter } from '../../../store/customerOrg';
@@ -10,7 +10,7 @@ import BreakdownHeader from '../BillingTableBreakdown/BreakdownHeader';
 const styles = {
   KPIValue: {
     pr: 2,
-    color: 'text.primary',
+    color: ({ palette }: AlyceTheme) => palette.text.primary,
   },
 } as const;
 

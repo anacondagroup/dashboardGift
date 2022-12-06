@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { StateStatus } from '@alycecom/utils';
 
 import { render, screen, userEvent, waitFor } from '../../../../testUtils';
 import {
@@ -7,8 +8,8 @@ import {
   initialState as customerOrgInitialState,
 } from '../../store/customerOrg/customerOrg.reducer';
 import { initialState as operationsInitialState, IOperationsState } from '../../store/operations/operations.reducer';
-import { loadHierarchyRequest, setSelectedHierarchyId } from '../../store/customerOrg';
-import { loadTypesRequest, setSelectedTypes } from '../../store/operations';
+import { setSelectedHierarchyId } from '../../store/customerOrg';
+import { loadOperationsRequest, loadTypesRequest, setSelectedTypes } from '../../store/operations';
 import { OperationType } from '../../constants/operations.constants';
 
 import DepositLedger from './DepositLedger';
@@ -32,7 +33,7 @@ describe('DepositLedger', () => {
         ...customerOrgInitialState,
         hierarchy: {
           ...customerOrgInitialState.hierarchy,
-          isLoading: true,
+          status: StateStatus.Pending,
         },
       },
       {
@@ -64,7 +65,29 @@ describe('DepositLedger', () => {
     expect(screen.queryAllByTestId('TableLoadingLabel')).toHaveLength(30);
   });
 
-  test('Should request hierarchy and types', () => {
+  test('Should request operations and types when hierarhy is loaded', () => {
+    const { dispatch } = setup(
+      {
+        ...customerOrgInitialState,
+        org: {
+          ...customerOrgInitialState.org,
+          id: 100,
+        },
+        hierarchy: {
+          ...customerOrgInitialState.hierarchy,
+          status: StateStatus.Fulfilled,
+        },
+      },
+      {
+        ...operationsInitialState,
+      },
+    );
+
+    expect(dispatch).toBeCalledWith(loadTypesRequest());
+    expect(dispatch).toBeCalledWith(loadOperationsRequest());
+  });
+
+  test('Should not load operations before hierarchy is loaded', () => {
     const { dispatch } = setup(
       {
         ...customerOrgInitialState,
@@ -74,7 +97,6 @@ describe('DepositLedger', () => {
       },
     );
 
-    expect(dispatch).toBeCalledWith(loadHierarchyRequest());
     expect(dispatch).toBeCalledWith(loadTypesRequest());
   });
 
@@ -164,7 +186,7 @@ describe('DepositLedger', () => {
     userEvent.click(screen.getByLabelText('Groups and Teams'));
 
     expect(
-      screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.${GroupsTeamsConstants.AllGroupsAndTeams}`),
+      screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.group-${GroupsTeamsConstants.AllGroupsAndTeams}`),
     ).toHaveTextContent(/^All Groups\$1,110.79$/);
     expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.group-g1`)).toHaveTextContent(/^Group 1\$1,234.00$/);
     expect(screen.getByTestId(`DepositLedger.GroupsAndTeams.Option.team-3`)).toHaveTextContent(/^Team 3\$0.00$/);

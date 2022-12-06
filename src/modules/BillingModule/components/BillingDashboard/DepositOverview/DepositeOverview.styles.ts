@@ -1,23 +1,25 @@
+import { AlyceTheme } from '@alycecom/ui';
+
 export const styles = {
   KPIValueBudget: {
     pr: 2,
-    color: 'green.dark',
+    color: ({ palette }: AlyceTheme) => palette.green.dark,
     '&:hover': {
-      color: 'green.dark',
+      color: ({ palette }: AlyceTheme) => palette.green.dark,
     },
   },
   negativeDeposit: {
-    color: 'red.main',
+    color: ({ palette }: AlyceTheme) => palette.red.main,
     '&:hover': {
-      color: 'red.main',
+      color: ({ palette }: AlyceTheme) => palette.red.main,
     },
   },
   button: {
     ml: -1,
     fontSize: 12,
-    color: 'grey.main',
+    color: ({ palette }: AlyceTheme) => palette.link.main,
     '&:hover': {
-      color: 'grey.main',
+      color: ({ palette }: AlyceTheme) => palette.link.main,
     },
   },
 } as const;

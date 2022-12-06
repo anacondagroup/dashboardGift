@@ -11,6 +11,7 @@ import {
 import { editBillingGroups, IEditBillingGroupsState } from './editBillingGroups/editBillingGroups.reducer';
 import { giftDeposits, IGiftDepositsState } from './giftDeposits/giftDeposits.reducer';
 import { editTeams, IEditTeamsState } from './editTeams/editTeams.reducer';
+import { ui, TBillingUIState } from './ui';
 
 export interface IBillingState {
   breakdowns: IBreakdownsState;
@@ -21,6 +22,7 @@ export interface IBillingState {
   billingGroupsContacts: TBillingGroupsContactsState;
   giftDeposits: IGiftDepositsState;
   editTeams: IEditTeamsState;
+  ui: TBillingUIState;
 }
 
 export default combineReducers<IBillingState>({
@@ -32,4 +34,5 @@ export default combineReducers<IBillingState>({
   billingGroupsContacts,
   giftDeposits,
   editTeams,
+  ui,
 });
