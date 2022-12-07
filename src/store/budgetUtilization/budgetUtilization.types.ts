@@ -6,3 +6,8 @@ export interface IBudgetUtilizationByTeam {
   amountSent: number;
   period: string;
 }
+
+export enum BudgetBulkEditOption {
+  GiftBudget = 'Gift budget',
+  AddOneOff = 'Add one-off',
+}

@@ -1,8 +1,8 @@
 import React from 'react';
 import { RefreshPeriod, TBudgetCreateParams } from '@alycecom/services';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { render, screen, waitFor, cleanup } from '../../../../../../../testUtils';
 import {
@@ -15,7 +15,7 @@ import TeamMembersBudgetTable from './TeamMembersBudgetTable';
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
   useDispatch: jest.fn(() => jest.fn()),
-  useSelector: jest.fn().mockImplementation(fn => fn()),
+  useSelector: jest.fn(),
   connect: () => () => {},
 }));
 
@@ -32,6 +32,7 @@ const DEFAULT_TABLE_PROPS = {
       integration: null,
     },
   ],
+  teamId: 1,
   teamUtilizations: [
     {
       userId: 0,
@@ -59,24 +60,43 @@ describe('TeamMembersBudgetTable', () => {
     useDispatchMock.mockReset();
     dispatch.mockReset();
     useDispatchMock.mockReturnValue(dispatch);
+
+    useSelector.mockImplementation(fn =>
+      fn({
+        settings: {
+          ui: {
+            teamBudget: {
+              isAllUsersSelected: false,
+              selectedUserIds: [],
+            },
+          },
+        },
+      }),
+    );
   });
 
   afterEach(cleanup);
 
   const setup = (props = DEFAULT_TABLE_PROPS) => {
     const Component = () => {
-      const { control } = useForm<TBudgetCreateParams>({
+      const formMethods = useForm<TBudgetCreateParams>({
         mode: 'all',
         defaultValues: teamBudgetFormDefaultValues,
         resolver: teamBudgetFormResolver,
       });
+
+      const { control } = formMethods;
 
       const teamMembersBudgetTableProps = {
         ...props,
         control,
       };
 
-      return <TeamMembersBudgetTable {...teamMembersBudgetTableProps} />;
+      return (
+        <FormProvider {...formMethods}>
+          <TeamMembersBudgetTable {...teamMembersBudgetTableProps} />
+        </FormProvider>
+      );
     };
 
     return render(<Component />);

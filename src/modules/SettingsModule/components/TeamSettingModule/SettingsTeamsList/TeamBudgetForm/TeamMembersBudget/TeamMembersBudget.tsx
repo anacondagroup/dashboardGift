@@ -9,6 +9,7 @@ import { TEAM_MEMBERS_TOOLTIP_MESSAGE } from '../../../../../constants/budget.co
 import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
 import { loadTeamBudgetUtilization } from '../../../../../../../store/budgetUtilization/budgetUtilization.actions';
+import { resetUsersSelection } from '../../../../../store/ui/teamBudget/teamBudget.reducer';
 import {
   getMembersWithUtilization,
   getTeamBudgetUtilization,
@@ -97,6 +98,10 @@ const TeamMembersBudget = ({
     }
   }, [dispatch, refetch, teamId, existingBudget]);
 
+  useEffect(() => {
+    dispatch(resetUsersSelection());
+  }, [dispatch]);
+
   const membersWithUtilization = useSelector(getMembersWithUtilization);
 
   const removedMembersHasUtilization = useMemo(() => {
@@ -120,11 +125,9 @@ const TeamMembersBudget = ({
         <Box sx={styles.tableScroll}>
           <TeamMembersTable
             users={searchedTeamMembers}
+            teamId={teamId ?? 0}
             teamMembersHaveLoaded={teamMembersHaveLoaded && !isFetching}
             teamUtilizations={teamUtilizations}
-            isAllSelected={false}
-            handleSelectUser={() => false}
-            handleSelectAllTeamMembers={() => null}
             control={control}
             refreshPeriod={refreshPeriod}
             onMemberBudgetDefinition={onMemberBudgetDefinition}

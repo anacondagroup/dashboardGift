@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Button, Grid, Theme, Typography } from '@mui/material';
 import { Divider, GlobalFonts, Icon, Tooltip } from '@alycecom/ui';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import {
   BudgetCreateField,
   BudgetType,
@@ -203,7 +203,6 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
 
   const onMemberBudgetDefinition = useCallback(() => {
     const totalBudget = teamBudgets.reduce((prev, curr) => prev + curr.budget, 0);
-
     setValue(BudgetCreateField.Amount, totalBudget);
   }, [setValue, teamBudgets]);
 
@@ -212,84 +211,86 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
   useEffect(() => reset(), [reset]);
 
   return (
-    <Box component="form" sx={styles.container} onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={styles.content}>
-        <Box sx={styles.budgetHeader}>
-          <Typography sx={styles.header}>Give the team a budget</Typography>
-          <Tooltip title={TEAM_BUDGET_TOOLTIP_MESSAGE}>
-            <Icon icon="info-circle" sx={styles.tooltipIcon} />
-          </Tooltip>
+    <FormProvider {...methods}>
+      <Box component="form" sx={styles.container} onSubmit={handleSubmit(onSubmit)}>
+        <Box sx={styles.content}>
+          <Box sx={styles.budgetHeader}>
+            <Typography sx={styles.header}>Give the team a budget</Typography>
+            <Tooltip title={TEAM_BUDGET_TOOLTIP_MESSAGE}>
+              <Icon icon="info-circle" sx={styles.tooltipIcon} />
+            </Tooltip>
+          </Box>
+          <Divider color="divider" height={2} mt={1} mb={2} />
+          <Grid container>
+            <Grid container sx={styles.formLine}>
+              <Grid item xs={4}>
+                <Typography sx={styles.inputLabel}>Budget type</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <BudgetTypeSelector control={control} error={errors.period?.message} />
+              </Grid>
+            </Grid>
+            <Grid container sx={styles.formLine}>
+              <Grid item xs={4}>
+                <Typography sx={styles.inputLabel}>Gift Budget</Typography>
+              </Grid>
+              <Grid item xs={8}>
+                <Box sx={styles.giftBudgetFieldsContainer}>
+                  <TeamBudget control={control} error={errors.amount?.message} />
+                  <RefreshPeriodSelector control={control} error={errors.period?.message} />
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid container sx={styles.formLine}>
+              <Grid item xs={4}>
+                <Typography sx={styles.inputLabel}>Pause gifting when</Typography>
+              </Grid>
+              <Grid item xs>
+                <PauseGiftingOn control={control} error={errors.period?.message} />
+              </Grid>
+            </Grid>
+          </Grid>
+          <TeamMembersBudget
+            teamId={teamId}
+            control={control}
+            refreshPeriod={refreshPeriod}
+            onMemberBudgetDefinition={onMemberBudgetDefinition}
+            memberBudgetsTotal={sumOfMemberBudgets}
+            existingBudget={budget}
+          />
         </Box>
-        <Divider color="divider" height={2} mt={1} mb={2} />
-        <Grid container>
-          <Grid container sx={styles.formLine}>
-            <Grid item xs={4}>
-              <Typography sx={styles.inputLabel}>Budget type</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <BudgetTypeSelector control={control} error={errors.period?.message} />
-            </Grid>
-          </Grid>
-          <Grid container sx={styles.formLine}>
-            <Grid item xs={4}>
-              <Typography sx={styles.inputLabel}>Gift Budget</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Box sx={styles.giftBudgetFieldsContainer}>
-                <TeamBudget control={control} error={errors.amount?.message} />
-                <RefreshPeriodSelector control={control} error={errors.period?.message} />
-              </Box>
-            </Grid>
-          </Grid>
-          <Grid container sx={styles.formLine}>
-            <Grid item xs={4}>
-              <Typography sx={styles.inputLabel}>Pause gifting when</Typography>
-            </Grid>
-            <Grid item xs>
-              <PauseGiftingOn control={control} error={errors.period?.message} />
-            </Grid>
-          </Grid>
-        </Grid>
-        <TeamMembersBudget
-          teamId={teamId}
-          control={control}
-          refreshPeriod={refreshPeriod}
-          onMemberBudgetDefinition={onMemberBudgetDefinition}
-          memberBudgetsTotal={sumOfMemberBudgets}
-          existingBudget={budget}
+
+        <StepSectionFooter
+          backButton={
+            <Button startIcon={<Icon icon="arrow-left" />} onClick={handleBack} data-testid="TeamBudgetForm.Back">
+              Back
+            </Button>
+          }
+          cancelButton={
+            <Button
+              sx={styles.cancelButton}
+              variant="outlined"
+              disabled={isBudgetLoading}
+              onClick={handleCancel}
+              data-testid="TeamBudgetForm.Cancel"
+            >
+              Cancel
+            </Button>
+          }
+          nextButton={
+            <Button
+              sx={styles.submitButton}
+              type="submit"
+              variant="contained"
+              disabled={isBudgetLoading || isUsersLoading}
+              data-testid="TeamBudgetForm.Save"
+            >
+              Save
+            </Button>
+          }
         />
       </Box>
-
-      <StepSectionFooter
-        backButton={
-          <Button startIcon={<Icon icon="arrow-left" />} onClick={handleBack} data-testid="TeamBudgetForm.Back">
-            Back
-          </Button>
-        }
-        cancelButton={
-          <Button
-            sx={styles.cancelButton}
-            variant="outlined"
-            disabled={isBudgetLoading}
-            onClick={handleCancel}
-            data-testid="TeamBudgetForm.Cancel"
-          >
-            Cancel
-          </Button>
-        }
-        nextButton={
-          <Button
-            sx={styles.submitButton}
-            type="submit"
-            variant="contained"
-            disabled={isBudgetLoading || isUsersLoading}
-            data-testid="TeamBudgetForm.Save"
-          >
-            Save
-          </Button>
-        }
-      />
-    </Box>
+    </FormProvider>
   );
 };
 
