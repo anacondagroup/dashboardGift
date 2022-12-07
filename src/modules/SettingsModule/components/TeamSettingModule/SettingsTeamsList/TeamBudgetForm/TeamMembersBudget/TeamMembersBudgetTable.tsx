@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Table,
   TableBody,
@@ -18,32 +19,21 @@ import {
   TextFieldProps,
 } from '@mui/material';
 import ReactNumberFormat from 'react-number-format';
-import { Control, Controller, useFieldArray } from 'react-hook-form';
-import { BudgetCreateField, RefreshPeriod, TBudgetCreateParams } from '@alycecom/services';
+import { Control, Controller, useFieldArray, useFormContext } from 'react-hook-form';
+import { BudgetCreateField, ITeamMemberBudget, RefreshPeriod, TBudgetCreateParams } from '@alycecom/services';
+import { EntityId } from '@alycecom/utils';
 
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
 import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
-import { IBudgetUtilizationByTeam } from '../../../../../../../store/budgetUtilization/budgetUtilization.types';
+import BulkEdit from '../fields/BulkEdit';
+import {
+  BudgetBulkEditOption,
+  IBudgetUtilizationByTeam,
+} from '../../../../../../../store/budgetUtilization/budgetUtilization.types';
+import { toggleAllUsersSelection, toggleUserSelection } from '../../../../../store/ui/teamBudget/teamBudget.reducer';
+import { getIsAllUsersSelected, getSelectedUsersIds } from '../../../../../store/ui/teamBudget/teamBudget.selectors';
 
-interface ITableCheckboxProps {
-  id?: number;
-  isCheckboxSelected?: boolean;
-  handleSelectCheckbox: () => void;
-}
-
-interface ICustomTableCellProps extends TableCellProps {
-  isLoading?: boolean;
-  testId?: string;
-}
-
-const TableCheckBox = ({ id, isCheckboxSelected, handleSelectCheckbox }: ITableCheckboxProps) => (
-  <Checkbox
-    color="primary"
-    checked={isCheckboxSelected}
-    onChange={handleSelectCheckbox}
-    data-testid={`TeamMembersBudget.Table${id ? `.${id}.Checkbox` : '.SelectAllCheckbox'}`}
-  />
-);
+import BulkEditBudgetModal from './BulkEditBudgetModal';
 
 const styles = {
   tableContainer: {
@@ -98,6 +88,11 @@ const styles = {
   },
 } as const;
 
+interface ICustomTableCellProps extends TableCellProps {
+  isLoading?: boolean;
+  testId?: string;
+}
+
 const CustomTableCell = ({ children, testId, ...props }: ICustomTableCellProps): JSX.Element => (
   <TableCell sx={styles.tableCell} size="small" {...props}>
     <Box data-testid={testId} sx={styles.tableCellBox}>
@@ -108,14 +103,12 @@ const CustomTableCell = ({ children, testId, ...props }: ICustomTableCellProps):
 
 export interface ITeamMembersBudgetTableProps {
   users: IUser[];
+  teamId: number;
   teamMembersHaveLoaded: boolean;
-  isAllSelected: boolean;
   control: Control<TBudgetCreateParams>;
   refreshPeriod: RefreshPeriod;
   teamUtilizations: IBudgetUtilizationByTeam[];
-  handleSelectUser: () => void;
   onMemberBudgetDefinition: () => void;
-  handleSelectAllTeamMembers: () => void;
   existingBudget?: IBudget;
 }
 
@@ -123,20 +116,27 @@ const CustomTextInput = (props: TextFieldProps) => <TextField {...props} sx={sty
 
 const TeamMembersBudgetTable = ({
   users,
+  teamId,
   teamMembersHaveLoaded,
-  isAllSelected,
   control,
   refreshPeriod,
   teamUtilizations,
-  handleSelectUser,
   onMemberBudgetDefinition,
-  handleSelectAllTeamMembers,
   existingBudget,
 }: ITeamMembersBudgetTableProps): JSX.Element => {
+  const dispatch = useDispatch();
+
   const { fields, append } = useFieldArray({
     name: BudgetCreateField.TeamMemberBudgets,
     control,
   });
+
+  const { setValue, getValues } = useFormContext();
+
+  const isAllUsersSelected = useSelector(getIsAllUsersSelected);
+  const selectedUsersIds = useSelector(getSelectedUsersIds);
+
+  const [showBulkEditModal, toggleBulkEditModalState] = useState<boolean>(false);
 
   useEffect(() => {
     // For initialCreation
@@ -173,100 +173,167 @@ const TeamMembersBudgetTable = ({
     [],
   );
 
-  return (
-    <TableContainer sx={styles.tableContainer}>
-      <Table stickyHeader>
-        <TableHead data-testid="TeamMembersBudgetTable.Head">
-          <TableRow>
-            <CustomTableCell>
-              <TableCheckBox isCheckboxSelected={isAllSelected} handleSelectCheckbox={handleSelectAllTeamMembers} />
-            </CustomTableCell>
-            <CustomTableCell>
-              <TableSortLabel
-              // TODO: Fix/restore sorting w/ PD-12177
-              // https://alycecom.atlassian.net/browse/PD-12177
-              // direction={sortDirection}
-              // active={sortField === 'name'}
-              // onClick={() => onSortChange('name')}
-              >
-                <Typography sx={styles.headerTitle}>NAME</Typography>
-              </TableSortLabel>
-            </CustomTableCell>
-            <CustomTableCell>
-              <Typography sx={styles.headerTitle}>GIFT BUDGET / REFRESH</Typography>
-            </CustomTableCell>
-            <CustomTableCell>
-              <Typography sx={styles.headerTitle}>UTILIZED THIS PERIOD</Typography>
-            </CustomTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {!teamMembersHaveLoaded ? (
-            <TableRow data-testid="TeamMembersBudget.TableLoading">{skeletonLoading()}</TableRow>
-          ) : (
-            fields.map((field, index) => {
-              const userForField: IUser | undefined = users.find(user => user.id === field.userId);
-              const userUtilization =
-                teamUtilizations.find(utilization => userForField && utilization.userId === userForField.id)
-                  ?.amountClaimed || 0;
+  const handleSelectAll = useCallback(
+    (checked: Boolean) => {
+      const userIds = users.map(user => user.id);
+      dispatch(toggleAllUsersSelection({ users: userIds as EntityId[], checked }));
+    },
+    [dispatch, users],
+  );
 
-              return userForField ? (
-                <TableRow key={field.id}>
-                  <CustomTableCell>
-                    <TableCheckBox handleSelectCheckbox={handleSelectUser} />
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Box sx={styles.avatarContainer}>
-                      <Avatar src={userForField.imageUrl} sizes="30" />
-                      <Box sx={styles.userContainer}>
-                        <Typography data-testid={`TeamMembersBudget.Table.${index}.Name`}>
-                          {userForField.firstName} {userForField.lastName}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </CustomTableCell>
-                  <CustomTableCell>
-                    <Box sx={styles.budgetAndRefreshContainer}>
-                      <Controller
-                        control={control}
-                        name={`${BudgetCreateField.TeamMemberBudgets}.${index}.budget` as const}
-                        render={({ field: { onChange, value } }) => (
-                          <ReactNumberFormat
-                            style={styles.budgetField as React.CSSProperties}
-                            key={field.userId}
-                            onValueChange={({ floatValue }) => {
-                              onChange(floatValue ?? 0);
-                              onMemberBudgetDefinition();
-                            }}
-                            decimalScale={2}
-                            allowNegative={false}
-                            customInput={CustomTextInput}
-                            disabled={false}
-                            thousandSeparator
-                            prefix="$"
-                            placeholder="$"
-                            InputLabelProps={{ shrink: true }}
-                            value={value ?? ''}
-                            variant="outlined"
-                            inputProps={{
-                              min: 0,
-                              styles: [styles.tableParameter],
-                              'data-testid': 'TeamMembersBudget.TeamMemberBudget',
-                            }}
-                          />
-                        )}
+  const handleSelectUser = useCallback(
+    (user: IUser, checked: Boolean) => {
+      dispatch(toggleUserSelection({ user: user.id as EntityId, checked, totalUsers: users.length }));
+    },
+    [users, dispatch],
+  );
+
+  const getIsUserSelected = useCallback(
+    (userId: EntityId) => selectedUsersIds.some((selectedUser: EntityId) => selectedUser === userId),
+    [selectedUsersIds],
+  );
+
+  const onBulkEditChange = useCallback((option: string) => {
+    if (option === BudgetBulkEditOption.GiftBudget) {
+      toggleBulkEditModalState(true);
+    }
+  }, []);
+
+  const onBulkEditSaveClick = useCallback(
+    (newBudget: number) => {
+      const teamMemberBudgets = getValues(BudgetCreateField.TeamMemberBudgets);
+      const newValues = teamMemberBudgets.map((teamMemberBudget: ITeamMemberBudget) => {
+        if (selectedUsersIds.find((user: EntityId) => Number(user) === teamMemberBudget.userId)) {
+          return {
+            ...teamMemberBudget,
+            budget: newBudget,
+          };
+        }
+        return teamMemberBudget;
+      });
+      setValue(BudgetCreateField.TeamMemberBudgets, newValues);
+    },
+    [setValue, selectedUsersIds, getValues],
+  );
+
+  return (
+    <>
+      <BulkEditBudgetModal
+        selectedUserIds={selectedUsersIds}
+        teamId={teamId}
+        budgetUtilizations={teamUtilizations}
+        budget={existingBudget}
+        onSaveClick={onBulkEditSaveClick}
+        isOpen={showBulkEditModal}
+        toggleModalState={toggleBulkEditModalState}
+      />
+      <TableContainer sx={styles.tableContainer}>
+        <Table stickyHeader>
+          <TableHead data-testid="TeamMembersBudgetTable.Head">
+            <TableRow>
+              <CustomTableCell>
+                <Checkbox
+                  color="primary"
+                  checked={isAllUsersSelected}
+                  onChange={() => handleSelectAll(isAllUsersSelected)}
+                  data-testid="TeamMembersBudgetTable.UserSelect.SelectAll"
+                />
+              </CustomTableCell>
+              <CustomTableCell>
+                {!!selectedUsersIds?.length && <BulkEdit onChange={onBulkEditChange} />}
+                {!selectedUsersIds?.length && (
+                  <TableSortLabel
+                  // TODO: Fix/restore sorting w/ PD-12177
+                  // https://alycecom.atlassian.net/browse/PD-12177
+                  // direction={sortDirection}
+                  // active={sortField === 'name'}
+                  // onClick={() => onSortChange('name')}
+                  >
+                    <Typography sx={styles.headerTitle}>NAME</Typography>
+                  </TableSortLabel>
+                )}
+              </CustomTableCell>
+              <CustomTableCell>
+                <Typography sx={styles.headerTitle}>GIFT BUDGET / REFRESH</Typography>
+              </CustomTableCell>
+              <CustomTableCell>
+                <Typography sx={styles.headerTitle}>UTILIZED THIS PERIOD</Typography>
+              </CustomTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {!teamMembersHaveLoaded ? (
+              <TableRow data-testid="TeamMembersBudget.TableLoading">{skeletonLoading()}</TableRow>
+            ) : (
+              fields.map((field, index) => {
+                const userForField: IUser | undefined = users.find(user => user.id === field.userId);
+                const userUtilization =
+                  teamUtilizations.find(utilization => userForField && utilization.userId === userForField.id)
+                    ?.amountClaimed || 0;
+
+                return userForField ? (
+                  <TableRow key={field.id}>
+                    <CustomTableCell>
+                      <Checkbox
+                        color="primary"
+                        checked={getIsUserSelected(userForField.id)}
+                        onChange={() => handleSelectUser(userForField, getIsUserSelected(userForField.id))}
+                        data-testid="TeamMembersBudgetTable.UserSelect.SelectAll"
                       />
-                      <Typography sx={styles.tableParameter}> / {refreshPeriod}</Typography>
-                    </Box>
-                  </CustomTableCell>
-                  <TableCell sx={styles.utilizationContainer}>$ {userUtilization.toLocaleString('en')}</TableCell>
-                </TableRow>
-              ) : null;
-            })
-          )}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                    </CustomTableCell>
+                    <CustomTableCell>
+                      <Box sx={styles.avatarContainer}>
+                        <Avatar src={userForField.imageUrl} sizes="30" />
+                        <Box sx={styles.userContainer}>
+                          <Typography data-testid={`TeamMembersBudget.Table.${index}.Name`}>
+                            {userForField.firstName} {userForField.lastName}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </CustomTableCell>
+                    <CustomTableCell>
+                      <Box sx={styles.budgetAndRefreshContainer}>
+                        <Controller
+                          control={control}
+                          name={`${BudgetCreateField.TeamMemberBudgets}.${index}.budget` as const}
+                          render={({ field: { onChange, value } }) => (
+                            <ReactNumberFormat
+                              style={styles.budgetField as React.CSSProperties}
+                              key={field.userId}
+                              onValueChange={({ floatValue }) => {
+                                onChange(floatValue ?? 0);
+                                onMemberBudgetDefinition();
+                              }}
+                              decimalScale={2}
+                              allowNegative={false}
+                              customInput={CustomTextInput}
+                              disabled={false}
+                              thousandSeparator
+                              prefix="$"
+                              placeholder="$"
+                              InputLabelProps={{ shrink: true }}
+                              value={value ?? ''}
+                              variant="outlined"
+                              inputProps={{
+                                min: 0,
+                                styles: [styles.tableParameter],
+                                'data-testid': 'TeamMembersBudget.TeamMemberBudget',
+                              }}
+                            />
+                          )}
+                        />
+                        <Typography sx={styles.tableParameter}> / {refreshPeriod}</Typography>
+                      </Box>
+                    </CustomTableCell>
+                    <TableCell sx={styles.utilizationContainer}>$ {userUtilization.toLocaleString('en')}</TableCell>
+                  </TableRow>
+                ) : null;
+              })
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 };
 export default TeamMembersBudgetTable;

@@ -5,6 +5,7 @@ import { reducer as templatesReducer } from './templates/templates.reducer';
 import { reducer as teamsSettingReducer, ITeamsSettingsState } from './teams/teamsSettings.reducer';
 import { organisationReducer, IOrganizationState } from './organisation/organisation.reducer';
 import { reducer as personalSettingsReducer, IPersonalSettingsState } from './personal/personal.reducer';
+import { ui as uiReducer, TUiState } from './ui/ui.reducer';
 
 // TODO Remove once all properties of settings state is defined
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -14,6 +15,7 @@ export interface ISettingsState {
   campaign: ISettingsCampaignState;
   templates: any;
   personal: IPersonalSettingsState;
+  ui: TUiState;
 }
 
 export default combineReducers<ISettingsState>({
@@ -22,4 +24,5 @@ export default combineReducers<ISettingsState>({
   campaign: campaignSettingsReducer,
   templates: templatesReducer,
   personal: personalSettingsReducer,
+  ui: uiReducer,
 });
