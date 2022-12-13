@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DateRangeSelect } from '@alycecom/ui';
 
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
-import { getDateRange, setDateRange } from '../../../store/operations';
+import { getDateRange } from '../../../store/ui/transactionsFilters/transactionsFilters.selectors';
+import { setDateRange } from '../../../store/ui/transactionsFilters/transactionsFilters.reducer';
 import { BILLING_DATA_MIN_DATE } from '../../../constants/billing.constants';
 
 const DateFilter = () => {

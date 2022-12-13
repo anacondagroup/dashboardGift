@@ -1,13 +1,13 @@
-import { GroupsTeamsConstants } from '../../constants/groupsTeams.constants';
+import { GroupsTeamsIdentifier } from '@alycecom/services';
 
 export const AllGroupsAndTeamsOption = {
-  id: GroupsTeamsConstants.AllGroupsAndTeams,
+  id: GroupsTeamsIdentifier.AllGroupsAndTeams,
   name: 'All Groups',
   accountId: '0',
 };
 
 export const UngroupedTeamsOption = {
-  id: GroupsTeamsConstants.Ungrouped,
+  id: GroupsTeamsIdentifier.Ungrouped,
   name: 'Remaining Teams',
-  accountId: 'Ungrouped',
+  accountId: 'ungrouped',
 };

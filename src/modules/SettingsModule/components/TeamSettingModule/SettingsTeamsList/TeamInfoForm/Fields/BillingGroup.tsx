@@ -1,13 +1,12 @@
 import React from 'react';
 import { Autocomplete, Box, FormControlProps, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
 import { Control, useController } from 'react-hook-form';
-import { useGetBillingGroupsQuery, billingGroupAdapter } from '@alycecom/services';
+import { useGetBillingGroupsQuery, billingGroupAdapter, GroupsTeamsIdentifier } from '@alycecom/services';
 import { useSelector } from 'react-redux';
 import { EntityId } from '@alycecom/utils';
 import { Icon, Tooltip } from '@alycecom/ui';
 
 import { TeamField, TTeamFormParams } from '../../../../../store/teams/team/team.types';
-import { GroupsTeamsConstants } from '../../../../../../BillingModule/constants/groupsTeams.constants';
 
 const styles = {
   root: {
@@ -51,7 +50,7 @@ const BillingGroup = ({ control }: TBillingGroupProps): JSX.Element => {
       selectFromResult: result => ({
         ...result,
         ...billingGroupAdapter.getSelectors(() => result?.data ?? billingGroupAdapter.getInitialState()),
-        groupsIds: result.data?.ids.filter(groupId => groupId !== GroupsTeamsConstants.Ungrouped) ?? [],
+        groupsIds: result.data?.ids.filter(groupId => groupId !== GroupsTeamsIdentifier.Ungrouped) ?? [],
       }),
     },
   );

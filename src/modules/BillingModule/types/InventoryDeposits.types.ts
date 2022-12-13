@@ -1,7 +1,9 @@
-import { IDeposit, IInventory } from './AccountResources.types';
+import { TDeposit } from '@alycecom/services';
+
+import { IInventory } from './AccountResources.types';
 
 export interface IInventoryDeposits {
   inventory: IInventory;
-  deposits: IDeposit[];
+  deposits: TDeposit[];
   totalMoney: number;
 }

@@ -8,10 +8,12 @@ import { StyledCell } from '../../../styled/Styled';
 import { TGiftingActivityGroupNode } from '../../../../types';
 import { setBillingTab } from '../../../../store/ui/tab/tab.reducer';
 import { BillingTab } from '../../../../store/ui/tab/tab.types';
-import { setSelectedHierarchyId } from '../../../../store/customerOrg';
-import { makeGroupHierarchyId } from '../../../../store/customerOrg/customerOrg.helpers';
 import { getDateRange } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
-import { setDateRange } from '../../../../store/operations';
+import { makeGroupHierarchyId } from '../../../../store/ui/transactionsFilters/transactionsFilters.helpers';
+import {
+  setSelectedHierarchyId,
+  setDateRange,
+} from '../../../../store/ui/transactionsFilters/transactionsFilters.reducer';
 
 import { styles } from './GroupRow.styles';
 import TeamRow from './TeamRow';

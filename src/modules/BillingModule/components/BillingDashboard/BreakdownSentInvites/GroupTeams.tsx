@@ -1,11 +1,11 @@
 import React, { memo } from 'react';
 
-import { IGroup } from '../../../types';
+import { TGroup } from '../../../types';
 
 import Team from './Team';
 
 export interface IGroupTeamsProps {
-  group: IGroup;
+  group: TGroup;
   isExpanded: boolean;
 }
 

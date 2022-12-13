@@ -12,7 +12,7 @@ export type TUseGetGiftingActivityByGroupValue = {
   ids: EntityId[];
 };
 
-export const useGetGiftingActivityByGroup = (id: string | number): TUseGetGiftingActivityByGroupValue => {
+export const useGetGiftingActivityByGroup = (id?: string | number): TUseGetGiftingActivityByGroupValue => {
   const { from, to } = useSelector(getDateRange);
 
   const skip = !id;

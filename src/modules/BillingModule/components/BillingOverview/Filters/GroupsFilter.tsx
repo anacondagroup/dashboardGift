@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AlyceTheme } from '@alycecom/ui';
+import { useGetOrganizationBillingHierarchyQuery } from '@alycecom/services';
 
 import { AllGroupsAndTeamsOption } from '../../../store/customerOrg/customerOrg.constants';
-import { getHierarchyIsLoading, getHierarchyList } from '../../../store/customerOrg';
 import { getGroupId } from '../../../store/ui/overviewFilters/overviewFilters.selectors';
 import { setGroupId } from '../../../store/ui/overviewFilters/overviewFilters.reducer';
+import { getHierarchyList } from '../../../store/billing.selectors';
 
 const styles = {
   indent: {
@@ -21,7 +22,7 @@ const styles = {
 const GroupsFilter = (): JSX.Element => {
   const dispatch = useDispatch();
 
-  const isLoading = useSelector(getHierarchyIsLoading);
+  const { isFetching } = useGetOrganizationBillingHierarchyQuery();
   const hierarchyList = useSelector(getHierarchyList);
 
   const groupId = useSelector(getGroupId);
@@ -29,7 +30,7 @@ const GroupsFilter = (): JSX.Element => {
   const groups = useMemo(() => hierarchyList.filter(item => item.level === 0), [hierarchyList]);
   const selectedGroup = useMemo(() => groups.find(item => item.id === groupId), [groupId, groups]);
 
-  const disabled = groups.length === 1 || isLoading;
+  const disabled = groups.length === 1 || isFetching;
 
   const handleSelect = (event: SelectChangeEvent) => {
     dispatch(setGroupId(event.target.value));

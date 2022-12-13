@@ -1,20 +1,21 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
 import { catchError, map, mergeMap, switchMap, takeUntil } from 'rxjs/operators';
-import { IListResponse, IResponse, handleError, handlers } from '@alycecom/services';
+import {
+  IListResponse,
+  IResponse,
+  handleError,
+  handlers,
+  TTransaction,
+  TTeamInfo,
+  TGroupInfo,
+} from '@alycecom/services';
 import qs from 'query-string';
 
-import { IAccountResources, IGroupInfo, IOperation, ITeamInfo } from '../../types';
+import { IAccountResources } from '../../types';
 import { acceptedInvitesRequest, sentInvitesRequest } from '../breakdowns';
-import { loadOperationsRequest } from '../operations';
 
 import {
-  customerOrgFailure,
-  customerOrgRequest,
-  customerOrgSuccess,
-  loadHierarchyFail,
-  loadHierarchyRequest,
-  loadHierarchySuccess,
   loadLastInvoiceFail,
   loadLastInvoiceRequest,
   loadLastInvoiceSuccess,
@@ -30,30 +31,17 @@ import {
   orgTeamsFailure,
   orgTeamsRequest,
   orgTeamsSuccess,
-  setSelectedHierarchyId,
   setTeamsFilter,
 } from './customerOrg.actions';
-import { ICustomerStats, IOrgHierarchy, IOrgInfo } from './customerOrg.types';
+import { ICustomerStats } from './customerOrg.types';
 import { getTeamsFilter } from './customerOrg.selectors';
-
-export const customerOrgEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
-  action$.pipe(
-    ofType(customerOrgRequest),
-    mergeMap(() =>
-      apiService.get('/api/v1/organization', {}, true).pipe(
-        map((response: IOrgInfo) => customerOrgSuccess(response)),
-        takeUntil(action$.ofType(customerOrgRequest)),
-        catchError(errorHandler({ callbacks: customerOrgFailure })),
-      ),
-    ),
-  );
 
 export const orgTeamsEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
   action$.pipe(
     ofType(orgTeamsRequest),
     mergeMap(() =>
       apiService.get('/api/v1/hierarchy/teams', {}, true).pipe(
-        map((response: IListResponse<ITeamInfo>) => orgTeamsSuccess(response.data)),
+        map((response: IListResponse<TTeamInfo>) => orgTeamsSuccess(response.data)),
         takeUntil(action$.ofType(orgTeamsRequest)),
         catchError(errorHandler({ callbacks: orgTeamsFailure })),
       ),
@@ -65,7 +53,7 @@ export const orgGroupsEpic: Epic = (action$, state$, { apiService, messagesServi
     ofType(orgGroupsRequest),
     mergeMap(() =>
       apiService.get('/api/v1/groups', {}, true).pipe(
-        map((response: IListResponse<IGroupInfo>) => orgGroupsSuccess(response.data)),
+        map((response: IListResponse<TGroupInfo>) => orgGroupsSuccess(response.data)),
         takeUntil(action$.ofType(orgGroupsRequest)),
         catchError(errorHandler({ callbacks: orgGroupsFailure })),
       ),
@@ -104,42 +92,22 @@ export const loadResourcesEpic: Epic = (action$, state$, { apiService, messagesS
     }),
   );
 
-export const loadHierarchyEpic: Epic = (action$, state$, { apiService, messagesService: { errorHandler } }) =>
-  action$.pipe(
-    ofType(loadHierarchyRequest),
-    switchMap(() =>
-      apiService.get(`/api/v1/reporting/resources/hierarchy-with-deposits-group-grouped`, {}, true).pipe(
-        map((response: IResponse<IOrgHierarchy>) => loadHierarchySuccess(response.data)),
-        catchError(errorHandler({ callbacks: loadHierarchyFail })),
-      ),
-    ),
-  );
-
-export const setSelectedAccountEpic: Epic = action$ =>
-  action$.pipe(
-    ofType(setSelectedHierarchyId),
-    mergeMap(() => [loadOperationsRequest()]),
-  );
-
 const loadLastInvoiceEpic: Epic = (action$, state$, { apiService }) =>
   action$.pipe(
     ofType(loadLastInvoiceRequest),
     switchMap(() =>
       apiService.get('/api/v1/reporting/resources/deposits/operations/latest-invoice', {}, true).pipe(
-        map((response: IResponse<IOperation>) => loadLastInvoiceSuccess(response.data)),
+        map((response: IResponse<TTransaction>) => loadLastInvoiceSuccess(response.data)),
         catchError(handleError(handlers.handleAnyError(loadLastInvoiceFail))),
       ),
     ),
   );
 
 export default [
-  customerOrgEpic,
   orgTeamsEpic,
   orgGroupsEpic,
   changeTeamsFilterEpic,
   loadStatsEpic,
   loadResourcesEpic,
-  loadHierarchyEpic,
-  setSelectedAccountEpic,
   loadLastInvoiceEpic,
 ];

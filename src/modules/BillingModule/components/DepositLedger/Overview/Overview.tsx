@@ -3,10 +3,14 @@ import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useLazyGetTransactionsReportQuery } from '@alycecom/services';
 
-import { getDateRange, getHasOperations, getPagination, getSelectedTypes } from '../../../store/operations';
 import DownloadLink from '../../../../../components/Shared/DownloadLink';
 import AccountBalance from '../../AccountBalance';
-import { getSelectedGroupOrTeam } from '../../../store/customerOrg';
+import {
+  getTransactionTypeIds,
+  getDateRange,
+  getPagination,
+} from '../../../store/ui/transactionsFilters/transactionsFilters.selectors';
+import { getSelectedGroupOrTeam } from '../../../store/billing.selectors';
 
 const styles = {
   root: {
@@ -26,10 +30,11 @@ const Overview = (): JSX.Element => {
     deposit: { accountId },
     balanceAccountId,
   } = useSelector(getSelectedGroupOrTeam);
+
   const { from, to } = useSelector(getDateRange);
-  const operationTypes = useSelector(getSelectedTypes);
   const { total } = useSelector(getPagination);
-  const hasOperations = useSelector(getHasOperations);
+  const operationTypes = useSelector(getTransactionTypeIds);
+  const hasOperations = total > 0;
 
   const [downloadTransactionsReport, { isFetching }] = useLazyGetTransactionsReportQuery();
 

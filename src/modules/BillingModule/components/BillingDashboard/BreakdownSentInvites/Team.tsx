@@ -6,7 +6,7 @@ import { formatTestId } from '@alycecom/utils';
 import { NumberFormat, TableCellTooltip, ExpandIcon } from '@alycecom/ui';
 
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
-import { IGroup, ITeam } from '../../../types';
+import { TGroup, TTeam } from '../../../types';
 
 import TeamInventories from './TeamInventories';
 
@@ -25,8 +25,8 @@ const useStyles = makeStyles(({ spacing }) => ({
 }));
 
 export interface ITeamProps {
-  team: ITeam;
-  group: IGroup;
+  team: TTeam;
+  group: TGroup;
   isExpandedByDefault: boolean;
 }
 

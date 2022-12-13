@@ -1,15 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import moment from 'moment';
 import { REQUEST_DATE_FORMAT } from '@alycecom/ui';
+import { GroupsTeamsIdentifier } from '@alycecom/services';
 
-import { TGroupId } from '../../../types';
-import { GroupsTeamsConstants } from '../../../constants/groupsTeams.constants';
 import { TDateRange } from '../../billing.types';
 import { resetBillingUi } from '../ui.actions';
 
 export type TOverviewFiltersState = {
   dateRange: TDateRange;
-  groupId: TGroupId;
+  groupId: string;
 };
 
 const initialState: TOverviewFiltersState = {
@@ -18,7 +17,7 @@ const initialState: TOverviewFiltersState = {
     from: moment().utc().startOf('month').format(REQUEST_DATE_FORMAT),
     to: moment().utc().endOf('day').format(REQUEST_DATE_FORMAT),
   },
-  groupId: GroupsTeamsConstants.AllGroupsAndTeams,
+  groupId: GroupsTeamsIdentifier.AllGroupsAndTeams,
 };
 
 export const {
@@ -34,7 +33,7 @@ export const {
       Object.assign(state, {
         dateRange: action.payload,
       }),
-    setGroupId: (state, action: PayloadAction<TGroupId>) =>
+    setGroupId: (state, action: PayloadAction<string>) =>
       Object.assign(state, {
         groupId: action.payload,
       }),

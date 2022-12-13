@@ -2,11 +2,11 @@ import React, { memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { AlyceTheme } from '@alycecom/ui';
+import { useGetOrganizationQuery, GroupsTeamsIdentifier } from '@alycecom/services';
 
 import { getGroupId } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
-import { getGroupsMap, getOrg } from '../../../../store/customerOrg';
-import { GroupsTeamsConstants } from '../../../../constants/groupsTeams.constants';
 import EmailReport from '../../../EmailReport/EmailReport';
+import { getGroupsMap } from '../../../../store/billing.selectors';
 
 const styles = {
   root: {
@@ -24,12 +24,13 @@ const styles = {
 } as const;
 
 const GiftingActivityHeader = (): JSX.Element => {
-  const orgInfo = useSelector(getOrg);
+  const { data: organization } = useGetOrganizationQuery();
+
   const groupId = useSelector(getGroupId);
   const groupsMap = useSelector(getGroupsMap);
 
-  const isAllGroups = groupId === GroupsTeamsConstants.AllGroupsAndTeams;
-  const accountName = isAllGroups ? orgInfo.name : groupsMap[groupId].groupName;
+  const isAllGroups = groupId === GroupsTeamsIdentifier.AllGroupsAndTeams;
+  const accountName = isAllGroups ? organization?.name : groupsMap[groupId].groupName;
 
   return (
     <Box sx={styles.root}>

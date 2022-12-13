@@ -12,7 +12,7 @@ import {
   acceptedTeamInventoriesRequest,
 } from '../../../store/breakdowns';
 import InventoryTypeImage from '../BillingTableBreakdown/InventoryTypeImage';
-import { IGroup, IInventoryDeposits, ITeam } from '../../../types';
+import { TGroup, IInventoryDeposits, TTeam } from '../../../types';
 
 const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
   tableRow: {
@@ -32,8 +32,8 @@ const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
 }));
 
 export interface ITeamInventoriesProps {
-  team: ITeam;
-  group: IGroup;
+  team: TTeam;
+  group: TGroup;
   isExpanded: boolean;
 }
 
