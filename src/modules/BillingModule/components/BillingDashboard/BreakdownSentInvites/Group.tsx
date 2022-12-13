@@ -5,7 +5,7 @@ import { formatTestId } from '@alycecom/utils';
 import { NumberFormat, TableCellTooltip, ExpandIcon, TableLoadingLabel } from '@alycecom/ui';
 
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
-import { IGroup } from '../../../types';
+import { TGroup } from '../../../types';
 
 import GroupTeams from './GroupTeams';
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface IGroupProps {
-  group: IGroup;
+  group: TGroup;
   isLoading: boolean;
   isExpandedByDefault: boolean;
 }

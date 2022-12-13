@@ -4,16 +4,10 @@ import { Box, Paper, Tab, Tabs, Toolbar } from '@mui/material';
 import { Divider } from '@alycecom/ui';
 import { Features, User } from '@alycecom/modules';
 import { useUnmount } from 'react-use';
+import { useGetOrganizationQuery } from '@alycecom/services';
 
 import { acceptedInvitesRequest, sentInvitesRequest } from '../../store/breakdowns';
-import {
-  customerOrgRequest,
-  getOrg,
-  loadHierarchyRequest,
-  loadLastInvoiceRequest,
-  loadResourcesRequest,
-  loadStatsRequest,
-} from '../../store/customerOrg';
+import { loadLastInvoiceRequest, loadResourcesRequest, loadStatsRequest } from '../../store/customerOrg';
 import { getGroupsListRequest } from '../../store/billingGroups';
 import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
 import TabPanel from '../../../../components/AppBar/TabPanel';
@@ -38,9 +32,10 @@ const BillingDashboard = () => {
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
+  const { data: organization } = useGetOrganizationQuery();
+
   const isUpdatedBillingOverview = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.BILLING_OVERVIEW_2_0));
 
-  const { id: orgId } = useSelector(getOrg);
   const userId = useSelector(User.selectors.getUserId);
   const currentTab = useSelector(getCurrentTab);
 
@@ -54,8 +49,6 @@ const BillingDashboard = () => {
 
   useEffect(() => {
     batch(() => {
-      dispatch(customerOrgRequest());
-      dispatch(loadHierarchyRequest());
       if (!isUpdatedBillingOverview) {
         dispatch(loadStatsRequest());
         dispatch(loadResourcesRequest());
@@ -68,10 +61,10 @@ const BillingDashboard = () => {
   }, [dispatch, isUpdatedBillingOverview]);
 
   useEffect(() => {
-    if (orgId && userId) {
+    if (organization?.id && userId) {
       trackEvent('Manage billing - Viewed');
     }
-  }, [trackEvent, orgId, userId]);
+  }, [trackEvent, organization, userId]);
 
   useUnmount(() => dispatch(resetBillingUi()));
 

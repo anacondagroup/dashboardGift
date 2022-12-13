@@ -4,6 +4,7 @@ import { FormControl, InputLabel, ListItemText, MenuItem, Radio, Select } from '
 import { makeStyles } from '@mui/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AlyceTheme } from '@alycecom/ui';
+import { GroupsTeamsIdentifier } from '@alycecom/services';
 
 import {
   orgGroupsRequest,
@@ -15,7 +16,6 @@ import {
   setCurrentGroupSelected,
 } from '../../../store/customerOrg';
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
-import { GroupsTeamsConstants } from '../../../constants/groupsTeams.constants';
 
 const useStyles = makeStyles<AlyceTheme>(({ spacing }) => ({
   radio: {
@@ -57,7 +57,7 @@ const TeamsFilter = () => {
     [dispatch],
   );
 
-  const selectedValue = filter.teamIds[0] || filter.groupIds[0] || GroupsTeamsConstants.AllGroupsAndTeams;
+  const selectedValue = filter.teamIds[0] || filter.groupIds[0] || GroupsTeamsIdentifier.AllGroupsAndTeams;
 
   const items = useMemo<IFilterItem[]>(() => {
     const groupsItems = groups.reduce<IFilterItem[]>((acc, group) => {
@@ -72,7 +72,7 @@ const TeamsFilter = () => {
         ...teams
           .filter(
             team =>
-              team.groupId === group.groupId || (!team.groupId && group.groupId === GroupsTeamsConstants.Ungrouped),
+              team.groupId === group.groupId || (!team.groupId && group.groupId === GroupsTeamsIdentifier.Ungrouped),
           )
           .map(team => ({
             value: team.teamId,
@@ -87,9 +87,9 @@ const TeamsFilter = () => {
 
     return [
       {
-        value: GroupsTeamsConstants.AllGroupsAndTeams,
+        value: GroupsTeamsIdentifier.AllGroupsAndTeams,
         label: 'All groups & teams',
-        isSelected: selectedValue === GroupsTeamsConstants.AllGroupsAndTeams,
+        isSelected: selectedValue === GroupsTeamsIdentifier.AllGroupsAndTeams,
         level: 0,
       },
       ...groupsItems,
@@ -103,7 +103,7 @@ const TeamsFilter = () => {
   const trackEvent = useBillingTrackEvent();
   const handleChangeSelected = useCallback(
     ev => {
-      if (ev.target.value === GroupsTeamsConstants.AllGroupsAndTeams) {
+      if (ev.target.value === GroupsTeamsIdentifier.AllGroupsAndTeams) {
         handleChangeFilter({
           teamIds: [],
           groupIds: [],
@@ -127,7 +127,7 @@ const TeamsFilter = () => {
           });
           trackEvent(
             `Billing insights - Filtered - By ${
-              selected.parentGroupId === GroupsTeamsConstants.Ungrouped ? 'ungrouped team' : 'team'
+              selected.parentGroupId === GroupsTeamsIdentifier.Ungrouped ? 'ungrouped team' : 'team'
             }`,
             {
               teamId: selected.value,

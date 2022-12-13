@@ -1,7 +1,7 @@
 import { createReducer } from 'redux-act';
 import moment from 'moment';
 
-import { IGroup, IInventory, IInventoryDeposits } from '../../types';
+import { TGroup, IInventory, IInventoryDeposits } from '../../types';
 
 import {
   acceptedInvitesFailure,
@@ -21,7 +21,7 @@ export interface IBreakdownsState {
   sent: {
     isLoading: boolean;
     totalInvites: number;
-    groups: IGroup[];
+    groups: TGroup[];
     filters: {
       from?: string;
       to?: string;
@@ -31,7 +31,7 @@ export interface IBreakdownsState {
     isLoading: boolean;
     totalInvites: number;
     totalMoney: number;
-    groups: IGroup[];
+    groups: TGroup[];
     inventories: {
       [groupId: string]: {
         [teamId: number]: {

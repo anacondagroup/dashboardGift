@@ -1,33 +1,22 @@
 import React, { memo, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
 import { User } from '@alycecom/modules';
+import { useGetOrganizationQuery } from '@alycecom/services';
 
 import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
-import { getHierarchyIsLoaded, getOrg } from '../../store/customerOrg';
-import { loadOperationsRequest, loadTypesRequest } from '../../store/operations';
 
-import Operations from './Operations/Operations';
+import Transactions from './Transactions';
 import Filters from './Filters';
 import Overview from './Overview';
 
 const DepositLedger = () => {
-  const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
-  const { id: orgId } = useSelector(getOrg);
+  const { data: organization } = useGetOrganizationQuery();
+  const orgId = organization?.id;
+
   const userId = useSelector(User.selectors.getUserId);
-  const hierarchyIsLoaded = useSelector(getHierarchyIsLoaded);
-
-  useEffect(() => {
-    dispatch(loadTypesRequest());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (hierarchyIsLoaded && orgId !== 0) {
-      dispatch(loadOperationsRequest());
-    }
-  }, [dispatch, orgId, hierarchyIsLoaded]);
 
   useEffect(() => {
     if (orgId && userId) {
@@ -44,7 +33,7 @@ const DepositLedger = () => {
         <Overview />
       </Grid>
       <Grid item container xs={12}>
-        <Operations />
+        <Transactions />
       </Grid>
     </Grid>
   );

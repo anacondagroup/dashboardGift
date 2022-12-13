@@ -1,9 +1,9 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { GroupsTeamsIdentifier } from '@alycecom/services';
 
 import { getGroupId } from '../../../store/ui/overviewFilters/overviewFilters.selectors';
-import { GroupsTeamsConstants } from '../../../constants/groupsTeams.constants';
 
 import AccountGiftingActivityTable from './AccountGiftingActivityTable';
 import GroupGiftingActivityTable from './GroupGiftingActivityTable';
@@ -18,7 +18,7 @@ const styles = {
 
 const GiftingActivity = (): JSX.Element => {
   const groupId = useSelector(getGroupId);
-  const isAllGroups = groupId === GroupsTeamsConstants.AllGroupsAndTeams;
+  const isAllGroups = groupId === GroupsTeamsIdentifier.AllGroupsAndTeams;
   return (
     <Box sx={styles.root}>
       <GiftingActivityHeader />

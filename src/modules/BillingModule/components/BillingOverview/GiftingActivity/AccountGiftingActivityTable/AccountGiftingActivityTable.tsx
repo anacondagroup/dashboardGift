@@ -1,13 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import { Table, TableBody, TableRow } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { EntityId } from '@reduxjs/toolkit';
+import { useGetOrganizationQuery, GroupsTeamsIdentifier } from '@alycecom/services';
 
 import { StyledHeaderCell, StyledTableHeader } from '../../../styled/Styled';
 import { GroupRow } from '../Rows';
-import { getOrg } from '../../../../store/customerOrg';
 import { useGetGiftingActivityByGroup } from '../../../../hooks/useGetGiftingActivityByGroup';
-import { GroupsTeamsConstants } from '../../../../constants/groupsTeams.constants';
 import { PurchasedGiftCell } from '../Cells';
 
 const styles = {
@@ -18,11 +16,11 @@ const styles = {
 } as const;
 
 const AccountGiftingActivityTable = (): JSX.Element => {
-  const { id: orgId, isLoading: isOrgInfoLoading } = useSelector(getOrg);
+  const { data: organization, isFetching: isOrganizationFetching } = useGetOrganizationQuery();
 
-  const { entities, ids, isFetching } = useGetGiftingActivityByGroup(orgId);
+  const { entities, ids, isFetching } = useGetGiftingActivityByGroup(organization?.id);
 
-  const isLoading = isOrgInfoLoading || isFetching;
+  const isLoading = isOrganizationFetching || isFetching;
 
   const rowIds = useMemo(() => (isLoading ? Array.from({ length: 5 }, (_, idx) => idx) : ids) as EntityId[], [
     ids,
@@ -49,9 +47,9 @@ const AccountGiftingActivityTable = (): JSX.Element => {
         {rowIds.map(id => {
           const group = entities[id];
 
-          const isUngrouped = group?.groupId === GroupsTeamsConstants.Ungrouped;
+          const isUngrouped = group?.groupId === GroupsTeamsIdentifier.Ungrouped;
           const isRowVisible = !isUngrouped || (isUngrouped && Boolean(group?.teams.length));
-          const isExpandedByDefault = !isFetching && rowIds.length === 1;
+          const isExpandedByDefault = !isLoading && rowIds.length === 1;
 
           return (
             isRowVisible && (

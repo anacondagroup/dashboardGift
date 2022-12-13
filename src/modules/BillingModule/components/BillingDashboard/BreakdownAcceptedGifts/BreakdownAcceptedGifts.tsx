@@ -11,7 +11,7 @@ import {
   getAcceptedTotalInvites,
   getAcceptedTotalMoney,
 } from '../../../store/breakdowns';
-import { IGroup } from '../../../types';
+import { TGroup } from '../../../types';
 
 import Group from './Group';
 import Total from './Total';
@@ -60,7 +60,7 @@ const BreakdownAcceptedGifts = () => {
             teams: [],
             totalInvites: 0,
             totalMoney: 0,
-          } as IGroup),
+          } as TGroup),
       ),
     [groups, isLoading],
   );

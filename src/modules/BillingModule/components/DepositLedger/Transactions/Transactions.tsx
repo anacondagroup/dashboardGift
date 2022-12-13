@@ -25,21 +25,25 @@ import {
 } from '@alycecom/ui';
 import classNames from 'classnames';
 import qs from 'query-string';
-
 import {
-  getOperations,
-  getOperationsIsLoading,
-  getPagination,
-  IOperationType,
-  getTypes,
-  setCurrentPage,
-  getSelectedTypes,
-} from '../../../store/operations';
-import { getHierarchyIsLoading } from '../../../store/customerOrg';
-import { IOperation } from '../../../types';
+  TTransaction,
+  useGetTransactionsQuery,
+  useGetTransactionTypesQuery,
+  TransactionType,
+  useGetOrganizationBillingHierarchyQuery,
+  useGetOrganizationQuery,
+} from '@alycecom/services';
+
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
 import { tabsKeys } from '../../../../../constants/sidebarTabs.constants';
-import { OperationType } from '../../../constants/operations.constants';
+import {
+  getTransactionTypeIds,
+  getPagination,
+  getDateRange,
+} from '../../../store/ui/transactionsFilters/transactionsFilters.selectors';
+import { getTransactionTypeNamesMap } from '../../../helpers/billingTransactions.helpers';
+import { setCurrentPage } from '../../../store/ui/transactionsFilters/transactionsFilters.reducer';
+import { getSelectedGroupOrTeam } from '../../../store/billing.selectors';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
   table: {
@@ -53,42 +57,53 @@ const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
   },
 }));
 
-type TRowData = IDefaultRowData & IOperation;
+type TRowData = IDefaultRowData & TTransaction;
 
-const Operations = () => {
+const Transactions = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
-  const operations = useSelector(getOperations);
-  const operationsIsLoading = useSelector(getOperationsIsLoading);
-  const hierarchyIsLoading = useSelector(getHierarchyIsLoading);
-  const selectedTypes = useSelector(getSelectedTypes);
+  const { data: organization } = useGetOrganizationQuery();
+  const orgId = organization?.id;
 
-  const isLoading = operationsIsLoading || hierarchyIsLoading;
-  const isTableEmpty = !isLoading && operations.length === 0;
+  const { isFetching: hierarchyIsFetching } = useGetOrganizationBillingHierarchyQuery();
 
-  const types = useSelector(getTypes);
+  const { data: transactionTypes = [], isFetching: isTransactionTypesFetching } = useGetTransactionTypesQuery();
 
-  const typesNamesMap = useMemo(() => {
-    const childrenTypes = types.reduce((acc: IOperationType[], item) => [...acc, ...(item.children || [])], []);
-    return childrenTypes.reduce<Record<string, string>>(
-      (map, type) => ({
-        ...map,
-        [type.id]: type.name,
-      }),
-      {},
-    );
-  }, [types]);
+  const {
+    deposit: { accountId },
+  } = useSelector(getSelectedGroupOrTeam);
+  const { total, perPage, currentPage } = useSelector(getPagination);
+  const { from, to } = useSelector(getDateRange);
+  const operationTypes = useSelector(getTransactionTypeIds);
 
-  const showRemainingDeposit = selectedTypes.length === types.length;
+  const { data: operations, isFetching } = useGetTransactionsQuery(
+    {
+      accountId,
+      filters: {
+        dateRange: from && to ? { from, to, toIncluded: true, fromIncluded: true } : undefined,
+        operationTypes,
+        page: currentPage,
+        perPage,
+      },
+    },
+    { skip: isTransactionTypesFetching || !orgId, refetchOnMountOrArgChange: true },
+  );
 
-  const rows = useMemo(() => fakeItemsFactory(operations, isLoading, id => ({ id: String(id) })) as TRowData[], [
-    isLoading,
-    operations,
-  ]);
+  const selectedTransactionTypes = useSelector(getTransactionTypeIds);
 
-  const pagination = useSelector(getPagination);
+  const isLoading = isFetching || hierarchyIsFetching;
+  const isTableEmpty = !isLoading && operations?.data?.length === 0;
+
+  const showRemainingDeposit = selectedTransactionTypes.length === transactionTypes.length;
+
+  const typeNamesMap = useMemo(() => getTransactionTypeNamesMap(transactionTypes), [transactionTypes]);
+
+  const rows = useMemo(
+    () => fakeItemsFactory(operations?.data ?? [], isLoading, id => ({ id: String(id) })) as TRowData[],
+    [isLoading, operations],
+  );
 
   const handleChangePage = useCallback(
     (event: React.MouseEvent<HTMLButtonElement> | null, page: number) => {
@@ -155,7 +170,7 @@ const Operations = () => {
         hideSorting: true,
         render: ({ id, typeId }) => (
           <span data-testid={`DepositLedger.List.Type.${id}`}>
-            <TableCellTooltip title={<>{typesNamesMap[typeId] || typeId}</>} />
+            <TableCellTooltip title={<>{typeNamesMap[typeId] || typeId}</>} />
           </span>
         ),
       },
@@ -167,7 +182,7 @@ const Operations = () => {
           let ref: JSX.Element;
           let refTitle = '';
 
-          if (typeId === OperationType.GiftingWithdrawal && references && references?.giftId) {
+          if (typeId === TransactionType.GiftingWithdrawal && references && references?.giftId) {
             const params = {
               contact_id: references.contactId,
               gift_id: references.giftId,
@@ -188,7 +203,7 @@ const Operations = () => {
             refTitle = `gift #${references.giftId}`;
           }
 
-          if (typeId === OperationType.HistoricInvoice && references?.invoiceId) {
+          if (typeId === TransactionType.HistoricInvoice && references?.invoiceId) {
             refTitle = `inv. #${references.invoiceId}`;
             ref = <span>{refTitle}</span>;
           }
@@ -211,7 +226,7 @@ const Operations = () => {
         ),
       },
     ],
-    [typesNamesMap, showRemainingDeposit, classes.positiveAmount, handleClickGiftLink],
+    [typeNamesMap, showRemainingDeposit, classes, handleClickGiftLink],
   );
 
   return (
@@ -238,16 +253,16 @@ const Operations = () => {
               <TableDataRow columns={columns} data={row} isLoading={isLoading} key={row.id} />
             ))}
           </TableBody>
-          {pagination.total > pagination.perPage && (
+          {total > perPage && (
             <TableFooter>
               <TableRow>
                 <TablePagination
                   data-testid="Operations.Pagination"
-                  rowsPerPageOptions={[pagination.perPage]}
+                  rowsPerPageOptions={[perPage]}
                   colSpan={6}
-                  count={pagination.total}
-                  rowsPerPage={pagination.perPage}
-                  page={pagination.currentPage - 1}
+                  count={total}
+                  rowsPerPage={perPage}
+                  page={currentPage - 1}
                   SelectProps={{
                     native: true,
                   }}
@@ -262,4 +277,4 @@ const Operations = () => {
   );
 };
 
-export default memo(Operations);
+export default memo(Transactions);

@@ -1,14 +1,9 @@
-import { ITeam } from './Team.types';
+import { TGroupInfo } from '@alycecom/services';
 
-export type TGroupId = string | 'Ungrouped';
+import { TTeam } from './Team.types';
 
-export interface IGroupInfo {
-  groupId: TGroupId;
-  groupName: string;
-}
-
-export interface IGroup extends IGroupInfo {
-  teams: ITeam[];
+export type TGroup = TGroupInfo & {
+  teams: TTeam[];
   totalInvites: number;
   totalMoney: number;
-}
+};

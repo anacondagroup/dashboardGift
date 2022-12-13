@@ -1,9 +1,8 @@
-import { TGiftingActivityGroup, TGiftingActivityTeam } from '@alycecom/services';
+import { TGiftingActivityGroup, TGiftingActivityTeam, GroupsTeamsIdentifier } from '@alycecom/services';
 import { Dictionary } from '@reduxjs/toolkit';
 
 import { IBillingContact } from '../store/billingGroupsContacts/billingGroupsContacts.types';
 import { TGiftingActivityGroupNode } from '../types';
-import { GroupsTeamsConstants } from '../constants/groupsTeams.constants';
 import { UngroupedTeamsOption } from '../store/customerOrg/customerOrg.constants';
 
 export const getBillingGroupContactOptionLabel = (option: IBillingContact): string => {
@@ -28,7 +27,7 @@ export const transformGiftingActivityGroupsToMap = (
   const groups = Object.values(entities) as TGiftingActivityGroup[];
 
   return groups.reduce((acc, group) => {
-    const isUngrouped = group.groupId === GroupsTeamsConstants.Ungrouped;
+    const isUngrouped = group.groupId === GroupsTeamsIdentifier.Ungrouped;
     return {
       ...acc,
       [group.groupId]: {

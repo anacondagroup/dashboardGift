@@ -3,14 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Box, FormControl, InputLabel, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { NumberFormat, AlyceTheme } from '@alycecom/ui';
+import { useGetOrganizationBillingHierarchyQuery } from '@alycecom/services';
 
-import {
-  getHierarchyIsLoading,
-  getHierarchyList,
-  getSelectedGroupOrTeam,
-  setSelectedHierarchyId,
-} from '../../../store/customerOrg';
 import { AllGroupsAndTeamsOption } from '../../../store/customerOrg/customerOrg.constants';
+import { setSelectedHierarchyId } from '../../../store/ui/transactionsFilters/transactionsFilters.reducer';
+import { getHierarchyList, getSelectedGroupOrTeam } from '../../../store/billing.selectors';
 
 const styles = {
   indent: {
@@ -30,16 +27,16 @@ const styles = {
 const GroupsAndTeamsFilter = () => {
   const dispatch = useDispatch();
 
-  const isLoading = useSelector(getHierarchyIsLoading);
-  const selectedGroupOrTeam = useSelector(getSelectedGroupOrTeam);
+  const { isFetching } = useGetOrganizationBillingHierarchyQuery();
 
   const items = useSelector(getHierarchyList);
+  const selectedGroupOrTeam = useSelector(getSelectedGroupOrTeam);
 
   const handleSelect = (event: SelectChangeEvent) => {
     dispatch(setSelectedHierarchyId(event.target.value));
   };
 
-  const disabled = items.length === 1 || isLoading;
+  const disabled = items.length === 1 || isFetching;
 
   return (
     <FormControl fullWidth variant="outlined">

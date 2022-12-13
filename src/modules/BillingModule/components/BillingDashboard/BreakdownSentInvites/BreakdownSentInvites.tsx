@@ -6,7 +6,7 @@ import { fakeItemsFactory } from '@alycecom/utils';
 
 import HeaderCell from '../BillingTableBreakdown/HeaderCell';
 import { getSentGroups, getSentIsLoading, getSentTotalInvites } from '../../../store/breakdowns';
-import { IGroup } from '../../../types';
+import { TGroup } from '../../../types';
 
 import Group from './Group';
 import Total from './Total';
@@ -50,7 +50,7 @@ const BreakdownSentInvites = () => {
             teams: [],
             totalInvites: 0,
             totalMoney: 0,
-          } as IGroup),
+          } as TGroup),
       ),
     [groups, isLoading],
   );

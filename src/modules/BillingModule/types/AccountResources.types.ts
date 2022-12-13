@@ -1,3 +1,5 @@
+import { TDeposit } from '@alycecom/services';
+
 export interface IInventory {
   accountId: string;
   resource: {
@@ -8,14 +10,7 @@ export interface IInventory {
   resourceImageUrl: string;
 }
 
-export interface IDeposit {
-  accountId: string;
-  money: {
-    amount: number;
-  };
-}
-
 export interface IAccountResources {
   inventory: IInventory[];
-  deposit: [IDeposit];
+  deposit: [TDeposit];
 }

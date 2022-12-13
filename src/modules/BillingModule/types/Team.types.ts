@@ -1,13 +1,9 @@
+import { TTeamInfo } from '@alycecom/services';
+
 import { IAccountResources } from './AccountResources.types';
 
-export interface ITeamInfo {
-  teamId: number;
-  teamName: string;
-  groupId?: string | null;
-}
-
-export interface ITeam extends ITeamInfo {
+export type TTeam = TTeamInfo & {
   resources: IAccountResources;
   totalInvites: number;
   totalMoney: number;
-}
+};

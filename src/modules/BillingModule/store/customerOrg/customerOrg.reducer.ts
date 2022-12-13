@@ -1,17 +1,8 @@
 import { createReducer } from 'redux-act';
-import { StateStatus } from '@alycecom/utils';
+import { TTransaction, TGroupInfo, TTeamInfo } from '@alycecom/services';
 
-import { IGroupInfo, IOperation, ITeamInfo } from '../../types';
-import { GroupsTeamsConstants } from '../../constants/groupsTeams.constants';
-
-import { ICustomerStats, IOrgHierarchy, IOrgInfo, ITeamsFilter } from './customerOrg.types';
+import { ICustomerStats, ITeamsFilter } from './customerOrg.types';
 import {
-  customerOrgFailure,
-  customerOrgRequest,
-  customerOrgSuccess,
-  loadHierarchyFail,
-  loadHierarchyRequest,
-  loadHierarchySuccess,
   loadLastInvoiceFail,
   loadLastInvoiceRequest,
   loadLastInvoiceSuccess,
@@ -28,21 +19,17 @@ import {
   orgTeamsRequest,
   orgTeamsSuccess,
   setCurrentGroupSelected,
-  setSelectedHierarchyId,
   setTeamsFilter,
 } from './customerOrg.actions';
-import { AllGroupsAndTeamsOption, UngroupedTeamsOption } from './customerOrg.constants';
-import { makeGroupHierarchyId } from './customerOrg.helpers';
 
 export interface ICustomerOrgState {
-  org: IOrgInfo & { isLoading: boolean };
   teams: {
     isLoading: boolean;
-    list: ITeamInfo[];
+    list: TTeamInfo[];
   };
   groups: {
     isLoading: boolean;
-    list: IGroupInfo[];
+    list: TGroupInfo[];
   };
   teamsFilter: ITeamsFilter;
   stats: ICustomerStats & {
@@ -53,24 +40,14 @@ export interface ICustomerOrgState {
     remainingInvites: number;
     remainingDeposit: number;
   };
-  hierarchy: {
-    status: StateStatus;
-    data: IOrgHierarchy;
-    selectedHierarchyId: string;
-  };
   lastInvoice: {
     isLoading: boolean;
-    data?: IOperation;
+    data?: TTransaction;
   };
   selectedGroup: string | null;
 }
 
 export const initialState: ICustomerOrgState = {
-  org: {
-    id: 0,
-    name: '',
-    isLoading: false,
-  },
   teams: {
     isLoading: false,
     list: [],
@@ -93,26 +70,6 @@ export const initialState: ICustomerOrgState = {
     remainingInvites: 0,
     remainingDeposit: 0,
   },
-  hierarchy: {
-    status: StateStatus.Idle,
-    data: {
-      depositsTotal: {
-        accountId: AllGroupsAndTeamsOption.accountId,
-        money: {
-          amount: 0,
-        },
-      },
-      remainingTeamsTotal: {
-        accountId: UngroupedTeamsOption.accountId,
-        money: {
-          amount: 0,
-        },
-      },
-      groupGrouped: [],
-      ungrouped: [],
-    },
-    selectedHierarchyId: makeGroupHierarchyId(GroupsTeamsConstants.AllGroupsAndTeams),
-  },
   lastInvoice: {
     isLoading: false,
     data: undefined,
@@ -121,27 +78,6 @@ export const initialState: ICustomerOrgState = {
 };
 
 export const customerOrg = createReducer({}, initialState)
-  .on(customerOrgRequest, state => ({
-    ...state,
-    org: {
-      ...state.org,
-      isLoading: true,
-    },
-  }))
-  .on(customerOrgSuccess, (state, payload) => ({
-    ...state,
-    org: {
-      ...payload,
-      isLoading: false,
-    },
-  }))
-  .on(customerOrgFailure, state => ({
-    ...state,
-    org: {
-      ...state.org,
-      isLoading: false,
-    },
-  }))
   .on(orgTeamsRequest, state => ({
     ...state,
     teams: {
@@ -245,50 +181,6 @@ export const customerOrg = createReducer({}, initialState)
       isLoading: false,
     },
   }))
-
-  .on(loadHierarchyRequest, state => ({
-    ...state,
-    hierarchy: {
-      ...state.hierarchy,
-      status: StateStatus.Pending,
-    },
-  }))
-  .on(loadHierarchySuccess, (state, payload) => ({
-    ...state,
-    hierarchy: {
-      ...state.hierarchy,
-      status: StateStatus.Fulfilled,
-      data: {
-        ...payload,
-        remainingTeamsTotal: {
-          ...state.hierarchy.data.remainingTeamsTotal,
-          money: {
-            amount: payload.ungrouped.reduce(
-              (acc, team) =>
-                acc + team.deposits.reduce((teamTotal, depositTeam) => teamTotal + depositTeam.money.amount, 0),
-              0,
-            ),
-          },
-        },
-      },
-    },
-  }))
-  .on(loadHierarchyFail, state => ({
-    ...state,
-    hierarchy: {
-      ...state.hierarchy,
-      status: StateStatus.Rejected,
-    },
-  }))
-
-  .on(setSelectedHierarchyId, (state, payload) => ({
-    ...state,
-    hierarchy: {
-      ...state.hierarchy,
-      selectedHierarchyId: payload,
-    },
-  }))
-
   .on(loadLastInvoiceRequest, state => ({
     ...state,
     lastInvoice: {

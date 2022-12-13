@@ -1,13 +1,15 @@
-import { IAccountResources, IGroupInfo, ITeamInfo } from '../../types';
+import { TGroupInfo, TTeamInfo } from '@alycecom/services';
+
+import { IAccountResources } from '../../types';
 
 export interface ITeamResources {
-  team: ITeamInfo;
+  team: TTeamInfo;
   resources: IAccountResources;
 }
 
 export interface IGroupedResources {
   groupResources: {
-    group: IGroupInfo;
+    group: TGroupInfo;
     teams: ITeamResources[];
   }[];
   ungroupedResources: ITeamResources[];

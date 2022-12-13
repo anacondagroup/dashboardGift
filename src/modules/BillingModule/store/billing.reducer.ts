@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 
 import { breakdowns, IBreakdownsState } from './breakdowns/breakdowns.reducer';
 import { customerOrg, ICustomerOrgState } from './customerOrg/customerOrg.reducer';
-import { operations, IOperationsState } from './operations/operations.reducer';
 import { billingGroups, IBillingGroupsState } from './billingGroups/billingGroups.reducer';
 import {
   billingGroupsContacts,
@@ -16,7 +15,6 @@ import { ui, TBillingUIState } from './ui';
 export interface IBillingState {
   breakdowns: IBreakdownsState;
   customerOrg: ICustomerOrgState;
-  operations: IOperationsState;
   billingGroups: IBillingGroupsState;
   editBillingGroups: IEditBillingGroupsState;
   billingGroupsContacts: TBillingGroupsContactsState;
@@ -28,7 +26,6 @@ export interface IBillingState {
 export default combineReducers<IBillingState>({
   breakdowns,
   customerOrg,
-  operations,
   billingGroups,
   editBillingGroups,
   billingGroupsContacts,

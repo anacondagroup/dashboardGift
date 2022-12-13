@@ -6,7 +6,7 @@ import { formatTestId } from '@alycecom/utils';
 import { AlyceTheme, TableCellTooltip } from '@alycecom/ui';
 
 import InventoryTypeImage from '../BillingTableBreakdown/InventoryTypeImage';
-import { IGroup, ITeam } from '../../../types';
+import { TGroup, TTeam } from '../../../types';
 
 const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
   tableRow: {
@@ -26,8 +26,8 @@ const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
 }));
 
 export interface ITeamInventoriesProps {
-  team: ITeam;
-  group: IGroup;
+  team: TTeam;
+  group: TGroup;
   isExpanded: boolean;
 }
 
