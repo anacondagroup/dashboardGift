@@ -3,7 +3,8 @@ import { Features } from '@alycecom/modules';
 
 import { render, userEvent, screen } from '../../../../../../testUtils';
 
-import TeamInfoForm, { ITeamInfoFormProps } from './TeamInfoForm';
+import TeamInfoForm from './TeamInfoForm';
+import { ITeam } from '../../../../store/teams/teams/teams.types';
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),
@@ -12,9 +13,28 @@ jest.mock('react-redux', () => ({
 
 jest.mock('./Fields/BillingGroup', () => 'BillingGroup');
 
+const mockedTeam = {
+  id: 70,
+  name: 'Team A',
+  members: {
+    amount: 1,
+  },
+  admins: [
+    {
+      full_name: 'Super Admin',
+      email: 'admin@gmail.com',
+      avatar: 'https://storage.googleapis.com/alyce-dev-images-data/images/users/self1045_37458.jpg',
+    },
+  ],
+  group: {
+    id: '974d5d0b-3604-463f-bcd3-3a49d2abb3d2',
+    name: 'First group',
+  },
+};
+
 describe('TeamInfoForm', () => {
-  const setup = (featuresState: Record<string, boolean>, props?: ITeamInfoFormProps) => {
-    const Component = () => <TeamInfoForm {...props} />;
+  const setup = (featuresState: Record<string, boolean>, team?: ITeam) => {
+    const Component = () => <TeamInfoForm />;
     const utils = render(<Component />, {
       initialState: {
         modules: {
@@ -22,16 +42,23 @@ describe('TeamInfoForm', () => {
             features: featuresState,
           },
         },
+        settings: {
+          teams: {
+            teamOperation: {
+              team,
+            },
+          },
+        },
       },
     });
     const getHeader = () => screen.getByText('Define the team name');
-    const getNameField = () => screen.getByLabelText('Team name *');
+    const getNameField = () => screen.getByLabelText('Team Name *');
     const getCancelButton = () => screen.getByRole('button', { name: /cancel/i });
     const getSaveButton = () => screen.getByRole('button', { name: /save/i });
 
     return {
       ...utils,
-      rerender: (newProps: ITeamInfoFormProps) => utils.rerender(<TeamInfoForm {...newProps} />),
+      rerender: () => utils.rerender(<TeamInfoForm />),
       getHeader,
       getNameField,
       getCancelButton,
@@ -61,31 +88,9 @@ describe('TeamInfoForm', () => {
   });
 
   it('should render with the teams name prepopulated when included', async () => {
-    setup(
-      { [Features.FLAGS.BUDGET_MANAGEMENT_SETUP]: false },
-      {
-        team: {
-          id: 70,
-          name: 'Team A',
-          members: {
-            amount: 1,
-          },
-          admins: [
-            {
-              full_name: 'Super Admin',
-              email: 'admin@gmail.com',
-              avatar: 'https://storage.googleapis.com/alyce-dev-images-data/images/users/self1045_37458.jpg',
-            },
-          ],
-          group: {
-            id: '974d5d0b-3604-463f-bcd3-3a49d2abb3d2',
-            name: 'First group',
-          },
-        },
-      },
-    );
+    const { getNameField } = setup({ [Features.FLAGS.BUDGET_MANAGEMENT_SETUP]: false }, mockedTeam);
 
-    expect(screen.getByRole('textbox', { name: /team name */i })).toHaveValue('Team A');
+    expect(getNameField()).toHaveValue('Team A');
   });
 
   it('should render next button instead of save if BUDGET_MANAGEMEMENT_SETUP is enabled', () => {

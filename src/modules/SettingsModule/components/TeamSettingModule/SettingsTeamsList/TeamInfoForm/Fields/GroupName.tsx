@@ -4,18 +4,19 @@ import { TextField, TextFieldProps } from '@mui/material';
 
 import { TeamField, TTeamFormParams } from '../../../../../store/teams/team/team.types';
 
-export type TTeamNameProps = TextFieldProps & {
+export type TGroupNameProps = TextFieldProps & {
   control: Control<TTeamFormParams>;
 };
 
 const styles = {
   field: {
+    mt: 4,
     width: 350,
   },
 } as const;
 
-const TeamName = ({ control }: TTeamNameProps): JSX.Element => {
-  const name = TeamField.Name;
+const GroupName = ({ control }: TGroupNameProps): JSX.Element => {
+  const name = TeamField.GroupName;
 
   const {
     field,
@@ -30,17 +31,17 @@ const TeamName = ({ control }: TTeamNameProps): JSX.Element => {
       sx={styles.field}
       {...field}
       fullWidth
-      label="Team Name *"
+      label="Group Name *"
       variant="outlined"
       margin="normal"
       error={!!error?.message}
       helperText={error?.message}
       inputProps={{
         autoComplete: 'off',
-        'data-testid': 'TeamInfoForm.Name',
+        'data-testid': 'TeamInfoForm.GroupName',
       }}
     />
   );
 };
 
-export default TeamName;
+export default GroupName;

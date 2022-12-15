@@ -1,61 +1,40 @@
-import React from 'react';
-import { Autocomplete, Box, FormControlProps, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
+import React, { useMemo } from 'react';
+import { Autocomplete, Box, FormControl, FormControlProps, FormHelperText, TextField, Typography } from '@mui/material';
 import { Control, useController } from 'react-hook-form';
-import { useGetBillingGroupsQuery, billingGroupAdapter, GroupsTeamsIdentifier } from '@alycecom/services';
+import { billingGroupAdapter, GroupsTeamsIdentifier, useGetBillingGroupsQuery } from '@alycecom/services';
 import { useSelector } from 'react-redux';
 import { EntityId } from '@alycecom/utils';
 import { Icon, Tooltip } from '@alycecom/ui';
+import { toLower } from 'ramda';
 
 import { TeamField, TTeamFormParams } from '../../../../../store/teams/team/team.types';
+import { NEW_BILLING_GROUP_ID, NEW_BILLING_GROUP_NAME } from '../../../../../store/teams/team/team.constants';
 
-const styles = {
-  root: {
-    mt: 2,
-  },
-  autocomplete: {
-    mt: 2,
-  },
-  formControl: {
-    width: 350,
-  },
-  wrapper: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-  },
-  label: {
-    fontSize: 16,
-    color: 'primary.main',
-  },
-  icon: {
-    ml: 1,
-    mt: 4,
-    color: 'primary.superLight',
-  },
-  tooltip: {
-    width: 180,
-  },
-} as const;
+import { styles } from './BillingGroup.styles';
 
 type TBillingGroupProps = FormControlProps & {
   control: Control<TTeamFormParams>;
+  canCreateNewGroup?: boolean;
 };
 
 const BILLING_GROUPS_PER_PAGE = 1000;
 
-const BillingGroup = ({ control }: TBillingGroupProps): JSX.Element => {
-  const { groupsIds, isLoading, selectEntities } = useGetBillingGroupsQuery(
-    { currentPage: 1, perPage: BILLING_GROUPS_PER_PAGE },
-    {
-      selectFromResult: result => ({
-        ...result,
-        ...billingGroupAdapter.getSelectors(() => result?.data ?? billingGroupAdapter.getInitialState()),
-        groupsIds: result.data?.ids.filter(groupId => groupId !== GroupsTeamsIdentifier.Ungrouped) ?? [],
-      }),
-    },
-  );
+const BillingGroup = ({ control, canCreateNewGroup = true }: TBillingGroupProps): JSX.Element => {
+  const { data, isLoading } = useGetBillingGroupsQuery({ currentPage: 1, perPage: BILLING_GROUPS_PER_PAGE });
 
+  const { selectEntities, selectIds } = billingGroupAdapter.getSelectors(
+    () => data ?? billingGroupAdapter.getInitialState(),
+  );
   const groupsMap = useSelector(selectEntities);
+  const groupIds = useSelector(selectIds);
+
+  const ids = useMemo(() => {
+    const filteredGroupIds = groupIds.filter(groupId => toLower(groupId as string) !== GroupsTeamsIdentifier.Ungrouped);
+    if (canCreateNewGroup) {
+      filteredGroupIds.push(NEW_BILLING_GROUP_ID);
+    }
+    return filteredGroupIds;
+  }, [groupIds, canCreateNewGroup]);
 
   const {
     fieldState: { error },
@@ -69,7 +48,7 @@ const BillingGroup = ({ control }: TBillingGroupProps): JSX.Element => {
     onChange(newGroupId);
   };
 
-  const getOptionLabel = (option: EntityId) => groupsMap[option]?.groupName || '';
+  const getOptionLabel = (option: EntityId) => groupsMap[option]?.groupName || NEW_BILLING_GROUP_NAME;
 
   return (
     <Box sx={styles.root}>
@@ -82,19 +61,20 @@ const BillingGroup = ({ control }: TBillingGroupProps): JSX.Element => {
             fullWidth
             onChange={handleSelectGroup}
             renderInput={props => <TextField {...props} variant="outlined" label="Billing group *" />}
-            options={groupsIds}
+            options={ids}
             getOptionLabel={getOptionLabel}
             renderOption={(props, option) => (
-              <li {...props}>
-                <Box
-                  whiteSpace="nowrap"
-                  textOverflow="ellipsis"
-                  overflow="hidden"
-                  data-testId={`TeamInfoForm.Option.${getOptionLabel(option)}`}
-                >
+              <Box
+                {...props}
+                component="li"
+                sx={styles.option}
+                data-testid={`TeamInfoForm.Option.${getOptionLabel(option)}`}
+              >
+                <Box sx={styles.optionContent}>
+                  {option === NEW_BILLING_GROUP_ID && <Icon icon="plus" sx={styles.plusIcon} />}
                   {getOptionLabel(option)}
                 </Box>
-              </li>
+              </Box>
             )}
             loading={isLoading}
             data-testid="TeamInfoForm.BillingGroupSelector"

@@ -10,4 +10,4 @@ export const getStatus = pipe(pathToTeamState, state => state.status);
 
 export const getErrors = pipe(pathToTeamState, state => state.errors);
 
-export const getIsTeamLoading = createSelector(getStatus, status => status === StateStatus.Pending);
+export const getIsTeamUpdating = createSelector(getStatus, status => status === StateStatus.Pending);
