@@ -7,7 +7,6 @@ import {
   getIsTeamSidebarOpen,
   getTeamId,
   getTeamSidebarStep,
-  getTeamSidebarTeam,
 } from '../../../../store/teams/teamOperation/teamOperation.selectors';
 import { setTeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.actions';
 import { TeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.types';
@@ -33,7 +32,6 @@ const TeamSidebar = (): JSX.Element => {
   const isOpen = useSelector(getIsTeamSidebarOpen);
   const activeStep = useSelector(getTeamSidebarStep);
   const teamId = useSelector(getTeamId);
-  const sideBarTeam = useSelector(getTeamSidebarTeam);
 
   const handleCloseSidebar = useCallback(() => {
     dispatch(setTeamSidebarStep({ step: null }));
@@ -53,7 +51,7 @@ const TeamSidebar = (): JSX.Element => {
         )}
 
         {hasBudgetManagementSetup && <TeamSidebarProgressStepper steps={STEPS} activeStep={activeStep} />}
-        {activeStep === TeamSidebarStep.TeamInfo && <TeamInfoForm team={sideBarTeam} />}
+        {activeStep === TeamSidebarStep.TeamInfo && <TeamInfoForm />}
         {activeStep === TeamSidebarStep.TeamBudget && teamId && <TeamBudgetForm teamId={teamId} />}
       </Box>
     </Drawer>

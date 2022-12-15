@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Button, Theme, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useExternalErrors } from '@alycecom/hooks';
 import { Divider } from '@alycecom/ui';
@@ -8,64 +8,24 @@ import { Features } from '@alycecom/modules';
 
 import StepSectionFooter from '../StepSectionFooter/StepSectionFooter';
 import { setTeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.actions';
-import { ITeam } from '../../../../store/teams/teams/teams.types';
 import { createTeam, renameTeam } from '../../../../store/teams/team/team.actions';
-import { getIsTeamLoading, getErrors } from '../../../../store/teams/team/team.selectors';
+import { getErrors, getIsTeamUpdating } from '../../../../store/teams/team/team.selectors';
 import { TeamField, TTeamFormParams } from '../../../../store/teams/team/team.types';
 import { teamInfoFormDefaultValues, teamInfoFormResolver } from '../../../../store/teams/team/team.schemas';
 import { TeamSidebarStep } from '../../../../store/teams/teamOperation/teamOperation.types';
+import { NEW_BILLING_GROUP_ID } from '../../../../store/teams/team/team.constants';
+import { getTeamSidebarTeam } from '../../../../store/teams/teamOperation/teamOperation.selectors';
 
 import TeamName from './Fields/TeamName';
 import BillingGroup from './Fields/BillingGroup';
+import { styles } from './TeamInfoForm.styles';
+import GroupName from './Fields/GroupName';
 
-const styles = {
-  container: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    pt: 2,
-  },
-  content: {
-    width: '100%',
-    mt: 1,
-    px: 3,
-  },
-  header: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'primary.main',
-  },
-  cancelButton: {
-    width: 100,
-    height: 48,
-    borderRadius: 1,
-    color: 'green.dark',
-    border: ({ palette }: Theme) => `1px solid ${palette.green.dark}`,
-    '&:hover': {
-      borderColor: 'green.mountainMeadowLight',
-    },
-  },
-  submitButton: {
-    width: 100,
-    height: 48,
-    borderRadius: 1,
-    color: 'common.white',
-    backgroundColor: 'green.dark',
-    '&:hover': {
-      backgroundColor: 'green.mountainMeadowLight',
-    },
-  },
-} as const;
-
-export interface ITeamInfoFormProps {
-  team?: ITeam;
-}
-
-const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
+const TeamInfoForm = (): JSX.Element => {
   const dispatch = useDispatch();
 
-  const isLoading = useSelector(getIsTeamLoading);
+  const team = useSelector(getTeamSidebarTeam);
+  const isUpdating = useSelector(getIsTeamUpdating);
   const externalErrors = useSelector(getErrors);
 
   const methods = useForm<TTeamFormParams>({
@@ -80,11 +40,15 @@ const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
     setError,
     reset,
     formState: { isDirty },
+    watch,
   } = methods;
 
   const hasBudgetManagementSetup = useSelector(
     Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP),
   );
+
+  const billingGroupId = watch(TeamField.GroupId);
+  const isGroupNameVisible = billingGroupId === NEW_BILLING_GROUP_ID;
 
   const handleCreateTeam = useCallback(
     (data: TTeamFormParams) => {
@@ -113,7 +77,7 @@ const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
 
   useEffect(() => {
     if (team) {
-      reset({ [TeamField.Name]: team.name, [TeamField.GroupId]: team?.group?.id });
+      reset({ [TeamField.Name]: team.name, [TeamField.GroupId]: team?.group?.id, [TeamField.GroupName]: '' });
     }
   }, [team, reset]);
 
@@ -127,16 +91,17 @@ const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
           <Divider color="divider" height={2} mt={1} mb={1} />
         </Box>
         <TeamName control={control} />
-        <BillingGroup control={control} />
+        <BillingGroup control={control} canCreateNewGroup={!team} />
+        {isGroupNameVisible && <GroupName control={control} />}
       </Box>
       <StepSectionFooter
         cancelButton={
           <Button
             sx={styles.cancelButton}
             variant="outlined"
-            disabled={isLoading}
+            disabled={isUpdating}
             onClick={handleCancel}
-            data-testId="TeamInfoForm.Cancel"
+            data-testid="TeamInfoForm.Cancel"
           >
             Cancel
           </Button>
@@ -146,8 +111,8 @@ const TeamInfoForm = ({ team }: ITeamInfoFormProps): JSX.Element => {
             sx={styles.submitButton}
             type="submit"
             variant="contained"
-            disabled={isLoading}
-            data-testId="TeamInfoForm.Next"
+            disabled={isUpdating}
+            data-testid="TeamInfoForm.Next"
           >
             {hasBudgetManagementSetup ? 'Next' : 'Save'}
           </Button>
