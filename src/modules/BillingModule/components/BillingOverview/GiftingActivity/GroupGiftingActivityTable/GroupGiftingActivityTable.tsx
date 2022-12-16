@@ -3,15 +3,16 @@ import { Table, TableBody, TableRow } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { fakeItemsFactory } from '@alycecom/utils';
 
-import { getGroupId } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
-import { StyledHeaderCell, StyledTableHeader } from '../../../styled/Styled';
+import { getGroupId, getSorting } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
+import { StyledTableHeader } from '../../../styled/Styled';
 import { TeamRow } from '../Rows';
 import { useGetGiftingActivityByGroup } from '../../../../hooks/useGetGiftingActivityByGroup';
 import { UngroupedTeamsOption } from '../../../../store/customerOrg/customerOrg.constants';
-import { PurchasedGiftCell } from '../Cells';
+import { PurchasedGiftCell, SortingHeaderCell } from '../Cells';
 import NoDataPlaceholder from '../NoDataPlaceholder/NoDataPlaceholder';
 import { TGiftingActivityTeamNode } from '../../../../types';
 import { DEFAULT_FAKE_TEAM } from '../../../../constants/billing.constants';
+import { makeSortByColumn } from '../../../../helpers/billingGroupForm.helpers';
 
 const styles = {
   root: {
@@ -26,42 +27,59 @@ const styles = {
 
 const GroupGiftingActivityTable = (): JSX.Element => {
   const groupId = useSelector(getGroupId);
+  const sorting = useSelector(getSorting);
 
-  const { entities, isFetching } = useGetGiftingActivityByGroup(groupId);
+  const { items, isFetching } = useGetGiftingActivityByGroup(groupId);
 
-  const group = entities[groupId];
+  const group = useMemo(() => items.find(item => item.groupId === groupId), [items, groupId]);
   const hasData = Boolean(group?.teams?.length);
 
   const isTableEmpty = !isFetching && !hasData;
 
   const isRemainingGroup = group?.groupId === UngroupedTeamsOption.id;
 
-  const rows = useMemo(
-    () =>
-      fakeItemsFactory<TGiftingActivityTeamNode>(
-        group?.teams ?? [],
-        isFetching,
-        id => ({ ...DEFAULT_FAKE_TEAM, teamId: id }),
-        5,
-      ),
-    [group, isFetching],
-  );
+  const rows = useMemo(() => {
+    const teams = group?.teams ?? [];
+
+    if (!isFetching) {
+      const sortByColumn = makeSortByColumn<TGiftingActivityTeamNode>({
+        column: sorting.column === 'groupName' ? 'teamName' : sorting.column,
+        direction: sorting.direction,
+      });
+      return sortByColumn(teams);
+    }
+
+    return fakeItemsFactory<TGiftingActivityTeamNode>(
+      teams,
+      isFetching,
+      id => ({ ...DEFAULT_FAKE_TEAM, teamId: id }),
+      5,
+    );
+  }, [group, isFetching, sorting]);
 
   return (
     <>
       <Table sx={styles.table}>
         <StyledTableHeader>
           <TableRow>
-            <StyledHeaderCell width="30%">Group/Team</StyledHeaderCell>
-            {isRemainingGroup && <StyledHeaderCell align="right">Ending balance</StyledHeaderCell>}
-            <StyledHeaderCell width={200} align="right">
+            <SortingHeaderCell name="groupName" width="30%">
+              Team
+            </SortingHeaderCell>
+            {isRemainingGroup && (
+              <SortingHeaderCell name="amountAtTheEnd" align="right">
+                Ending balance
+              </SortingHeaderCell>
+            )}
+            <SortingHeaderCell name="sentCount" width={200} align="right">
               Sent
-            </StyledHeaderCell>
-            <StyledHeaderCell width={200} align="right">
+            </SortingHeaderCell>
+            <SortingHeaderCell name="claimedCount" width={200} align="right">
               Accepted
-            </StyledHeaderCell>
+            </SortingHeaderCell>
             <PurchasedGiftCell />
-            <StyledHeaderCell align="right">Spent</StyledHeaderCell>
+            <SortingHeaderCell name="amountSpent" align="right" width={200}>
+              Spent
+            </SortingHeaderCell>
           </TableRow>
         </StyledTableHeader>
         <TableBody>

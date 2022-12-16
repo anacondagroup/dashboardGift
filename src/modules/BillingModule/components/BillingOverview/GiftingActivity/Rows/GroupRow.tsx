@@ -1,19 +1,20 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback, useState, useMemo } from 'react';
 import { Box, TableRow, Typography, Button } from '@mui/material';
 import { ExpandIcon, NumberFormat, TableCellTooltip, TableLoadingLabel } from '@alycecom/ui';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useBillingTrackEvent } from '../../../../hooks/useBillingTrackEvent';
 import { StyledCell } from '../../../styled/Styled';
-import { TGiftingActivityGroupNode } from '../../../../types';
+import { TGiftingActivityGroupNode, TGiftingActivityTeamNode } from '../../../../types';
 import { setBillingTab } from '../../../../store/ui/tab/tab.reducer';
 import { BillingTab } from '../../../../store/ui/tab/tab.types';
-import { getDateRange } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
+import { getDateRange, getSorting } from '../../../../store/ui/overviewFilters/overviewFilters.selectors';
 import { makeGroupHierarchyId } from '../../../../store/ui/transactionsFilters/transactionsFilters.helpers';
 import {
   setSelectedHierarchyId,
   setDateRange,
 } from '../../../../store/ui/transactionsFilters/transactionsFilters.reducer';
+import { makeSortByColumn } from '../../../../helpers/billingGroupForm.helpers';
 
 import { styles } from './GroupRow.styles';
 import TeamRow from './TeamRow';
@@ -40,9 +41,23 @@ const GroupRow = ({ group, isLoading, isExpandedByDefault }: IGroupRowProps): JS
   } = group || {};
 
   const dateRange = useSelector(getDateRange);
+  const sorting = useSelector(getSorting);
 
   const canBeExpanded = !isLoading && Boolean(teams?.length);
   const [isExpanded, setIsExpanded] = useState(isExpandedByDefault);
+
+  const teamsRows = useMemo(() => {
+    if (!teams || !isExpanded) {
+      return teams;
+    }
+
+    const sortByColumn = makeSortByColumn<TGiftingActivityTeamNode>({
+      column: sorting.column === 'groupName' ? 'teamName' : sorting.column,
+      direction: sorting.direction,
+    });
+
+    return sortByColumn(teams);
+  }, [teams, sorting, isExpanded]);
 
   const trackEvent = useBillingTrackEvent();
   const handleClick = useCallback(() => {
@@ -134,7 +149,7 @@ const GroupRow = ({ group, isLoading, isExpandedByDefault }: IGroupRowProps): JS
       </TableRow>
       {isExpanded && !isLoading && (
         <>
-          {teams?.map(team => (
+          {teamsRows?.map(team => (
             <TeamRow key={team.teamId} team={team} isLoading={isLoading} hasIndent hasBalanceColumn />
           ))}
         </>

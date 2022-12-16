@@ -1,15 +1,14 @@
+import { useMemo } from 'react';
 import { giftingActivityAdapter, useGetGiftingActivityByGroupIdQuery } from '@alycecom/services';
 import { useSelector } from 'react-redux';
-import { Dictionary, EntityId } from '@reduxjs/toolkit';
 
 import { getDateRange } from '../store/ui/overviewFilters/overviewFilters.selectors';
-import { transformGiftingActivityGroupsToMap } from '../helpers/billingGroupForm.helpers';
+import { transformGiftingActivityGroups } from '../helpers/billingGroupForm.helpers';
 import { TGiftingActivityGroupNode } from '../types';
 
 export type TUseGetGiftingActivityByGroupValue = {
   isFetching: boolean;
-  entities: Dictionary<TGiftingActivityGroupNode>;
-  ids: EntityId[];
+  items: TGiftingActivityGroupNode[];
 };
 
 export const useGetGiftingActivityByGroup = (id?: string | number): TUseGetGiftingActivityByGroupValue => {
@@ -21,21 +20,19 @@ export const useGetGiftingActivityByGroup = (id?: string | number): TUseGetGifti
     filters: from && to ? { dateRange: { from, to } } : undefined,
   };
 
-  const { entities, selectIds, isFetching } = useGetGiftingActivityByGroupIdQuery(requestParams, {
-    selectFromResult: result => ({
-      ...result,
-      ...giftingActivityAdapter.getSelectors(() => result?.data ?? giftingActivityAdapter.getInitialState()),
-      entities: transformGiftingActivityGroupsToMap(result.data?.entities ?? {}),
-    }),
+  const { data, isFetching } = useGetGiftingActivityByGroupIdQuery(requestParams, {
     refetchOnMountOrArgChange: true,
     skip,
   });
 
-  const ids = useSelector(selectIds);
+  const { selectAll } = giftingActivityAdapter.getSelectors(() => data ?? giftingActivityAdapter.getInitialState());
+
+  const groups = useSelector(selectAll);
+
+  const items = useMemo(() => transformGiftingActivityGroups(groups), [groups]);
 
   return {
     isFetching,
-    ids,
-    entities,
+    items,
   };
 };
