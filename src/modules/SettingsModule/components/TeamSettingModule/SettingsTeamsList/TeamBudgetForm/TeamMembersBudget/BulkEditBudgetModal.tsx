@@ -28,7 +28,7 @@ const PeriodDescription = {
   [RefreshPeriod.Weekly]: 'start of next week',
   [RefreshPeriod.Monthly]: 'start of next month',
   [RefreshPeriod.Quarterly]: 'start of next quarter',
-  [RefreshPeriod.NoRefresh]: 'budget is increased',
+  [RefreshPeriod.NoReset]: 'budget is increased',
 };
 
 const BulkEditBudgetModal = ({

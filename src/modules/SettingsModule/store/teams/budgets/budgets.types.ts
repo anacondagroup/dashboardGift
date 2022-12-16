@@ -4,10 +4,10 @@ export interface ITeamMembers {
 }
 
 export enum RefreshPeriod {
-  Monthly = 'monthly',
   Weekly = 'weekly',
+  Monthly = 'monthly',
   Quarterly = 'quarterly',
-  NoRefresh = 'no refresh',
+  NoReset = 'no reset',
 }
 
 export enum NotifyTeamAdminType {

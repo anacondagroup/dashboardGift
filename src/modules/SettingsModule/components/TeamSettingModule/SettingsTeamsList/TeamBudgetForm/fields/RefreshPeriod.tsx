@@ -16,7 +16,7 @@ const styles = {
 } as const;
 
 const getRenderValue = (value: string): JSX.Element => (
-  <Box sx={styles.renderValue}>{value === 'no refresh' ? value : `${value} reset`}</Box>
+  <Box sx={styles.renderValue}>{value === RefreshPeriod.NoReset ? value : `${value} reset`}</Box>
 );
 
 const RefreshPeriodSelector = ({ control, error }: IRefreshPeriodSelectorProps): JSX.Element => (
@@ -36,7 +36,7 @@ const RefreshPeriodSelector = ({ control, error }: IRefreshPeriodSelectorProps):
         >
           {Object.values(RefreshPeriod).map(refreshPeriod => (
             <MenuItem key={refreshPeriod} data-testid={`RefreshPeriodOption.${refreshPeriod}`} value={refreshPeriod}>
-              {refreshPeriod === RefreshPeriod.NoRefresh ? RefreshPeriod.NoRefresh : `${refreshPeriod} reset`}
+              {refreshPeriod === RefreshPeriod.NoReset ? RefreshPeriod.NoReset : `${refreshPeriod} reset`}
             </MenuItem>
           ))}
         </Select>

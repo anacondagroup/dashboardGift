@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { TableCellTooltip } from '@alycecom/ui';
 import {
   Table,
   TableBody,
@@ -11,7 +12,6 @@ import {
   Box,
   Avatar,
   Typography,
-  Theme,
   Skeleton,
   TableCellProps,
   TableSortLabel,
@@ -34,59 +34,7 @@ import { toggleAllUsersSelection, toggleUserSelection } from '../../../../../sto
 import { getIsAllUsersSelected, getSelectedUsersIds } from '../../../../../store/ui/teamBudget/teamBudget.selectors';
 
 import BulkEditBudgetModal from './BulkEditBudgetModal';
-
-const styles = {
-  tableContainer: {
-    borderRadius: 2,
-  },
-  skeletonContainer: {
-    height: '30px',
-  },
-  avatarContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100px',
-  },
-  headerTitle: {
-    color: 'primary.main',
-    fontSize: 12,
-  },
-  tableParameter: {
-    color: 'primary.main',
-  },
-  userContainer: {
-    marginLeft: '10px',
-  },
-  tableCell: {
-    padding: '0 5px',
-  },
-  tableCellBox: {
-    display: 'flex',
-    padding: 'none',
-    justifyContent: 'center',
-  },
-  budgetAndRefreshContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    margin: ({ spacing }: Theme) => spacing(0.5),
-    gap: ({ spacing }: Theme) => spacing(0.5),
-  },
-  budgetField: {
-    width: 100,
-    textAlign: 'right',
-    input: {
-      color: 'primary.main',
-      fontWeight: 'bold',
-      textAlign: 'right',
-    },
-  },
-  utilizationContainer: {
-    textAlign: 'right',
-    color: 'primary.main',
-  },
-} as const;
+import { styles } from './TeamMembersBudgetTable.styles';
 
 interface ICustomTableCellProps extends TableCellProps {
   isLoading?: boolean;
@@ -254,7 +202,7 @@ const TeamMembersBudgetTable = ({
                 )}
               </CustomTableCell>
               <CustomTableCell>
-                <Typography sx={styles.headerTitle}>GIFT BUDGET / REFRESH</Typography>
+                <Typography sx={styles.headerTitle}>GIFT BUDGET / RESET</Typography>
               </CustomTableCell>
               <CustomTableCell>
                 <Typography sx={styles.headerTitle}>UTILIZED THIS PERIOD</Typography>
@@ -285,9 +233,12 @@ const TeamMembersBudgetTable = ({
                       <Box sx={styles.avatarContainer}>
                         <Avatar src={userForField.imageUrl} sizes="30" />
                         <Box sx={styles.userContainer}>
-                          <Typography data-testid={`TeamMembersBudget.Table.${index}.Name`}>
-                            {userForField.firstName} {userForField.lastName}
-                          </Typography>
+                          <TableCellTooltip
+                            data-testid={`TeamMembersBudget.Table.${index}.Name`}
+                            title={`${userForField.firstName} ${userForField.lastName} `}
+                            lengthToShow={10}
+                            placement="top-start"
+                          />
                         </Box>
                       </Box>
                     </CustomTableCell>
