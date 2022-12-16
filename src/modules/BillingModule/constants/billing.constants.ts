@@ -10,3 +10,15 @@ export const DEFAULT_FAKE_TEAM = {
   amountAtTheStart: 0,
   amountAtTheEnd: 0,
 };
+
+export const DEFAULT_FAKE_GROUP = {
+  groupId: '',
+  groupName: '',
+  sentCount: 0,
+  claimedCount: 0,
+  purchasedCount: 0,
+  amountSpent: 0,
+  amountAtTheStart: 0,
+  amountAtTheEnd: 0,
+  teams: [],
+};

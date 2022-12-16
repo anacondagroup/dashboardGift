@@ -8,3 +8,4 @@ const getOverviewFiltersState = (state: IRootState): TOverviewFiltersState => st
 
 export const getDateRange = pipe(getOverviewFiltersState, state => state.dateRange);
 export const getGroupId = pipe(getOverviewFiltersState, state => state.groupId);
+export const getSorting = pipe(getOverviewFiltersState, state => state.sorting);
