@@ -20,7 +20,7 @@ type TBillingGroupProps = FormControlProps & {
 const BILLING_GROUPS_PER_PAGE = 1000;
 
 const BillingGroup = ({ control, canCreateNewGroup = true }: TBillingGroupProps): JSX.Element => {
-  const { data, isFetching } = useGetBillingGroupsQuery({ currentPage: 1, perPage: BILLING_GROUPS_PER_PAGE });
+  const { data, isLoading } = useGetBillingGroupsQuery({ currentPage: 1, perPage: BILLING_GROUPS_PER_PAGE });
 
   const { selectEntities, selectIds } = billingGroupAdapter.getSelectors(
     () => data ?? billingGroupAdapter.getInitialState(),
@@ -76,7 +76,7 @@ const BillingGroup = ({ control, canCreateNewGroup = true }: TBillingGroupProps)
                 </Box>
               </Box>
             )}
-            disabled={isFetching}
+            loading={isLoading}
             data-testid="TeamInfoForm.BillingGroupSelector"
           />
           {error?.message && <FormHelperText>{error?.message}</FormHelperText>}
