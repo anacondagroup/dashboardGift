@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Box, Theme, Typography } from '@mui/material';
-import { Tooltip, Icon, Divider, palette, SearchField } from '@alycecom/ui';
+import { Box, Typography } from '@mui/material';
+import { Tooltip, Icon, Divider, SearchField } from '@alycecom/ui';
 import { Control } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { RefreshPeriod, TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
@@ -18,33 +18,7 @@ import {
 
 import TeamMembersTable from './TeamMembersBudgetTable';
 import TeamMembersBudgetFooter from './TeamMembersBudgetFooter';
-
-const styles = {
-  headContainer: {
-    display: 'flex',
-    margin: ({ spacing }: Theme) => spacing(3.75, 0, 1.25, 0),
-  },
-  header: {
-    fontSize: '20px',
-    color: ({ palette: themePalette }: Theme) => themePalette.primary.main,
-  },
-  tableContainer: {
-    border: ({ palette: themePalette }: Theme) => `1px solid ${themePalette.primary.superLight}`,
-    borderRadius: 2,
-  },
-  tableScroll: {
-    maxHeight: '35vh',
-    overflow: 'scroll',
-  },
-  icon: {
-    marginLeft: 0.5,
-    color: palette.primary.superLight,
-  },
-  searchContainer: {
-    width: '65%',
-    margin: ({ spacing }: Theme) => spacing(1.25, 0),
-  },
-} as const;
+import { styles } from './TeamMembersBudget.styles';
 
 export interface ITeamMembersBudgetProps {
   teamId: number | null;

@@ -89,7 +89,7 @@ describe('TeamBudgetForm', () => {
       await screen.findByRole('option', { name: `${RefreshPeriod.Weekly} reset` }),
       await screen.findByRole('option', { name: `${RefreshPeriod.Monthly} reset` }),
       await screen.findByRole('option', { name: `${RefreshPeriod.Quarterly} reset` }),
-      await screen.findByRole('option', { name: RefreshPeriod.NoRefresh }),
+      await screen.findByRole('option', { name: RefreshPeriod.NoReset }),
     ];
 
     options.map(option => expect(option).toBeInTheDocument());
