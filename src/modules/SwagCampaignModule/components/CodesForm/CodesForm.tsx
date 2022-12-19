@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useController, useForm } from 'react-hook-form';
 import { Box, Collapse, FormControl, FormControlLabel, RadioGroup, Radio, Theme, Typography } from '@mui/material';
 import { useApplyManualFormErrorsEffect } from '@alycecom/hooks';
-import { SectionTitleStyled, SFormLabel } from '@alycecom/modules';
+import { SectionTitleStyled, SFormLabel, CommonData } from '@alycecom/modules';
 
 import { setGiftCodeFormat, resetCodesSettings } from '../../store/swagCampaign/steps/codes/codes.actions';
 import { CodesType } from '../../store/swagCampaign/steps/codes/codes.constants';
@@ -43,6 +43,8 @@ const CodesForm = ({ children, onSubmit }: CodesFormProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const giftCodeFormat = useSelector(getGiftCodeFormat);
+
+  const printingFeeValue = useSelector(CommonData.selectors.getPrintingFeeValue);
 
   const codesOrder = useSelector(getCardsOrder);
   const errors = useSelector(getErrors);
@@ -121,7 +123,14 @@ const CodesForm = ({ children, onSubmit }: CodesFormProps): JSX.Element => {
                 </Typography>
               </Box>
               <Box>
-                <Typography sx={styles.textDescription}>10-14 business days.</Typography>
+                <Typography sx={styles.textDescription}>
+                  10-14 business days.&nbsp;
+                  <span>
+                    <b>
+                      Upon ordering, you will be charged ${printingFeeValue} per card for printing and shipping costs.
+                    </b>
+                  </span>
+                </Typography>
               </Box>
             </Box>
             <Box ml={4} mt={2}>
