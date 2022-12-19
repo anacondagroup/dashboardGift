@@ -1,3 +1,5 @@
+import { PauseGiftingOnOption } from '@alycecom/services';
+
 export interface ITeamMembers {
   userId: number;
   budget: number;
@@ -22,11 +24,6 @@ export enum NotifySenderType {
   OnceRemaining = 'once_remaining',
 }
 
-export enum PauseGiftingOn {
-  Claimed = 'claimed',
-  Sent = 'sent',
-}
-
 export interface IBudget {
   amount: number;
   teamId: number;
@@ -37,5 +34,5 @@ export interface IBudget {
   notifySenderType: NotifySenderType | null;
   notifySenderAtPercent: number | null;
   notifyTeamAdminAtPercent: number | null;
-  pauseGiftingOn: PauseGiftingOn;
+  pauseGiftingOn: PauseGiftingOnOption;
 }

@@ -32,14 +32,13 @@ const PauseGiftingOnSelector = ({ control, error }: IPauseGiftingOnSelectorProps
   <Controller
     name={BudgetCreateField.PauseOption}
     control={control}
-    render={({ field: { onChange } }) => (
+    render={({ field: { onChange, value } }) => (
       <FormControl fullWidth variant="outlined" error={!!error}>
         <Select
           labelId="PauseGiftingOn.Select.Label"
           id="PauseGiftingOn.Select.Label"
-          value={PauseGiftingOnOption.Claimed}
+          value={value ?? PauseGiftingOnOption.Claimed}
           renderValue={getRenderValue}
-          disabled
           onChange={onChange}
           data-testid="PauseGiftingOn.Select"
           IconComponent={ExpandMoreIcon}

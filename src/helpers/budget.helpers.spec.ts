@@ -1,4 +1,4 @@
-import { TBudgetUtilization } from '@alycecom/services';
+import { PauseGiftingOnOption, TBudgetUtilization } from '@alycecom/services';
 import { IBudgetUtilizationByTeam } from '../store/budgetUtilization/budgetUtilization.types';
 
 import { convertUtilizationsToDollars, getBudgetUtilizationText, hasBudgetToSpend } from './budget.helpers';
@@ -14,6 +14,7 @@ describe('toolbarUserBudget helpers', () => {
           amountClaimed: 25000,
           amountSent: 350000,
           period: 'weekly',
+          pauseGiftingOn: PauseGiftingOnOption.Claimed,
         },
         {
           teamId: 38,
@@ -22,6 +23,7 @@ describe('toolbarUserBudget helpers', () => {
           amountClaimed: 35000,
           amountSent: 450000,
           period: 'weekly',
+          pauseGiftingOn: PauseGiftingOnOption.Sent,
         },
       ];
 
@@ -35,6 +37,7 @@ describe('toolbarUserBudget helpers', () => {
           amountClaimed: 250,
           amountSent: 3500,
           period: 'weekly',
+          pauseGiftingOn: PauseGiftingOnOption.Claimed,
         },
         {
           teamId: 38,
@@ -43,6 +46,7 @@ describe('toolbarUserBudget helpers', () => {
           amountClaimed: 350,
           amountSent: 4500,
           period: 'weekly',
+          pauseGiftingOn: PauseGiftingOnOption.Sent,
         },
       ]);
     });

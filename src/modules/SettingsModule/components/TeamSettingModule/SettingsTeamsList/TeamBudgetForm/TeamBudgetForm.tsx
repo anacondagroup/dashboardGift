@@ -8,7 +8,6 @@ import {
   BudgetType,
   ITeamMemberBudget,
   MessageType,
-  PauseGiftingOnOption,
   showGlobalMessage,
   TBudgetCreateParams,
   useCreateTeamBudgetMutation,
@@ -104,7 +103,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
           amount: budget.amount,
           type: BudgetType.User,
           period: budget.period,
-          pauseGiftingOn: PauseGiftingOnOption.Claimed,
+          pauseGiftingOn: budget.pauseGiftingOn,
           teamMembers: budget.teamMembers,
           notifyTeamAdminType: budget.notifyTeamAdminType,
           notifySenderType: budget.notifySenderType,
@@ -132,6 +131,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
   const teamIds = useSelector(getTeamIds);
 
   const refreshPeriod = watch('period');
+  const pauseGiftingOn = watch('pauseGiftingOn');
 
   const handleCancel = useCallback(() => {
     dispatch(setTeamSidebarStep({ step: null }));
@@ -257,6 +257,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
             onMemberBudgetDefinition={onMemberBudgetDefinition}
             memberBudgetsTotal={sumOfMemberBudgets}
             existingBudget={budget}
+            pauseGiftingOn={pauseGiftingOn}
           />
         </Box>
 

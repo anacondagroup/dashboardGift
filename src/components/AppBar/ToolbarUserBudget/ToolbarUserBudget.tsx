@@ -76,7 +76,7 @@ const ToolbarUserBudget = ({
 
   const firstTeamsUtilization = budgetUtilizations.find(utilization => utilization.teamId === sortedTeams[0].id);
 
-  const shouldShowZeroBudgetWarning = firstTeamsUtilization && firstTeamsUtilization.availableBudgetAmount === 0;
+  const shouldShowZeroBudgetWarning = firstTeamsUtilization && firstTeamsUtilization.availableBudgetAmount <= 0;
 
   const [showModal, toggleModalState] = useState<boolean>(false);
 

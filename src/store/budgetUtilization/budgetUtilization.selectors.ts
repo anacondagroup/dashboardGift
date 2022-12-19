@@ -1,3 +1,4 @@
+import { PauseGiftingOnOption } from '@alycecom/services';
 import { StateStatus } from '@alycecom/utils';
 import { pipe } from 'ramda';
 
@@ -7,7 +8,13 @@ const getBudgetUtilizationState = (state: IRootState) => state.budgetUtilization
 
 export const getTeamBudgetUtilization = pipe(getBudgetUtilizationState, state => state.teamUtilization);
 export const getTeamBudgetUtilizationTotal = pipe(getBudgetUtilizationState, state =>
-  state.teamUtilization.reduce((prev, curr) => prev + curr.amountClaimed, 0),
+  state.teamUtilization.reduce(
+    (teamUtilizationSum, teamUtilization) =>
+      teamUtilization.pauseGiftingOn === PauseGiftingOnOption.Claimed
+        ? teamUtilizationSum + teamUtilization.amountClaimed
+        : teamUtilizationSum + teamUtilization.amountSent,
+    0,
+  ),
 );
 
 export const getIsTeamUserBudgetUtilizationLoading = pipe(
