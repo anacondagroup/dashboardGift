@@ -1,3 +1,5 @@
+import { PauseGiftingOnOption } from '@alycecom/services';
+
 export interface IBudgetUtilizationByTeam {
   userId: number;
   teamId: number;
@@ -5,6 +7,7 @@ export interface IBudgetUtilizationByTeam {
   amountClaimed: number;
   amountSent: number;
   period: string;
+  pauseGiftingOn: PauseGiftingOnOption;
 }
 
 export enum BudgetBulkEditOption {

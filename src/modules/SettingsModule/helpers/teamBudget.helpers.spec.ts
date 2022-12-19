@@ -1,6 +1,6 @@
 import { PauseGiftingOnOption } from '@alycecom/services';
 
-import { IBudget, PauseGiftingOn, RefreshPeriod } from '../store/teams/budgets/budgets.types';
+import { IBudget, RefreshPeriod } from '../store/teams/budgets/budgets.types';
 import { convertBudgetToDollars } from './teamBudget.helpers';
 
 describe('teamBudget helpers', () => {
@@ -12,7 +12,7 @@ describe('teamBudget helpers', () => {
         { userId: 1046, budget: 10012 },
         { userId: 1047, budget: 10020 },
       ],
-      pauseGiftingOn: PauseGiftingOn.Sent,
+      pauseGiftingOn: PauseGiftingOnOption.Sent,
       period: RefreshPeriod.Monthly,
       amount: 30032,
       rollover: false,

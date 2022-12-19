@@ -3,7 +3,7 @@ import { Button } from '@alycecom/ui';
 import { Box, Modal, TextField, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ReactNumberFormat from 'react-number-format';
-import { RefreshPeriod } from '@alycecom/services';
+import { PauseGiftingOnOption, RefreshPeriod } from '@alycecom/services';
 import { EntityId } from '@alycecom/utils';
 import { useSelector } from 'react-redux';
 
@@ -54,7 +54,14 @@ const BulkEditBudgetModal = ({
           const userUtilization = budgetUtilizations.find(
             (utilization: IBudgetUtilizationByTeam) => user.id === utilization.userId,
           );
-          return userUtilization && bulkAmount <= userUtilization.amountClaimed;
+          if (!userUtilization) {
+            return false;
+          }
+          const amountUtilized =
+            userUtilization.pauseGiftingOn === PauseGiftingOnOption.Claimed
+              ? userUtilization.amountClaimed
+              : userUtilization.amountSent;
+          return userUtilization && bulkAmount <= (amountUtilized || 0);
         })
         .map((user: IUser) => `${user.firstName} ${user.lastName}`),
     [budgetUtilizations, bulkAmount, selectedUsers],

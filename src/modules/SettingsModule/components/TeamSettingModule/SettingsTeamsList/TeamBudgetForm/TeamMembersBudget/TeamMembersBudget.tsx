@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { Tooltip, Icon, Divider, SearchField } from '@alycecom/ui';
 import { Control } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { RefreshPeriod, TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
+import { PauseGiftingOnOption, RefreshPeriod, TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
 
 import { TEAM_MEMBERS_TOOLTIP_MESSAGE } from '../../../../../constants/budget.constants';
 import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
@@ -27,6 +27,7 @@ export interface ITeamMembersBudgetProps {
   onMemberBudgetDefinition: () => void;
   memberBudgetsTotal: number;
   existingBudget?: IBudget;
+  pauseGiftingOn: PauseGiftingOnOption;
 }
 
 function getSearchedMembers(users: IUser[], searchValue: string): IUser[] {
@@ -42,11 +43,12 @@ const TeamMembersBudget = ({
   memberBudgetsTotal,
   onMemberBudgetDefinition,
   existingBudget,
+  pauseGiftingOn,
 }: ITeamMembersBudgetProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const teamUtilizations = useSelector(getTeamBudgetUtilization);
-  const teamUtilizationTotalClaimed = useSelector(getTeamBudgetUtilizationTotal);
+  const teamUtilizationTotal = useSelector(getTeamBudgetUtilizationTotal);
 
   const [searchValue, setSearchValue] = useState('');
   const handleOnChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value);
@@ -106,12 +108,13 @@ const TeamMembersBudget = ({
             refreshPeriod={refreshPeriod}
             onMemberBudgetDefinition={onMemberBudgetDefinition}
             existingBudget={existingBudget}
+            pauseGiftingOn={pauseGiftingOn}
           />
         </Box>
         <TeamMembersBudgetFooter
           refresh={refreshPeriod}
           totalMemberBudgets={memberBudgetsTotal}
-          totalMembersUtilization={teamUtilizationTotalClaimed}
+          totalMembersUtilization={teamUtilizationTotal}
           removedMembersHasUtilization={removedMembersHasUtilization}
         />
       </Box>

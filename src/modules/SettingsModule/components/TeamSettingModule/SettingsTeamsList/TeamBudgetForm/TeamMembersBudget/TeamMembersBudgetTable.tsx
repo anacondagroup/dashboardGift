@@ -20,7 +20,14 @@ import {
 } from '@mui/material';
 import ReactNumberFormat from 'react-number-format';
 import { Control, Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { BudgetCreateField, ITeamMemberBudget, RefreshPeriod, TBudgetCreateParams } from '@alycecom/services';
+import {
+  BudgetCreateField,
+  ITeamMemberBudget,
+  PauseGiftingOnOption,
+  RefreshPeriod,
+  TBudgetCreateParams,
+} from '@alycecom/services';
+import { NumberFormat } from '@alycecom/ui';
 import { EntityId } from '@alycecom/utils';
 
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
@@ -49,6 +56,11 @@ const CustomTableCell = ({ children, testId, ...props }: ICustomTableCellProps):
   </TableCell>
 );
 
+const PauseGiftingOnIndex = {
+  [PauseGiftingOnOption.Claimed]: 'amountClaimed',
+  [PauseGiftingOnOption.Sent]: 'amountSent',
+};
+
 export interface ITeamMembersBudgetTableProps {
   users: IUser[];
   teamId: number;
@@ -58,6 +70,7 @@ export interface ITeamMembersBudgetTableProps {
   teamUtilizations: IBudgetUtilizationByTeam[];
   onMemberBudgetDefinition: () => void;
   existingBudget?: IBudget;
+  pauseGiftingOn: PauseGiftingOnOption;
 }
 
 const CustomTextInput = (props: TextFieldProps) => <TextField {...props} sx={styles.budgetField} />;
@@ -71,6 +84,7 @@ const TeamMembersBudgetTable = ({
   teamUtilizations,
   onMemberBudgetDefinition,
   existingBudget,
+  pauseGiftingOn,
 }: ITeamMembersBudgetTableProps): JSX.Element => {
   const dispatch = useDispatch();
 
@@ -215,9 +229,12 @@ const TeamMembersBudgetTable = ({
             ) : (
               fields.map((field, index) => {
                 const userForField: IUser | undefined = users.find(user => user.id === field.userId);
-                const userUtilization =
-                  teamUtilizations.find(utilization => userForField && utilization.userId === userForField.id)
-                    ?.amountClaimed || 0;
+                const userUtilization = teamUtilizations.find(
+                  utilization => userForField && utilization.userId === userForField.id,
+                );
+                const userUtilizationValue = userUtilization
+                  ? userUtilization[PauseGiftingOnIndex[pauseGiftingOn] as keyof typeof userUtilization]
+                  : 0;
 
                 return userForField ? (
                   <TableRow key={field.id}>
@@ -276,7 +293,9 @@ const TeamMembersBudgetTable = ({
                         <Typography sx={styles.tableParameter}> / {refreshPeriod}</Typography>
                       </Box>
                     </CustomTableCell>
-                    <TableCell sx={styles.utilizationContainer}>$ {userUtilization.toLocaleString('en')}</TableCell>
+                    <TableCell sx={styles.utilizationContainer}>
+                      <NumberFormat format="$0,0.00">{userUtilizationValue}</NumberFormat>
+                    </TableCell>
                   </TableRow>
                 ) : null;
               })
