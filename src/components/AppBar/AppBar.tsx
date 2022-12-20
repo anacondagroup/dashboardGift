@@ -12,6 +12,8 @@ import appBarLogo from '../../assets/images/white_bird.svg';
 import { tabsKeys } from '../../constants/sidebarTabs.constants';
 import { hasBudgetToSpend } from '../../helpers/budget.helpers';
 import { INSUFFICIENT_BUDGET_TOOLTIP_MESSAGE } from '../../modules/SettingsModule/constants/budget.constants';
+import usePermissions from '../../hooks/usePermissions';
+import { PermissionKeys } from '../../constants/permissions.constants';
 
 import ToolbarProfile from './ToolbarProfile';
 import ToolbarInvitations from './ToolbarInvitations';
@@ -45,6 +47,13 @@ const AppBar = () => {
   const classes = useStyles();
   const updateUrlFunc = useSetUrlQuery();
   const userId = useSelector(User.selectors.getUserId);
+
+  const permissions = usePermissions();
+  const hasOrganizationSettings = permissions.includes(PermissionKeys.OrganisationAdmin);
+  const teamsIds = useSelector(User.selectors.getUserCanManageTeams);
+  const hasAnalyticReportsFeature = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.ANALYTICS_REPORTING));
+
+  const isAnalyticReportsAllowed = hasAnalyticReportsFeature && (hasOrganizationSettings || teamsIds.length > 0);
 
   const { params: { selectedTab = '/' } = {} } =
     useRouteMatch<{ selectedTab: string }>('/:selectedTab(teams|campaigns|billing|marketplace)?') || {};
@@ -116,6 +125,9 @@ const AppBar = () => {
               value="marketplace"
               data-testid="marketplace_link"
             />
+            {isAnalyticReportsAllowed && (
+              <TabLink to="/reporting/download-reports" label="Gifting Insights" value="giftingInsights" />
+            )}
           </Tabs>
         </div>
         <Box flex="0 0 auto" display="flex" height="100%" py={1.5} flexDirection="row" justifyContent="flex-end">

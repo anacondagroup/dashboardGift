@@ -16,7 +16,7 @@ import StepSection from '../../StepSection';
 import { getReportsByReportName, getListStatusPending } from '../../../store/reporting/reporting.selectors';
 import { IReportInfo } from '../../../store/reporting/reporting.types';
 import { resetCreateStatus } from '../../../store/reporting/reporting.actions';
-import { useReportingTrackEvent } from '../../../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 
 import AutomatedReportCard from './AutomatedReportCard';
 
