@@ -22,7 +22,7 @@ import { ITeam } from '../../../UsersManagement/store/usersManagement.types';
 import { getDownloadReportPending } from '../../store/reporting/reporting.selectors';
 import { downloadReport } from '../../store/reporting/reporting.actions';
 import { makeHasPermissionSelector } from '../../../../store/common/permissions/permissions.selectors';
-import { useReportingTrackEvent } from '../../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../../hooks/useReportingTrackEvent';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   box: {

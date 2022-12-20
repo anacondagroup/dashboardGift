@@ -30,7 +30,7 @@ import { createReport } from '../../../store/reporting/reporting.actions';
 import { setSidebarStep } from '../../../store/reportingSidebar/reportingSidebar.actions';
 import { ITeam } from '../../../../UsersManagement/store/usersManagement.types';
 import { formattedSendDay } from '../../../../SettingsModule/helpers/reporting.helpers';
-import { useReportingTrackEvent } from '../../../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 import { useSetFormDirtyEffect } from '../../../hooks/useSetFormDirtyEffect';
 
 import ReportingFrequency from './ReportingFrequency';

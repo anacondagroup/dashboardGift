@@ -35,7 +35,7 @@ import { getReportIdToEdit } from '../../../store/reportingSidebar/reportingSide
 import { makeHasPermissionSelector } from '../../../../../store/common/permissions/permissions.selectors';
 import { IReportInfo } from '../../../store/reporting/reporting.types';
 import { formattedSendDay } from '../../../../SettingsModule/helpers/reporting.helpers';
-import { useReportingTrackEvent } from '../../../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 import { useSetFormDirtyEffect } from '../../../hooks/useSetFormDirtyEffect';
 import { ReportingFrequencyEnum } from '../../../../SettingsModule/constants/reporting.constants';
 

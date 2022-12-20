@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 import { getReportsByReportName, getListStatusPending } from '../store/reporting/reporting.selectors';
 import { setSidebarStep } from '../store/reportingSidebar/reportingSidebar.actions';
 import { GiftingInsights, ReportingSidebarCategory } from '../store/reporting/reporting.constants';
-import { useReportingTrackEvent } from '../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../hooks/useReportingTrackEvent';
 
 import ReportingSidebar from './ReportSidebar';
 

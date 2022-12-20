@@ -14,12 +14,9 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
-import { Auth, GiftingOnTheFly, HasFeature, Features, User } from '@alycecom/modules';
+import { Auth, GiftingOnTheFly, User } from '@alycecom/modules';
 import { LinkButton, Icon } from '@alycecom/ui';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { PermissionKeys } from '../../constants/permissions.constants';
-import usePermissions from '../../hooks/usePermissions';
 
 const useStyles = makeStyles(theme => ({
   toolbarMenu: {
@@ -38,10 +35,7 @@ const ToolbarProfile = () => {
   const userName = useSelector(User.selectors.getUserName);
   const orgName = useSelector(User.selectors.getOrgName);
   const avatarUrl = useSelector(User.selectors.getUserImage);
-  const teamsIds = useSelector(User.selectors.getUserCanManageTeams);
   const canViewGiftingOnTheFly = useSelector(User.selectors.getCanViewGiftingOnTheFly);
-  const permissions = usePermissions();
-  const hasOrganizationSettings = permissions.includes(PermissionKeys.OrganisationAdmin);
 
   const handleMenu = useCallback(event => {
     setAnchorEl(event.currentTarget);
@@ -95,13 +89,6 @@ const ToolbarProfile = () => {
                     >
                       Your Preferences
                     </MenuItem>
-                    <HasFeature featureKey={Features.FLAGS.ANALYTICS_REPORTING}>
-                      {(teamsIds.length > 0 || hasOrganizationSettings) && (
-                        <MenuItem data-testid="Toolbar.ReportingLink" component={Link} to="/reporting/download-reports">
-                          Gifting Insights
-                        </MenuItem>
-                      )}
-                    </HasFeature>
                     {canViewGiftingOnTheFly && (
                       <MenuItem
                         data-testid="Toolbar.GiftingSettingsLink"

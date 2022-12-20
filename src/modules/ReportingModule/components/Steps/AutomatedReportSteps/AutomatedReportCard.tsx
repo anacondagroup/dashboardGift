@@ -9,7 +9,7 @@ import { GiftingInsights, ReportingSidebarCategory } from '../../../store/report
 import { setSidebarStep } from '../../../store/reportingSidebar/reportingSidebar.actions';
 import { resetEditStatus } from '../../../store/reporting/reporting.actions';
 import { ReportingFrequencyEnum } from '../../../../SettingsModule/constants/reporting.constants';
-import { useReportingTrackEvent } from '../../../../SettingsModule/hooks/useReportingTrackEvent';
+import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   listItem: {
