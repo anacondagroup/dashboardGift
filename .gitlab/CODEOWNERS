@@ -6,14 +6,6 @@
 
 [Applications]
 /src/modules/AuthModule @user-groups/frontend-techleads
-/src/modules/EmailBrandingModule @user-groups/mt-zion
-/src/modules/MarketplaceModule @user-groups/mt-zion
-/src/modules/ProspectingCampaignModule @user-groups/mt-zion
-/src/modules/GiftEmailPreviewModule @user-groups/mt-zion
-/src/modules/BatchEmailPreviewModule @user-groups/mt-zion
-/src/modules/GiftingFlow @user-groups/mt-zion
-/src/modules/UsersManagement @user-groups/mt-zion
-/src/modules/GiftingOnTheFly @user-groups/mt-zion
 
 [Deployment]
 /.gitlab/ @user-groups/devops
@@ -21,9 +13,7 @@ docker-compose.yaml @user-groups/frontend-techleads
 *ockerfile @user-groups/frontend-techleads
 
 [Dependencies]
-*ackage.json @user-groups/frontend-techleads
 .npmrc @user-groups/frontend-techleads
-yarn.lock @user-groups/frontend-techleads
 
 [Documentation]
 *.md @user-groups/frontend
