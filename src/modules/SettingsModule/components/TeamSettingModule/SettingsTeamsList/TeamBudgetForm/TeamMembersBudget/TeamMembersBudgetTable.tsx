@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TableCellTooltip } from '@alycecom/ui';
+import { TableCellTooltip, NumberFormat } from '@alycecom/ui';
 import {
   Table,
   TableBody,
@@ -27,7 +27,6 @@ import {
   RefreshPeriod,
   TBudgetCreateParams,
 } from '@alycecom/services';
-import { NumberFormat } from '@alycecom/ui';
 import { EntityId } from '@alycecom/utils';
 
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';

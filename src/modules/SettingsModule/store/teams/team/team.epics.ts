@@ -1,7 +1,7 @@
 import { Epic } from 'redux-observable';
 import { ofType } from '@alycecom/utils';
 import { catchError, mergeMap, switchMap, withLatestFrom } from 'rxjs/operators';
-import { handleError, handlers, MessageType, TrackEvent } from '@alycecom/services';
+import { handleError, handlers, MessageType, TrackEvent, appApi, BillingApiTag } from '@alycecom/services';
 import { Auth, Features } from '@alycecom/modules';
 import { omit } from 'ramda';
 
@@ -32,12 +32,14 @@ export const createTeamEpic: Epic = (action$, state$, { apiService, messagesServ
           );
 
           const sideBarStep: TeamSidebarStep | null = hasBudgetManagementSetup ? TeamSidebarStep.TeamBudget : null;
+          const isNewGroup = payload[TeamField.GroupId] === NEW_BILLING_GROUP_ID;
 
           return [
             createTeam.fulfilled(),
             setTeamSidebarStep({ step: sideBarStep, teamId: data.teamId }),
             loadTeamsSettingsRequest(),
             loadTeamsRequest(),
+            ...(isNewGroup ? [appApi.util.invalidateTags([{ type: BillingApiTag.BillingGroup, id: 'LIST' }])] : []),
             TrackEvent.actions.trackEvent({
               name: 'New team — created',
               payload: { adminId },
