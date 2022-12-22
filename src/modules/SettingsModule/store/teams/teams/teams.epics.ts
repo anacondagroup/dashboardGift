@@ -1,7 +1,7 @@
 import { Epic } from 'redux-observable';
-import { catchError, map, mergeMap, debounce, takeUntil } from 'rxjs/operators';
-import { of, timer } from 'rxjs';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { ofType } from '@alycecom/utils';
+import { handleError, handlers } from '@alycecom/services';
 
 import { loadTeamsSettingsFail, loadTeamsSettingsRequest, loadTeamsSettingsSuccess } from './teams.actions';
 import { ITeam } from './teams.types';
@@ -9,12 +9,10 @@ import { ITeam } from './teams.types';
 const loadTeamsEpic: Epic = (action$, state$, { apiService }) =>
   action$.pipe(
     ofType(loadTeamsSettingsRequest),
-    debounce(() => timer(300)),
-    mergeMap(() =>
+    switchMap(() =>
       apiService.get(`/enterprise/dashboard/settings/teams`).pipe(
         map((response: { success: true; teams: ITeam[] }) => loadTeamsSettingsSuccess(response.teams)),
-        catchError(error => of(loadTeamsSettingsFail(error))),
-        takeUntil(action$.pipe(ofType(loadTeamsSettingsRequest))),
+        catchError(handleError(handlers.handleAnyError(loadTeamsSettingsFail))),
       ),
     ),
   );

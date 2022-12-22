@@ -1,6 +1,13 @@
 import React from 'react';
-import { render } from '../../../../../../testUtils';
+import { StateStatus } from '@alycecom/utils';
+
+import { render } from '../../../../../../../testUtils';
 import BudgetCell, { IBudgetCellProps } from './BudgetCell';
+
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: jest.fn(),
+}));
 
 describe('BudgetCell', () => {
   const setup = (props: IBudgetCellProps) => {
@@ -26,6 +33,7 @@ describe('BudgetCell', () => {
                 ],
               },
             },
+            status: StateStatus.Fulfilled,
           },
         },
       },
@@ -34,18 +42,13 @@ describe('BudgetCell', () => {
   };
 
   describe('budget info displayed', () => {
-    const onBudgetClickMock = jest.fn();
-
     it('shows the budget amount and refresh period when one exists for the team', () => {
-      const teamId = 37;
-      const { getByText } = setup({ teamId, isLoading: false, onBudgetClick: onBudgetClickMock });
-
+      const { getByText } = setup({ teamId: 37 });
       expect(getByText('$ 3,000 / monthly')).toBeInTheDocument();
     });
 
     it('shows the user they need to define a budget and refresh period when one does not exist', () => {
-      const { getByText } = setup({ teamId: 38, isLoading: false, onBudgetClick: onBudgetClickMock });
-
+      const { getByText } = setup({ teamId: 38 });
       expect(getByText('Define budget / reset period')).toBeInTheDocument();
     });
   });

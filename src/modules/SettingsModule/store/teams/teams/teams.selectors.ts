@@ -15,9 +15,5 @@ export const getIsLoading = pipe(getTeamsState, state => state.status === StateS
 export const getIsLoaded = pipe(getTeamsState, state => state.status === StateStatus.Fulfilled);
 
 export const getTeams = selectors.getAll;
-
 export const getTeamById = selectors.getById;
-
 export const getTeamIds = selectors.getIds;
-
-export const getErrors = pipe(getTeamsState, state => state.errors);

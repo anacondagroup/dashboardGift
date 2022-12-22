@@ -3,6 +3,7 @@ import { IListResponseWithPagination, IOffsetPagination } from '@alycecom/servic
 import { CAMPAIGN_STATUS, CAMPAIGN_TYPES } from '../../../../../../constants/campaignSettings.constants';
 import { TABLE_SORT } from '../../../../../../components/Shared/CustomTable/customTable.constants';
 import { IRowDataItem } from '../../../../../../components/Shared/CustomTable/CustomTable.types';
+import { TeamStatus } from '../../../../../SettingsModule/store/teams/teams/teams.types';
 
 export enum CampaignBreakDownFilterTabs {
   All = 'all',
@@ -37,6 +38,7 @@ export interface ICampaignBreakdownListItem extends IRowDataItem {
   team: {
     id: number;
     name: string;
+    status: TeamStatus;
   };
   giftsSent: number;
   giftsViewed: number;

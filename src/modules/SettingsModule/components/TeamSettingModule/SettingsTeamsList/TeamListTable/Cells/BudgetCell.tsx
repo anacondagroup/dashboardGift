@@ -1,18 +1,20 @@
 import React, { memo, useMemo } from 'react';
 import { GlobalFonts, TableLoadingLabel } from '@alycecom/ui';
-import { Typography, TableCell, Theme } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Typography, TableCell } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { getBudgetByTeamId } from '../../../../store/teams/budgets/budgets.selectors';
+import { getBudgetByTeamId, getIsBudgetLoading } from '../../../../../store/teams/budgets/budgets.selectors';
+import { setTeamSidebarStep } from '../../../../../store/teams/teamOperation/teamOperation.actions';
+import { TeamSidebarStep } from '../../../../../store/teams/teamOperation/teamOperation.types';
 
 const styles = {
   loadingLabel: {
     maxWidth: 275,
-    paddingRight: ({ spacing }: Theme) => spacing(2),
   },
   budgetText: {
     ...GlobalFonts['.Body-Regular-Left-ALL-CAP-LINK-Bold'],
     cursor: 'pointer',
+    textAlign: 'right',
   },
   noBudgetStyle: {
     fontStyle: 'italic',
@@ -21,12 +23,17 @@ const styles = {
 
 export interface IBudgetCellProps {
   teamId: number;
-  isLoading: boolean;
-  onBudgetClick: (teamId: number) => void;
 }
 
-const BudgetCell = ({ teamId, isLoading, onBudgetClick }: IBudgetCellProps): JSX.Element => {
+const BudgetCell = ({ teamId }: IBudgetCellProps): JSX.Element => {
+  const dispatch = useDispatch();
+
   const budget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const isLoading = useSelector(getIsBudgetLoading);
+
+  const handleChangeBudget = () => {
+    dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamBudget, teamId }));
+  };
 
   const NO_BUDGET_TEXT = 'Define budget / reset period';
   const budgetText = useMemo(
@@ -45,10 +52,7 @@ const BudgetCell = ({ teamId, isLoading, onBudgetClick }: IBudgetCellProps): JSX
         isLoading={isLoading}
         sx={styles.loadingLabel}
         render={() => (
-          <Typography
-            onClick={() => onBudgetClick(teamId)}
-            sx={{ ...styles.budgetText, ...(!budget && styles.noBudgetStyle) }}
-          >
+          <Typography onClick={handleChangeBudget} sx={{ ...styles.budgetText, ...(!budget && styles.noBudgetStyle) }}>
             {budgetText}
           </Typography>
         )}

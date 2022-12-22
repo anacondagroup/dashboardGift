@@ -29,6 +29,7 @@ import {
   getUnArchiveAvailabilityOptions,
 } from '../../../helpers/campaignsManagement.helpers';
 import { ActivateCampaignRoutes, ActivateEditorStep } from '../../../../ActivateModule/routePaths';
+import { TeamStatus } from '../../../../SettingsModule/store/teams/teams/teams.types';
 
 import CampaignTypeLabel from './CampaignTypeLabel';
 import CampaignStatusLabel from './CampaignStatusLabel';
@@ -204,7 +205,11 @@ const CampaignTableRow = ({
         action: onDuplicateCampaign,
         ...getActionAvailabilityOptions({
           campaign: rowItem,
-          hasPermission: canCreateCampaign,
+          hasPermission: canCreateCampaign && rowItem.team.status === TeamStatus.active,
+          prohibitedTooltip:
+            rowItem.team.status !== TeamStatus.active
+              ? 'You cannot duplicate a campaign for an archived team'
+              : undefined,
           implementedForTypes: [CAMPAIGN_TYPES.STANDARD, CAMPAIGN_TYPES.PROSPECTING, CAMPAIGN_TYPES.ACTIVATE],
           possibleForStatuses: [
             CAMPAIGN_STATUS.ACTIVE,
@@ -267,7 +272,11 @@ const CampaignTableRow = ({
         action: onUnArchiveCampaign,
         ...getUnArchiveAvailabilityOptions({
           campaigns: [rowItem],
-          hasPermission: canEditCampaign,
+          hasPermission: canEditCampaign && rowItem.team.status === TeamStatus.active,
+          tooltip:
+            rowItem.team.status !== TeamStatus.active
+              ? 'You cannot unarchive a campaign for an archived team'
+              : undefined,
         }),
         dataTestid: `CampaignManagement.Table.${rowItem.id}.Actions.Unarchive`,
       },
