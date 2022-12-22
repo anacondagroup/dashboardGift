@@ -5,6 +5,11 @@ export interface ITeamAdmin {
   avatar: string;
 }
 
+export enum TeamStatus {
+  active = 'active',
+  archived = 'archived',
+}
+
 export interface ITeam {
   id: number;
   name: string;
@@ -15,5 +20,10 @@ export interface ITeam {
   group: {
     id: string;
     name: string;
+  } | null;
+  status: TeamStatus;
+  archivedAt: {
+    date: string;
+    timezone: string;
   } | null;
 }
