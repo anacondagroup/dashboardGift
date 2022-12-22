@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, TableCell, TableFooter, TableRow, Theme, Typography, TableContainer, Box } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { Tooltip } from '@alycecom/ui';
+import { Tooltip, NumberFormat } from '@alycecom/ui';
 import { RefreshPeriod } from '@alycecom/services';
 
 import { UTILIZATION_INCLUDES_REMOVED_USERS } from '../../../../../constants/budget.constants';
@@ -58,7 +58,7 @@ const TeamMembersBudgetFooter = ({
           </TableCell>
           <TableCell>
             <Typography sx={styles.footerTitle}>
-              $ {totalMemberBudgets.toLocaleString('en')} / {refresh}
+              <NumberFormat format="$ 0,0.00">{totalMemberBudgets}</NumberFormat> / {refresh}
             </Typography>
           </TableCell>
           <TableCell>
@@ -70,7 +70,9 @@ const TeamMembersBudgetFooter = ({
               ) : (
                 ''
               )}
-              <Typography sx={styles.utilizationText}>$ {totalMembersUtilization.toLocaleString('en')}</Typography>
+              <Typography sx={styles.utilizationText}>
+                <NumberFormat format="$ 0,0.00">{totalMembersUtilization}</NumberFormat>
+              </Typography>
             </Box>
           </TableCell>
         </TableRow>

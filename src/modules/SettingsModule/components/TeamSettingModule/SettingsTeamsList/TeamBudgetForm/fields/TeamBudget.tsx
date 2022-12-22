@@ -25,6 +25,7 @@ const TeamBudget = ({ control, error }: ITeamBudgetProps): JSX.Element => (
         }}
         onFocus={event => event.target.setSelectionRange(BUDGET_SELECT_MIN_RANGE, BUDGET_SELECT_MAX_RANGE)}
         decimalScale={2}
+        fixedDecimalScale
         allowNegative={false}
         customInput={TextField}
         disabled
