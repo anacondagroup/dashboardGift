@@ -272,6 +272,7 @@ const TeamMembersBudgetTable = ({
                                 onMemberBudgetDefinition();
                               }}
                               decimalScale={2}
+                              fixedDecimalScale={!value ? false : value}
                               allowNegative={false}
                               customInput={CustomTextInput}
                               disabled={false}
@@ -293,7 +294,7 @@ const TeamMembersBudgetTable = ({
                       </Box>
                     </CustomTableCell>
                     <TableCell sx={styles.utilizationContainer}>
-                      <NumberFormat format="$0,0.00">{userUtilizationValue}</NumberFormat>
+                      <NumberFormat format="$ 0,0.00">{userUtilizationValue}</NumberFormat>
                     </TableCell>
                   </TableRow>
                 ) : null;
