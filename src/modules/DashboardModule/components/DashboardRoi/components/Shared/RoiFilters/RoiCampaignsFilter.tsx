@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
-import { campaignListEntityAdapter, useGetCampaignListQuery } from '@alycecom/services';
+import React, { memo, useMemo } from 'react';
+import { campaignListEntityAdapter, TCampaignSummary, useGetCampaignListQuery } from '@alycecom/services';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMultiAutocompleteProps, MultiAutocomplete } from '@alycecom/ui';
-import { Box } from '@mui/material';
+import { AutocompleteRenderOptionState, Box, Checkbox } from '@mui/material';
+import { toUnderscore } from '@alycecom/utils';
 
 import { setRoiFilters } from '../../../store/filters';
 import { getRoiCurrentCampaigns } from '../../../store/filters/filters.selectors';
@@ -20,19 +21,43 @@ const styles = {
     padding: 0,
     fontSize: '14px',
   },
+  renderOptions: {
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: '2',
+    WebkitBoxOrient: 'vertical',
+  },
 } as const;
+
+const renderOption = (
+  { className, onMouseOver: _, ...props }: React.HTMLAttributes<HTMLLIElement>,
+  option: TCampaignSummary,
+  { selected }: AutocompleteRenderOptionState,
+) => {
+  const optionLabel = option.campaignName;
+
+  return (
+    <li {...props} className={className}>
+      <Checkbox
+        checked={selected}
+        color="primary"
+        data-testid={`AlyceUI.MultiSelect.Option.${toUnderscore(optionLabel)}`}
+      />
+      <Box sx={styles.renderOptions} data-testid={`AlyceUI.MultiSelect.OptionLabel.${toUnderscore(optionLabel)}`}>
+        {optionLabel}
+      </Box>
+    </li>
+  );
+};
 
 const RoiCampaignsFilter = (): JSX.Element => {
   const dispatch = useDispatch();
   const selectedCampaignIds = useSelector(getRoiCurrentCampaigns);
 
-  const { selectAll } = useGetCampaignListQuery(undefined, {
-    selectFromResult: result => ({
-      ...result,
-      ...campaignListEntityAdapter.getSelectors(() => result?.data ?? campaignListEntityAdapter.getInitialState()),
-    }),
-  });
-
+  const { data } = useGetCampaignListQuery(undefined);
+  const { selectAll } = campaignListEntityAdapter.getSelectors(
+    () => data ?? campaignListEntityAdapter.getInitialState(),
+  );
   const campaigns = useSelector(selectAll);
 
   const selectedCampaigns = useMemo(
@@ -53,6 +78,7 @@ const RoiCampaignsFilter = (): JSX.Element => {
         options={campaigns}
         multiple
         getOptionLabel={option => option.campaignName}
+        renderOption={renderOption}
         onChange={handleCampaignsChange}
         listboxProps={{ maxVisibleRows: 4 }}
       />
@@ -60,4 +86,4 @@ const RoiCampaignsFilter = (): JSX.Element => {
   );
 };
 
-export default RoiCampaignsFilter;
+export default memo(RoiCampaignsFilter);

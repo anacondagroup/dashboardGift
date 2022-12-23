@@ -1,5 +1,5 @@
 import { TTotalInfluencedByDeal } from '@alycecom/services';
-import { REQUEST_DATE_FORMAT } from '@alycecom/ui';
+import { DISPLAY_DATE_FORMAT, REQUEST_DATE_FORMAT } from '@alycecom/ui';
 import moment from 'moment';
 import numeral from 'numeral';
 import { uniq, flatten, mergeAll } from 'ramda';
@@ -13,7 +13,7 @@ export enum NumberFormattingOptions {
   LargeWithDecimals = '0,0.00',
 }
 
-export const toDateFromNow = (data: string): string => moment(data).fromNow();
+export const toRoiDateFormat = (date: string): string => moment(date).format(DISPLAY_DATE_FORMAT);
 
 export const toFormattedPrice = (number: number, format: string = NumberFormattingOptions.Short): string =>
   `$${numeral(number).format(format)}`;
@@ -61,49 +61,49 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     label: 'All Times',
     value: {
       from: ALYCE_FOUNDATION_DATE,
-      to: moment().format(REQUEST_DATE_FORMAT),
+      to: moment().utc().format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Month to Date',
     value: {
-      from: moment().subtract(1, 'months').format(REQUEST_DATE_FORMAT),
-      to: moment().format(REQUEST_DATE_FORMAT),
+      from: moment().utc().startOf('month').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().endOf('day').format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Year to Date',
     value: {
-      from: moment().subtract(1, 'years').format(REQUEST_DATE_FORMAT),
-      to: moment().format(REQUEST_DATE_FORMAT),
+      from: moment().utc().startOf('year').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().endOf('day').format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Past Week',
     value: {
-      from: moment().subtract(1, 'weeks').startOf('week').format(REQUEST_DATE_FORMAT),
-      to: moment().subtract(1, 'weeks').endOf('week').format(REQUEST_DATE_FORMAT),
+      from: moment().utc().subtract(1, 'weeks').startOf('week').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().subtract(1, 'weeks').endOf('week').format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Past Month',
     value: {
-      from: moment().subtract(1, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
-      to: moment().subtract(1, 'months').endOf('month').format(REQUEST_DATE_FORMAT),
+      from: moment().utc().subtract(1, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().subtract(1, 'months').endOf('month').format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Past Quarter',
     value: {
-      from: moment().subtract(1, 'quarters').startOf('quarter').format(REQUEST_DATE_FORMAT),
-      to: moment().subtract(1, 'quarters').endOf('quarter').format(REQUEST_DATE_FORMAT),
+      from: moment().utc().subtract(3, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().subtract(1, 'months').endOf('month').format(REQUEST_DATE_FORMAT),
     },
   },
   {
     label: 'Past Year',
     value: {
-      from: moment().subtract(1, 'years').startOf('year').format(REQUEST_DATE_FORMAT),
-      to: moment().subtract(1, 'years').endOf('year').format(REQUEST_DATE_FORMAT),
+      from: moment().utc().subtract(365, 'days').startOf('day').format(REQUEST_DATE_FORMAT),
+      to: moment().utc().format(REQUEST_DATE_FORMAT),
     },
   },
 ];

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { teamListAdapter, useGetTeamListQuery } from '@alycecom/services';
 import { useDispatch, useSelector } from 'react-redux';
 import { MultiAutocomplete } from '@alycecom/ui';
@@ -26,12 +26,8 @@ const RoiTeamsFilter = (): JSX.Element => {
   const selectedTeamIds = useSelector(getRoiCurrentTeams);
   const isTeamsFilterInitialized = useRef(false);
 
-  const { selectAll } = useGetTeamListQuery(undefined, {
-    selectFromResult: result => ({
-      ...result,
-      ...teamListAdapter.getSelectors(() => result?.data ?? teamListAdapter.getInitialState()),
-    }),
-  });
+  const { data } = useGetTeamListQuery(undefined);
+  const { selectAll } = teamListAdapter.getSelectors(() => data ?? teamListAdapter.getInitialState());
   const teams = useSelector(selectAll);
   const selectedTeams = useMemo(() => teams.filter(team => selectedTeamIds.includes(team.id)), [
     teams,
@@ -68,4 +64,4 @@ const RoiTeamsFilter = (): JSX.Element => {
   );
 };
 
-export default RoiTeamsFilter;
+export default memo(RoiTeamsFilter);

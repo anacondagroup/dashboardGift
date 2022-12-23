@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { RoiTable, RoiTableClickableRow, TRoiColumn, RoiSendReportButton, IRoiTableProps } from '../../../Shared';
 import { useRoiTable } from '../../../../hooks';
-import { NumberFormattingOptions, toDateFromNow, toFormattedPrice } from '../../../../utils';
+import { NumberFormattingOptions, toFormattedPrice, toRoiDateFormat } from '../../../../utils';
 import { ROI_ROUTES } from '../../../../routePaths';
 import { useGetInfluencedAccounts } from '../../../../hooks/useGetInfluencedAccounts';
 
@@ -19,8 +19,8 @@ const columns: TRoiColumn<TInfluencedAccounts>[] = [
     label: 'Latest Accept',
     tooltipText: 'Time since the most recent gift was  accepted',
     field: 'claimedAt',
-    getFormattedValue: data => data.claimedAt && toDateFromNow(data.claimedAt),
     isSortable: true,
+    getFormattedValue: data => data.claimedAt && toRoiDateFormat(data.claimedAt),
   },
   {
     label: 'Campaign Purpose',
