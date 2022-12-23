@@ -36,13 +36,13 @@ const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
     label: 'Sent On',
     field: 'sentAt',
     isSortable: true,
-    getFormattedValue: data => moment(data.sentAt).format(DISPLAY_DATE_FORMAT),
+    getFormattedValue: data => data.sentAt && moment(data.sentAt).format(DISPLAY_DATE_FORMAT),
   },
   {
     label: 'Accepted On',
     field: 'claimedAt',
     isSortable: true,
-    getFormattedValue: data => moment(data.claimedAt).format(DISPLAY_DATE_FORMAT),
+    getFormattedValue: data => data.claimedAt && moment(data.claimedAt).format(DISPLAY_DATE_FORMAT),
   },
   {
     label: 'Meeting Booked',

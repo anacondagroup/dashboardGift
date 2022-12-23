@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { usersTeammatesAdapter, useGetTeammatesListQuery } from '@alycecom/services';
 import { useDispatch, useSelector } from 'react-redux';
 import { IMultiAutocompleteProps, MultiAutocomplete } from '@alycecom/ui';
@@ -26,13 +26,8 @@ const RoiTeamMembersFilter = (): JSX.Element => {
   const dispatch = useDispatch();
   const selectedMembersIds = useSelector(getRoiCurrentTeamMembers);
 
-  const { selectAll } = useGetTeammatesListQuery(undefined, {
-    selectFromResult: result => ({
-      ...result,
-      ...usersTeammatesAdapter.getSelectors(() => result?.data ?? usersTeammatesAdapter.getInitialState()),
-    }),
-  });
-
+  const { data } = useGetTeammatesListQuery(undefined);
+  const { selectAll } = usersTeammatesAdapter.getSelectors(() => data ?? usersTeammatesAdapter.getInitialState());
   const teamMembers = useSelector(selectAll);
 
   const selectedTeamMembers = useMemo(() => teamMembers.filter(member => selectedMembersIds.includes(member.userId)), [
@@ -60,4 +55,4 @@ const RoiTeamMembersFilter = (): JSX.Element => {
   );
 };
 
-export default RoiTeamMembersFilter;
+export default memo(RoiTeamMembersFilter);
