@@ -1,5 +1,15 @@
 /* eslint-disable no-underscore-dangle */
-import { Box, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, Typography } from '@mui/material';
+import {
+  Box,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  Typography,
+  SelectChangeEvent,
+} from '@mui/material';
 import classNames from 'classnames';
 import { Controller, useFormContext } from 'react-hook-form';
 import React, { memo, useCallback } from 'react';
@@ -25,7 +35,7 @@ const useStyles = makeStyles(({ spacing }) => ({
 
 const ReportingFrequency = (): JSX.Element => {
   const classes = useStyles();
-  const { control, watch } = useFormContext();
+  const { control, watch, setValue } = useFormContext();
   const defaultFrequency = watch('frequency');
   const defaultDay = watch('days');
   const defaultTime = watch('time');
@@ -45,6 +55,18 @@ const ReportingFrequency = (): JSX.Element => {
   const daysToShow = frequencyDays();
   const isDayChooseAvailable = control._formValues.frequency.toLowerCase() !== ReportingFrequencyEnum.daily;
 
+  const onChangeFrequencyHandler = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setValue('frequency', e.target.value);
+      if (e.target.value === frequency[0]) {
+        setValue('days', monthDays[0]);
+      } else {
+        setValue('days', days[5]);
+      }
+    },
+    [setValue],
+  );
+
   return (
     <Box>
       <Box className={classes.box}>
@@ -56,14 +78,14 @@ const ReportingFrequency = (): JSX.Element => {
             <Controller
               control={control}
               name="frequency"
-              render={({ field: { onChange, value } }) => (
+              render={({ field: { value } }) => (
                 <FormControl variant="outlined" fullWidth>
                   <InputLabel id="CreateGiftingTrendsReport.FrequencySelectLabel">Frequency</InputLabel>
                   <Select
                     labelId="CreateGiftingTrendsReport.FrequencySelectSelect"
                     id="CreateGiftingTrendsReport.FrequencySelectSelect"
                     value={value || defaultFrequency}
-                    onChange={onChange}
+                    onChange={onChangeFrequencyHandler}
                     input={<OutlinedInput label="Frequency" />}
                   >
                     {frequency.map(option => (
