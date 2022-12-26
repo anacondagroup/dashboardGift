@@ -3,7 +3,7 @@ import moment from 'moment-timezone';
 
 import { ITeam } from '../../../UsersManagement/store/usersManagement.types';
 
-import { days, frequency, hoursList, reportingTimespan, maximumValidDate } from './reporting.constants';
+import { monthDays, frequency, hoursList, reportingTimespan, maximumValidDate } from './reporting.constants';
 
 export interface IDownloadPerformance {
   teams: ITeam[];
@@ -75,7 +75,7 @@ export const AutomatedReportFormSchema = object().shape({
     .shape({ key: string().required(), value: string().required() })
     .required(),
   frequency: string().default(frequency[0]).required(),
-  days: string().default(days[5]).required(),
+  days: string().default(monthDays[0]).required(),
   time: string().default(hoursList[17]).required(),
   timezone: string().default(moment().tz(moment.tz.guess()).format('z')),
 });
