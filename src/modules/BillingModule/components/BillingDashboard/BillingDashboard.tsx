@@ -1,6 +1,6 @@
 import React, { memo, useCallback, useEffect } from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
-import { Box, Paper, Tab, Tabs, Toolbar } from '@mui/material';
+import { Box, Tab, Tabs, Toolbar } from '@mui/material';
 import { Divider } from '@alycecom/ui';
 import { Features, User } from '@alycecom/modules';
 import { useUnmount } from 'react-use';
@@ -70,32 +70,30 @@ const BillingDashboard = () => {
 
   return (
     <>
-      <Box ml={5} mr={5}>
-        <Paper elevation={2}>
-          <Toolbar>
-            <Tabs
-              value={currentTab}
-              onChange={handleChangeTab}
-              aria-label="manage billing tabs"
-              indicatorColor="primary"
-              textColor="primary"
-            >
-              <Tab label={BillingTabName.Overview} {...tabProps(BillingTab.Overview)} />
-              <Tab label={BillingTabName.BillingGroups} {...tabProps(BillingTab.Groups)} />
-              <Tab label={BillingTabName.Transactions} {...tabProps(BillingTab.Transactions)} />
-            </Tabs>
-          </Toolbar>
-          <Divider mb={1} />
-          <TabPanel value={currentTab} index={BillingTab.Overview}>
-            {isUpdatedBillingOverview ? <BillingOverview /> : <Overview />}
-          </TabPanel>
-          <TabPanel value={currentTab} index={BillingTab.Groups}>
-            <BillingGroups />
-          </TabPanel>
-          <TabPanel value={currentTab} index={BillingTab.Transactions}>
-            <DepositLedger />
-          </TabPanel>
-        </Paper>
+      <Box mt={3}>
+        <Toolbar disableGutters>
+          <Tabs
+            value={currentTab}
+            onChange={handleChangeTab}
+            aria-label="manage billing tabs"
+            indicatorColor="primary"
+            textColor="primary"
+          >
+            <Tab label={BillingTabName.Overview} {...tabProps(BillingTab.Overview)} />
+            <Tab label={BillingTabName.BillingGroups} {...tabProps(BillingTab.Groups)} />
+            <Tab label={BillingTabName.Transactions} {...tabProps(BillingTab.Transactions)} />
+          </Tabs>
+        </Toolbar>
+        <Divider mb={1} />
+        <TabPanel value={currentTab} index={BillingTab.Overview}>
+          {isUpdatedBillingOverview ? <BillingOverview /> : <Overview />}
+        </TabPanel>
+        <TabPanel value={currentTab} index={BillingTab.Groups}>
+          <BillingGroups />
+        </TabPanel>
+        <TabPanel value={currentTab} index={BillingTab.Transactions}>
+          <DepositLedger />
+        </TabPanel>
       </Box>
       <BillingGroupSidebar />
     </>

@@ -1,6 +1,6 @@
 import React, { memo, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Grid } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 import { User } from '@alycecom/modules';
 import { useGetOrganizationQuery } from '@alycecom/services';
 
@@ -9,6 +9,14 @@ import { useBillingTrackEvent } from '../../hooks/useBillingTrackEvent';
 import Transactions from './Transactions';
 import Filters from './Filters';
 import Overview from './Overview';
+
+const styles = {
+  overviewWrapper: {
+    width: 1,
+    px: 2,
+    py: 3,
+  },
+} as const;
 
 const DepositLedger = () => {
   const trackEvent = useBillingTrackEvent();
@@ -27,10 +35,10 @@ const DepositLedger = () => {
   return (
     <Grid container>
       <Grid item container xs={12}>
-        <Filters />
-      </Grid>
-      <Grid item container xs={12}>
-        <Overview />
+        <Paper sx={styles.overviewWrapper} elevation={4}>
+          <Filters />
+          <Overview />
+        </Paper>
       </Grid>
       <Grid item container xs={12}>
         <Transactions />

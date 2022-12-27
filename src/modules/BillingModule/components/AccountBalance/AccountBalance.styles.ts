@@ -4,6 +4,7 @@ export const styles = {
   root: {
     display: 'flex',
     justifyContent: 'flex-start',
+    height: 60,
   },
   kpiItem: {
     alignItems: 'center',

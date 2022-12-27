@@ -13,7 +13,6 @@ import {
 
 const useStyles = makeStyles(({ palette, spacing }) => ({
   root: {
-    borderTop: `1px solid ${palette.divider}`,
     padding: spacing(3),
   },
   header: {

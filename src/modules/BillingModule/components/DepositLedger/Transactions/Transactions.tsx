@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Paper,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { fakeItemsFactory, pickNotEmptyAndNil } from '@alycecom/utils';
@@ -45,7 +46,7 @@ import { getTransactionTypeNamesMap } from '../../../helpers/billingTransactions
 import { setCurrentPage } from '../../../store/ui/transactionsFilters/transactionsFilters.reducer';
 import { getSelectedGroupOrTeam } from '../../../store/billing.selectors';
 
-const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
+const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   table: {
     tableLayout: 'fixed',
   },
@@ -54,6 +55,12 @@ const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
   },
   positiveAmount: {
     color: palette.green.superDark,
+  },
+  paper: {
+    width: '100%',
+    padding: spacing(2),
+    paddingTop: spacing(3),
+    marginTop: spacing(3),
   },
 }));
 
@@ -230,7 +237,7 @@ const Transactions = () => {
   );
 
   return (
-    <Box width={1} mt={2} pt={3} pr={3} pb={1} pl={3}>
+    <Paper className={classes.paper} elevation={4}>
       {isTableEmpty ? (
         <Box width={1} p={1} display="flex" justifyContent="center" alignItems="center">
           <Typography className="H3-Dark">Nothing to show</Typography>
@@ -273,7 +280,7 @@ const Transactions = () => {
           )}
         </Table>
       )}
-    </Box>
+    </Paper>
   );
 };
 

@@ -13,14 +13,25 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   },
   sideBar: {
     minWidth: 250,
+    borderRight: `1px solid ${palette.divider}`,
+  },
+  sidebarWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    marginLeft: spacing(3),
+    marginTop: spacing(5),
+  },
+  sidebarHeader: {
+    fontSize: 24,
+    fontWeight: 700,
+    lineHeight: '28px',
+    color: palette.primary.main,
   },
   content: {
     width: 'calc(100% - 215px)',
-    padding: spacing(2),
     backgroundColor: palette.common.white,
-  },
-  dashboardLayout: {
-    padding: 0,
   },
 }));
 
@@ -32,18 +43,11 @@ const SettingsLayout = ({ children }: ISettingsLayout): JSX.Element => {
   const classes = useStyles();
 
   return (
-    <AppBarLayout classes={{ dashboardLayout: classes.dashboardLayout }}>
+    <AppBarLayout disabledGutters>
       <Grid container direction="row" className={classes.root} wrap="nowrap" data-testid="SettingsLayout">
         <Grid item className={classes.sideBar}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="flex-start"
-            flexDirection="column"
-            ml={3}
-            mt={5}
-          >
-            <Typography className="H2-Chambray">Settings</Typography>
+          <Box className={classes.sidebarWrapper}>
+            <Typography className={classes.sidebarHeader}>Settings</Typography>
             <SettingsTabsSidebar />
           </Box>
         </Grid>

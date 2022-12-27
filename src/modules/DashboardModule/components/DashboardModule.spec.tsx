@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
+import { createBrowserHistory } from 'history';
 
 import DashboardModule from './DashboardModule';
 import AppBarLayout from '../../../components/Dashboard/Shared/AppBarLayout';
@@ -14,27 +15,32 @@ jest.mock('@mui/material', () => ({
   withStyles: jest.fn(() => jest.fn()),
 }));
 jest.mock('react-redux', () => ({
-  connect: jest.fn(() => c => c),
+  connect: jest.fn(() => jest.fn()),
   useDispatch: jest.fn(),
+}));
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useLocation: jest.fn(),
+  withRouter: jest.fn(),
 }));
 
 describe('DashboardModule', () => {
-  beforeAll(() => jest.spyOn(window, 'scrollTo').mockImplementation(jest.fn()));
-  afterAll(() => window.scrollTo.mockRestore());
-
   it('Should load user, teams, campaigns on mount', () => {
     const match = {
       url: '/',
-      params: {},
+      params: { url: '' },
       path: '/',
+      isExact: true,
     };
     const location = {
       pathname: '/',
       hash: '',
       search: '',
+      state: {},
     };
+    const history = createBrowserHistory();
 
-    const wrapper = shallow(<DashboardModule location={location} match={match} />);
+    const wrapper = shallow(<DashboardModule history={history} location={location} match={match} />);
 
     expect(wrapper.find(AppBarLayout).exists()).toBe(true);
   });
