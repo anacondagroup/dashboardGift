@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Paper } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { GroupsTeamsIdentifier } from '@alycecom/services';
 
@@ -11,8 +11,10 @@ import GiftingActivityHeader from './GiftingActivityHeader';
 
 const styles = {
   root: {
-    width: '100%',
+    width: 1,
     mt: 4,
+    p: 2,
+    pt: 3,
   },
 } as const;
 
@@ -20,10 +22,10 @@ const GiftingActivity = (): JSX.Element => {
   const groupId = useSelector(getGroupId);
   const isAllGroups = groupId === GroupsTeamsIdentifier.AllGroupsAndTeams;
   return (
-    <Box sx={styles.root}>
+    <Paper sx={styles.root} elevation={4}>
       <GiftingActivityHeader />
       {isAllGroups ? <AccountGiftingActivityTable /> : <GroupGiftingActivityTable />}
-    </Box>
+    </Paper>
   );
 };
 

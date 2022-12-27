@@ -17,7 +17,6 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   },
   tabs: {
     marginTop: spacing(4),
-    marginRight: spacing(1),
     marginLeft: `-${spacing(3)}`,
     width: 250,
   },
@@ -25,16 +24,24 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
     width: '100%',
     height: 42,
     paddingLeft: spacing(4),
-    color: palette.link.main,
+    color: palette.primary.main,
+    fontSize: 18,
+    lineHeight: '24px',
+    fontWeight: 400,
     zIndex: 1,
+    '&:hover': {
+      color: palette.primary.main,
+    },
   },
   tabWrapper: {
     justifyContent: 'flex-start',
   },
   tabSelected: {
     color: palette.primary.main,
+    fontWeight: 700,
   },
   subTab: {
+    color: palette.primary.main,
     paddingLeft: spacing(3),
   },
 }));
@@ -130,7 +137,7 @@ const SettingsTabsSidebar = (): JSX.Element => {
           component={Link}
           label={
             <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
-              <Box color={isFocusedOnOrgSettings ? 'primary.main' : 'link.main'}>Org Settings</Box>
+              <Box fontWeight={isFocusedOnOrgSettings ? 700 : 400}>Org Settings</Box>
               <Box>
                 <Icon icon={isFocusedOnOrgSettings ? 'angle-up' : 'angle-down'} color="grey.main" />
               </Box>
@@ -207,7 +214,7 @@ const SettingsTabsSidebar = (): JSX.Element => {
           component={Link}
           label={
             <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
-              <Box color={isFocusedOnBillingSettings ? 'primary.main' : 'link.main'}>Billing</Box>
+              <Box fontWeight={isFocusedOnBillingSettings ? 700 : 400}>Billing</Box>
             </Box>
           }
           value={SettingsTabs.Billing}
@@ -220,7 +227,7 @@ const SettingsTabsSidebar = (): JSX.Element => {
         component={Link}
         label={
           <Box display="flex" flexDirection="row" justifyContent="space-between" width="100%">
-            <Box color={isFocusedOnPersonalSettings ? 'primary.main' : 'link.main'}>Your Preferences</Box>
+            <Box fontWeight={isFocusedOnPersonalSettings ? 700 : 400}>Your Preferences</Box>
             <Box>
               <Icon icon={isFocusedOnPersonalSettings ? 'angle-up' : 'angle-down'} color="grey.main" />
             </Box>

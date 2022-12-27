@@ -21,12 +21,23 @@ import { TCampaignTableSetValues } from '../../../store/breakdowns/campaignsMana
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing, breakpoints }) => ({
   root: {
-    paddingTop: spacing(2),
     marginBottom: `-${spacing(3)}`,
     flexWrap: 'nowrap',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexDirection: 'row',
+    minHeight: '95vh',
+  },
+  sidebar: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    flex: '0 0 auto',
+    flexDirection: 'column',
+    paddingTop: spacing(5),
+    paddingLeft: spacing(3),
+    minHeight: '95vh',
+    borderRight: `1px solid ${palette.divider}`,
   },
   tabsIndicator: {
     width: '100%',
@@ -42,7 +53,9 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing, breakpoints }) => 
     width: '100%',
     height: 42,
     paddingLeft: spacing(4),
-    color: palette.link.main,
+    color: palette.primary.main,
+    fontSize: 18,
+    fontWeight: 400,
     zIndex: 1,
   },
   tabWrapper: {
@@ -50,15 +63,19 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing, breakpoints }) => 
   },
   tabSelected: {
     color: palette.primary.main,
+    fontWeight: 700,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 700,
+    color: palette.primary.main,
   },
   content: {
     backgroundColor: palette.background.paper,
-    marginTop: `-${spacing(5)}`,
-    marginRight: `-${spacing(3)}`,
     flexGrow: 1,
     minHeight: 'calc(100vh - 100px)',
-    paddingLeft: spacing(7),
     paddingTop: spacing(5),
+    paddingLeft: spacing(7),
     paddingBottom: spacing(6),
     paddingRight: spacing(6),
     [breakpoints.down(breakpoints.values.lg)]: {
@@ -110,15 +127,8 @@ const DashboardCampaignsFilterSection = ({ setValues, children }: IDashboardCamp
 
   return (
     <Grid container className={classes.root}>
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="flex-start"
-        flex="0 0 auto"
-        flexDirection="column"
-        ml={1}
-      >
-        <Typography className="H2-Chambray">Campaigns</Typography>
+      <Box className={classes.sidebar}>
+        <Typography className={classes.header}>Campaigns</Typography>
         <Tabs
           classes={tabsClasses}
           orientation="vertical"

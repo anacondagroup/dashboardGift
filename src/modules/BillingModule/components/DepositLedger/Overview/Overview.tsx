@@ -17,7 +17,6 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     width: 1,
-    mb: 1,
   },
   linkWrapper: {
     display: 'flex',

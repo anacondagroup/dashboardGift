@@ -3,6 +3,7 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import CreateCampaignSidebar from '../../SettingsModule/components/CampaignSettingsModule/CreateCampaignSidebar/CreateCampaignSidebar';
 import AppBarLayout from '../../../components/Dashboard/Shared/AppBarLayout';
+import { CAMPAIGNS_ROOT } from '../routePaths';
 
 import DashboardTeams from './DashboardTeams/DashboardTeams';
 import DashboardTeam from './DashboardTeam/DashboardTeam';
@@ -16,10 +17,10 @@ import { ROI_ROOT } from './DashboardRoi/routePaths';
 
 type TDashboardModuleProps = RouteComponentProps<{ url: string }>;
 
-const DashboardModule = ({ match: { url: parentUrl } }: TDashboardModuleProps) => (
+const DashboardModule = ({ match: { url: parentUrl }, location: { pathname } }: TDashboardModuleProps) => (
   <>
     <CreateCampaignSidebar />
-    <AppBarLayout>
+    <AppBarLayout disabledGutters={pathname === CAMPAIGNS_ROOT}>
       <Switch>
         <Route path={`${parentUrl}/`} component={DashboardHome} />
         <Route path={`${parentUrl}${ROI_ROOT}`} component={DashboardRoi} />

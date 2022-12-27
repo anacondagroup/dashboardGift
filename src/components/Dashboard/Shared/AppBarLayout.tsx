@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useUrlQuery } from '@alycecom/hooks';
+import classNames from 'classnames';
+import { makeStyles } from '@mui/styles';
 
 import AppBar from '../../AppBar/AppBar';
 import ProspectingSidebar from '../../../modules/GiftingFlow/components/Sidebar';
@@ -10,12 +12,20 @@ import DashboardLayout from './DashboardLayout';
 
 export interface IAppBarLayoutProps {
   children: React.ReactNode;
+  disabledGutters?: boolean;
   classes?: {
     dashboardLayout?: string;
   };
 }
 
-const AppBarLayout = ({ children, classes = {} }: IAppBarLayoutProps): JSX.Element => {
+const useStyles = makeStyles({
+  disabledGutters: {
+    padding: 0,
+  },
+});
+
+const AppBarLayout = ({ children, classes = {}, disabledGutters = false }: IAppBarLayoutProps): JSX.Element => {
+  const appBarClasses = useStyles();
   const { campaignId: campaignIdFromUrl = '', teamId: teamIdFromUrl = '', contactId } = useUrlQuery([
     'campaignId',
     'teamId',
@@ -30,7 +40,11 @@ const AppBarLayout = ({ children, classes = {} }: IAppBarLayoutProps): JSX.Eleme
   return (
     <>
       <AppBar />
-      <DashboardLayout className={classes.dashboardLayout}>{children}</DashboardLayout>
+      <DashboardLayout
+        className={classNames(classes.dashboardLayout, { [appBarClasses.disabledGutters]: disabledGutters })}
+      >
+        {children}
+      </DashboardLayout>
       <ProspectingSidebar key={contactId} teamId={sidebarTeamId as number} />
     </>
   );
