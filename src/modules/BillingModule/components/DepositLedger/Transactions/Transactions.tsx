@@ -12,10 +12,8 @@ import {
   Typography,
   Paper,
 } from '@mui/material';
-import { makeStyles } from '@mui/styles';
 import { fakeItemsFactory, pickNotEmptyAndNil } from '@alycecom/utils';
 import {
-  AlyceTheme,
   DateFormat,
   IColumn,
   IDefaultRowData,
@@ -24,7 +22,6 @@ import {
   TableDataRow,
   TableHeadRow,
 } from '@alycecom/ui';
-import classNames from 'classnames';
 import qs from 'query-string';
 import {
   TTransaction,
@@ -34,6 +31,7 @@ import {
   useGetOrganizationBillingHierarchyQuery,
   useGetOrganizationQuery,
 } from '@alycecom/services';
+import { SHORT_DATE_FORMAT } from '@alycecom/modules';
 
 import { useBillingTrackEvent } from '../../../hooks/useBillingTrackEvent';
 import { tabsKeys } from '../../../../../constants/sidebarTabs.constants';
@@ -46,28 +44,11 @@ import { getTransactionTypeNamesMap } from '../../../helpers/billingTransactions
 import { setCurrentPage } from '../../../store/ui/transactionsFilters/transactionsFilters.reducer';
 import { getSelectedGroupOrTeam } from '../../../store/billing.selectors';
 
-const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
-  table: {
-    tableLayout: 'fixed',
-  },
-  colDate: {
-    width: 240,
-  },
-  positiveAmount: {
-    color: palette.green.superDark,
-  },
-  paper: {
-    width: '100%',
-    padding: spacing(2),
-    paddingTop: spacing(3),
-    marginTop: spacing(3),
-  },
-}));
+import { styles } from './Transactions.styles';
 
 type TRowData = IDefaultRowData & TTransaction;
 
 const Transactions = () => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   const trackEvent = useBillingTrackEvent();
 
@@ -137,7 +118,7 @@ const Transactions = () => {
         hideSorting: true,
         render: ({ id, operatedAt }) => (
           <span data-testid={`DepositLedger.List.OperatedAt.${id}`}>
-            <DateFormat value={operatedAt} format="YYYY-MM-DD" />
+            <DateFormat value={operatedAt} format={SHORT_DATE_FORMAT} />
           </span>
         ),
       },
@@ -146,12 +127,13 @@ const Transactions = () => {
         name: 'Amount',
         hideSorting: true,
         render: ({ id, amount }) => (
-          <span
+          <Box
+            component="span"
             data-testid={`DepositLedger.List.Amount.${id}`}
-            className={classNames({ [classes.positiveAmount]: amount.amount > 0 })}
+            sx={[amount.amount > 0 && styles.positiveAmount]}
           >
             <TableCellTooltip title={<NumberFormat format="$0,0.00">{amount.amount}</NumberFormat>} />
-          </span>
+          </Box>
         ),
       },
       ...(showRemainingDeposit
@@ -161,12 +143,13 @@ const Transactions = () => {
               name: 'Balance',
               hideSorting: true,
               render: ({ id, accountRemaining }: TRowData) => (
-                <span
+                <Box
+                  component="span"
                   data-testid={`DepositLedger.List.Remaining.${id}`}
-                  className={classNames({ [classes.positiveAmount]: accountRemaining.amount > 0 })}
+                  sx={[accountRemaining.amount > 0 && styles.positiveAmount]}
                 >
                   <TableCellTooltip title={<NumberFormat format="$0,0.00">{accountRemaining.amount}</NumberFormat>} />
-                </span>
+                </Box>
               ),
             },
           ]
@@ -233,19 +216,19 @@ const Transactions = () => {
         ),
       },
     ],
-    [typeNamesMap, showRemainingDeposit, classes, handleClickGiftLink],
+    [typeNamesMap, showRemainingDeposit, handleClickGiftLink],
   );
 
   return (
-    <Paper className={classes.paper} elevation={4}>
+    <Paper sx={styles.paper} elevation={4}>
       {isTableEmpty ? (
         <Box width={1} p={1} display="flex" justifyContent="center" alignItems="center">
           <Typography className="H3-Dark">Nothing to show</Typography>
         </Box>
       ) : (
-        <Table className={classes.table}>
+        <Table sx={styles.table}>
           <colgroup>
-            <col className={classes.colDate} />
+            <Box component="col" sx={styles.colDate} />
             <col />
             {showRemainingDeposit && <col />}
             <col />

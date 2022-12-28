@@ -1,24 +1,27 @@
-import React, { memo, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useMemo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Typography, Box, Grid, Table, TableRow, TableHead, TableBody, TableCell, Skeleton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
-import classNames from 'classnames';
 import { fakeItemsFactory } from '@alycecom/utils';
+import { AlyceTheme } from '@alycecom/ui';
+import moment from 'moment';
+import { SHORT_DATE_FORMAT } from '@alycecom/modules';
 
 import { ITeamDetail } from '../../../../store/billingGroups/billingGroups.types';
 import HeaderCell from '../../BillingTableBreakdown/HeaderCell';
 import { getTeamsListRequest } from '../../../../store/billingGroups';
 
-const useStyles = makeStyles(() => ({
+const styles = {
   title: {
-    maxWidth: '280px',
+    maxWidth: 280,
     fontWeight: 'bolder',
   },
   container: {
-    marginLeft: '1.5em',
-    marginRight: '1.5em',
+    mx: 2,
   },
-}));
+  archivedAt: {
+    color: ({ palette }: AlyceTheme) => palette.additional.chambray20,
+  },
+} as const;
 
 export interface ITeamsTableProps {
   groupId: string | null;
@@ -27,10 +30,9 @@ export interface ITeamsTableProps {
 }
 
 const TeamsTable = ({ teamsList, isLoadingTeams, groupId }: ITeamsTableProps) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
 
-  const initialHeight = 30;
+  const hasTeams = teamsList.length > 0;
 
   const rows = useMemo(
     () =>
@@ -55,63 +57,59 @@ const TeamsTable = ({ teamsList, isLoadingTeams, groupId }: ITeamsTableProps) =>
     dispatch(getTeamsListRequest({ groupId }));
   }, [groupId, dispatch]);
 
-  const renderTable = useCallback(() => {
-    if (teamsList.length > 0) {
-      return (
-        <>
-          <Table className={classes.container}>
-            <TableHead>
-              <TableRow>
-                <HeaderCell padding="none">NAME</HeaderCell>
-                <HeaderCell align="left">TOTAL USERS</HeaderCell>
-                <HeaderCell align="left">CURRENT # ACTIVE CAMPAIGNS</HeaderCell>
-                <HeaderCell align="left" padding="none" />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map(team => (
-                <TableRow key={`group-id-${team.teamId}`}>
-                  <TableCell>
-                    {isLoadingTeams ? <Skeleton width="100%" height={initialHeight} /> : <Box>{team.teamName}</Box>}
-                  </TableCell>
-                  <TableCell>
-                    {isLoadingTeams ? <Skeleton width="100%" height={initialHeight} /> : <Box>{team.totalUsers}</Box>}
-                  </TableCell>
-                  <TableCell>
-                    {isLoadingTeams ? (
-                      <Skeleton width="100%" height={initialHeight} />
-                    ) : (
-                      <Box>{team.totalActiveCampaigns}</Box>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </>
-      );
-    }
-    return (
-      <>
-        <Box ml={3} display="flex" justifyContent="center" alignContent="center" alignItems="center">
-          <Typography className="H4-Light" align="center">
-            There are no teams associated with this group
-          </Typography>
-        </Box>
-      </>
-    );
-  }, [teamsList, isLoadingTeams, rows, classes.container]);
-
   return (
     <>
       <Grid container item xs={12} direction="row">
         <Grid item xs={9}>
           <Box ml={3} mr={3} display="flex" justifyContent="left" alignItems="center" minHeight="5vh">
-            <Typography className={classNames('H1', classes.title)}>Teams</Typography>
+            <Typography sx={styles.title}>Teams</Typography>
           </Box>
         </Grid>
       </Grid>
-      {renderTable()}
+      {hasTeams ? (
+        <Table sx={styles.container}>
+          <TableHead>
+            <TableRow>
+              <HeaderCell padding="none">NAME</HeaderCell>
+              <HeaderCell align="left">TOTAL USERS</HeaderCell>
+              <HeaderCell align="left">CURRENT # ACTIVE CAMPAIGNS</HeaderCell>
+              <HeaderCell align="left" padding="none" />
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map(team => (
+              <TableRow key={`group-id-${team.teamId}`}>
+                <TableCell>
+                  {isLoadingTeams ? (
+                    <Skeleton width="100%" height={30} />
+                  ) : (
+                    <Box>
+                      {team.teamName}{' '}
+                      {team.archivedAt && (
+                        <Box component="span" sx={styles.archivedAt}>
+                          (Archived {moment(team.archivedAt).format(SHORT_DATE_FORMAT)})
+                        </Box>
+                      )}
+                    </Box>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {isLoadingTeams ? <Skeleton width="100%" height={30} /> : <Box>{team.totalUsers}</Box>}
+                </TableCell>
+                <TableCell>
+                  {isLoadingTeams ? <Skeleton width="100%" height={30} /> : <Box>{team.totalActiveCampaigns}</Box>}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <Box ml={3} display="flex" justifyContent="center" alignContent="center" alignItems="center">
+          <Typography className="H4-Light" align="center">
+            There are no teams associated with this group
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };

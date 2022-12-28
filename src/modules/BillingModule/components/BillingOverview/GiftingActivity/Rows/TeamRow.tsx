@@ -3,6 +3,8 @@ import { TableRow, Box, Theme, SxProps, Link, Typography, Button } from '@mui/ma
 import { NumberFormat, TableCellTooltip, TableLoadingLabel } from '@alycecom/ui';
 import qs from 'query-string';
 import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import { SHORT_DATE_FORMAT } from '@alycecom/modules';
 
 import { StyledCell } from '../../../styled/Styled';
 import { TGiftingActivityTeamNode } from '../../../../types';
@@ -55,6 +57,7 @@ const TeamRow = ({
     amountAtTheEnd,
     amountAtTheStart,
     isUngrouped,
+    archivedAt,
   } = team;
 
   const handleShowTransactions = useCallback(() => {
@@ -75,8 +78,13 @@ const TeamRow = ({
               title={teamName}
               renderLabel={() => (
                 <Box sx={[styles.teamNameRoot, hasIndent && styles.indent]}>
-                  <Box component="span" sx={[styles.teamName]}>
-                    {teamName}
+                  <Box component="span" sx={styles.teamName}>
+                    {teamName}{' '}
+                    {archivedAt && (
+                      <Box component="span" sx={styles.archivedAt}>
+                        (Archived {moment(archivedAt).format(SHORT_DATE_FORMAT)})
+                      </Box>
+                    )}
                   </Box>
                   {isUngrouped && (
                     <Typography sx={styles.teamStartBalance}>

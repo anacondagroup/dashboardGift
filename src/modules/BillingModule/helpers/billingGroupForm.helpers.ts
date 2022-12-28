@@ -20,7 +20,7 @@ export const getBillingGroupContactOptionSelected = (option: IBillingContact, op
   option.email === optionValue?.email;
 
 const calculateAmount = (teams: TGiftingActivityTeam[]) => (
-  field: keyof Omit<TGiftingActivityTeam, 'teamId' | 'teamName'>,
+  field: keyof Omit<TGiftingActivityTeam, 'teamId' | 'teamName' | 'archivedAt'>,
 ): number => teams.reduce((acc, team) => acc + team[field], 0);
 
 export const transformGiftingActivityGroups = (groups: TGiftingActivityGroup[]): TGiftingActivityGroupNode[] =>

@@ -39,31 +39,16 @@ export interface ITeamDetail {
   groupId: string | null;
   teamId: number;
   teamName: string;
+  archivedAt: string | null;
   teamOwnerId: number;
   totalUsers: number;
   totalActiveCampaigns: number;
-}
-
-export interface ITeamsListDetails {
-  teamId: number;
-  teamName: string;
-  teamOwnerId: number;
-  groupName: string | null;
 }
 
 export interface IPagination {
   currentPage: number;
   perPage: number;
   total: number;
-}
-export interface IBillingGroupCardsInfo {
-  expandAll: boolean;
-  groupIds: string[];
-}
-
-export interface IGroupsIdsList {
-  groupId: string | null;
-  teamsLoaded: boolean;
 }
 
 export interface IGroupId {

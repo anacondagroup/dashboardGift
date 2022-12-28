@@ -34,6 +34,7 @@ export const getHierarchyList = createSelector(
         hierarchyId: makeGroupHierarchyId(GroupsTeamsIdentifier.AllGroupsAndTeams),
         deposit: hierarchy.depositsTotal,
         level: 0,
+        archivedAt: null,
       },
     ];
     hierarchyList.push(
@@ -44,6 +45,7 @@ export const getHierarchyList = createSelector(
           name: group.groupInfo.groupName,
           deposit: group.deposits[0],
           level: 0,
+          archivedAt: null,
         });
         acc.push(
           ...group.teams.map(team => ({
@@ -52,6 +54,7 @@ export const getHierarchyList = createSelector(
             name: team.teamInfo.teamName,
             deposit: team.deposits[0],
             balanceAccountId: group.deposits[0]?.accountId,
+            archivedAt: team.teamInfo.archivedAt,
             level: 1,
           })),
         );
@@ -65,6 +68,7 @@ export const getHierarchyList = createSelector(
           ...UngroupedTeamsOption,
           hierarchyId: makeGroupHierarchyId(GroupsTeamsIdentifier.Ungrouped),
           deposit: hierarchy.remainingTeamsTotal,
+          archivedAt: null,
           level: 0,
         },
         ...hierarchy.ungrouped.map(team => ({
@@ -72,6 +76,7 @@ export const getHierarchyList = createSelector(
           hierarchyId: `team-${team.teamInfo.teamId}`,
           name: team.teamInfo.teamName,
           deposit: team.deposits[0],
+          archivedAt: team.teamInfo.archivedAt,
           isUngrouped: true,
           level: 1,
         })),
