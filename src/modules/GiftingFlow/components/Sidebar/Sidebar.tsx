@@ -3,7 +3,14 @@ import { Box, Drawer } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useSetUrlQuery, useUrlQuery } from '@alycecom/hooks';
 import { AlyceTheme } from '@alycecom/ui';
-import { TCampaign, CampaignType, appApi, ProspectingBatchesTagType, CampaignsApiTag } from '@alycecom/services';
+import {
+  TCampaign,
+  CampaignType,
+  appApi,
+  ProspectingBatchesTagType,
+  CampaignsApiTag,
+  TCampaignSort,
+} from '@alycecom/services';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   ContactDetails,
@@ -104,6 +111,14 @@ const Sidebar = ({ teamId }: ISidebarProps): JSX.Element => {
   const hasInternational = useSelector(
     useMemo(() => Features.selectors.hasFeatureFlag(Features.FLAGS.INTERNATIONAL), []),
   );
+
+  const hasBudgetManagementLimit = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_LIMIT),
+  );
+  const hasBudgetManagementSetup = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP),
+  );
+  const hasBudgetFeaturesEnabled = hasBudgetManagementLimit && hasBudgetManagementSetup;
 
   useMarketplaceCountryEffect(countryId);
 
@@ -257,6 +272,20 @@ const Sidebar = ({ teamId }: ISidebarProps): JSX.Element => {
     [userDetails],
   );
 
+  const selectCampaignMultisort: TCampaignSort[] = useMemo(
+    () => [
+      {
+        field: 'isFavourite',
+        direction: SortDirection.desc,
+      },
+      hasBudgetFeaturesEnabled
+        ? { field: 'insufficientBudget', direction: SortDirection.asc }
+        : { field: 'giftsLimit', direction: SortDirection.desc },
+      { field: 'name', direction: SortDirection.asc },
+    ],
+    [hasBudgetFeaturesEnabled],
+  );
+
   const handleOpenBatch = useCallback(
     (batchId: number) => {
       setUrlQuery({ batchId, flowType: GiftingFlowType.Prospecting });
@@ -281,20 +310,7 @@ const Sidebar = ({ teamId }: ISidebarProps): JSX.Element => {
             <GiftingFlow.SelectCampaign
               filters={{
                 types: [CampaignType.One2One, CampaignType.Prospecting],
-                multisort: [
-                  {
-                    field: 'isFavourite',
-                    direction: SortDirection.desc,
-                  },
-                  {
-                    field: 'giftsLimit',
-                    direction: SortDirection.desc,
-                  },
-                  {
-                    field: 'name',
-                    direction: SortDirection.asc,
-                  },
-                ],
+                multisort: selectCampaignMultisort,
               }}
               onSelect={handleSelectCampaign}
               onOpenBatch={handleOpenBatch}
