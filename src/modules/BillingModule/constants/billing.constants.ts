@@ -9,6 +9,7 @@ export const DEFAULT_FAKE_TEAM = {
   amountSpent: 0,
   amountAtTheStart: 0,
   amountAtTheEnd: 0,
+  archivedAt: null,
 };
 
 export const DEFAULT_FAKE_GROUP = {

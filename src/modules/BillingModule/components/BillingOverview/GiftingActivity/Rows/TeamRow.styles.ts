@@ -40,4 +40,7 @@ export const styles = {
       textDecoration: 'underline',
     },
   },
+  archivedAt: {
+    color: ({ palette }: AlyceTheme) => palette.additional.chambray20,
+  },
 } as const;

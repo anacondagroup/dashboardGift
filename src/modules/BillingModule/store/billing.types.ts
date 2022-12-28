@@ -14,6 +14,7 @@ export type TGroupTeamNode = {
   balanceAccountId?: string;
   level: number;
   isUngrouped?: boolean;
+  archivedAt: string | null;
 };
 
 export type TGroupNode = {
