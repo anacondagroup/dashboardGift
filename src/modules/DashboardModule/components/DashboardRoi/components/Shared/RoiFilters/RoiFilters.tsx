@@ -74,10 +74,11 @@ const RoiFilters = (): JSX.Element => {
               ref: selectRef,
             }}
             renderItems={() => [
-              ...ROI_DATA_PERIODS.map(({ label, value }) => (
+              ...ROI_DATA_PERIODS.map(({ label, value, testId }) => (
                 <MenuItem
                   key={getComputedValue(value)}
                   value={getComputedValue(value)}
+                  data-testid={testId}
                   onClick={() => handleDateRangeSelect(value)}
                 >
                   {label}

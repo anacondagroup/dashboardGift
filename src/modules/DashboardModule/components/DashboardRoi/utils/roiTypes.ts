@@ -3,6 +3,7 @@ import { TRoiPeriod } from '@alycecom/services';
 export type TDateRangeOption = {
   label: string;
   value: TRoiPeriod;
+  testId: string;
 };
 
 export enum TActiveFilterSelection {

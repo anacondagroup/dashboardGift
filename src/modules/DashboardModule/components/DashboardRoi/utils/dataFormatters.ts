@@ -63,6 +63,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: ALYCE_FOUNDATION_DATE,
       to: moment().utc().format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.AllTimes',
   },
   {
     label: 'Month to Date',
@@ -70,6 +71,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().startOf('month').format(REQUEST_DATE_FORMAT),
       to: moment().utc().endOf('day').format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.MonthToDate',
   },
   {
     label: 'Year to Date',
@@ -77,6 +79,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().startOf('year').format(REQUEST_DATE_FORMAT),
       to: moment().utc().endOf('day').format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.YearToDate',
   },
   {
     label: 'Past Week',
@@ -84,6 +87,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().subtract(1, 'weeks').startOf('week').format(REQUEST_DATE_FORMAT),
       to: moment().utc().subtract(1, 'weeks').endOf('week').format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.PastWeek',
   },
   {
     label: 'Past Month',
@@ -91,6 +95,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().subtract(1, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
       to: moment().utc().subtract(1, 'months').endOf('month').format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.PastMonth',
   },
   {
     label: 'Past Quarter',
@@ -98,6 +103,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().subtract(3, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
       to: moment().utc().subtract(1, 'months').endOf('month').format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.PastQuarter',
   },
   {
     label: 'Past Year',
@@ -105,6 +111,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
       from: moment().utc().subtract(365, 'days').startOf('day').format(REQUEST_DATE_FORMAT),
       to: moment().utc().format(REQUEST_DATE_FORMAT),
     },
+    testId: 'RoiFilters.TimeRange.PastQuarter',
   },
 ];
 
