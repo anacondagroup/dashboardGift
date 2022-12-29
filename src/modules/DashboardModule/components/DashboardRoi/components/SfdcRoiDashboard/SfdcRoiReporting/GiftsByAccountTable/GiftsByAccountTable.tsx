@@ -18,7 +18,7 @@ const columns: TRoiColumn<TAcceptedGiftByEmailDomain>[] = [
     isSortable: true,
   },
   {
-    label: 'Gift',
+    label: 'Most Recent Gift Sent',
     field: 'giftProduct',
     isSortable: true,
   },
