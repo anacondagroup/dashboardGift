@@ -7,24 +7,24 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.0.1.tgz#b38b444ad3aa5fedbb15f2f746dcd934226a12dd"
   integrity sha512-+u76oB43nOHrF4DDWRLWDCtci7f3QJoEBigemIdIeTi1ODqjx6Tad9NCVnPRwewWlKkVab5PlK8DCtPTyX7S8g==
 
-"@alycecom/hooks@118.3.0":
-  version "118.3.0"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/hooks/-/@alycecom/hooks-118.3.0.tgz#ede9ed1640976a5f47e8ed24fab73b8caade0f1f"
-  integrity sha1-7entFkCXal9H6O0k+rc7jKreDx8=
+"@alycecom/hooks@118.4.0":
+  version "118.4.0"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/hooks/-/@alycecom/hooks-118.4.0.tgz#4f37d03e029e98399a61edcb70407335b5ee108c"
+  integrity sha1-TzfQPgKemDmaYe3LcEBzNbXuEIw=
   dependencies:
-    "@alycecom/utils" "118.3.0"
+    "@alycecom/utils" "118.4.0"
     react-hook-form "^7.24.0"
     react-router-last-location "^2.0.1"
 
-"@alycecom/modules@118.3.0":
-  version "118.3.0"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/modules/-/@alycecom/modules-118.3.0.tgz#f2edc4c3178708cd634b98595ae2b6164d4b7458"
-  integrity sha1-8u3EwxeHCM1jS5hZWuK2Fk1LdFg=
+"@alycecom/modules@118.4.0":
+  version "118.4.0"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/modules/-/@alycecom/modules-118.4.0.tgz#8847e752d3ae72e71b878eb1e9fcc17540d538e2"
+  integrity sha1-iEfnUtOucucbh46x6fzBdUDVOOI=
   dependencies:
-    "@alycecom/hooks" "118.3.0"
-    "@alycecom/services" "118.3.0"
-    "@alycecom/ui" "118.3.0"
-    "@alycecom/utils" "118.3.0"
+    "@alycecom/hooks" "118.4.0"
+    "@alycecom/services" "118.4.0"
+    "@alycecom/ui" "118.4.0"
+    "@alycecom/utils" "118.4.0"
     "@babel/preset-typescript" "^7.10.4"
     "@date-io/moment" "^1.3.9"
     "@hookform/resolvers" "^2.8.5"
@@ -42,14 +42,14 @@
     uuid "^8.3.2"
     yup "^0.32.11"
 
-"@alycecom/services@118.3.0":
-  version "118.3.0"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/services/-/@alycecom/services-118.3.0.tgz#09d913d275157acfed9abfa9c82fed9a42647e4a"
-  integrity sha1-CdkT0nUVes/tmr+pyC/tmkJkfko=
+"@alycecom/services@118.4.0":
+  version "118.4.0"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/services/-/@alycecom/services-118.4.0.tgz#3734b6e27f05f8d86df9f780192f91d38b1b5c7f"
+  integrity sha1-NzS24n8F+Nht+feAGS+R04sbXH8=
   dependencies:
-    "@alycecom/hooks" "118.3.0"
-    "@alycecom/ui" "118.3.0"
-    "@alycecom/utils" "118.3.0"
+    "@alycecom/hooks" "118.4.0"
+    "@alycecom/ui" "118.4.0"
+    "@alycecom/utils" "118.4.0"
     "@babel/plugin-proposal-class-properties" "^7.12.1"
     "@babel/plugin-proposal-optional-chaining" "^7.12.1"
     "@babel/plugin-transform-runtime" "^7.12.1"
@@ -65,13 +65,13 @@
     redux-persist "^6.0.0"
     tsd-jsdoc "^2.5.0"
 
-"@alycecom/ui@118.3.0":
-  version "118.3.0"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/ui/-/@alycecom/ui-118.3.0.tgz#81f93c0e408b1ae3e5d5dcb0d3b3232d09cd474d"
-  integrity sha1-gfk8DkCLGuPl1dyw07MjLQnNR00=
+"@alycecom/ui@118.4.0":
+  version "118.4.0"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/ui/-/@alycecom/ui-118.4.0.tgz#9fdbfcf6557ea0b105d7f5dae7efdf68d4243469"
+  integrity sha1-n9v89lV+oLEF1/Xa5+/faNQkNGk=
   dependencies:
-    "@alycecom/hooks" "118.3.0"
-    "@alycecom/utils" "118.3.0"
+    "@alycecom/hooks" "118.4.0"
+    "@alycecom/utils" "118.4.0"
     autosuggest-highlight "^3.1.1"
     babel-plugin-inline-react-svg "^1.1.1"
     babel-plugin-transform-es2015-modules-commonjs "^6.26.2"
@@ -87,10 +87,10 @@
     sanitize-html "^1.27.5"
     tinycolor2 "^1.4.2"
 
-"@alycecom/utils@118.3.0":
-  version "118.3.0"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/utils/-/@alycecom/utils-118.3.0.tgz#54347e0991614485b96faa1e94efa74ca3ea31e7"
-  integrity sha1-VDR+CZFhRIW5b6oelO+nTKPqMec=
+"@alycecom/utils@118.4.0":
+  version "118.4.0"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/utils/-/@alycecom/utils-118.4.0.tgz#53eebe34d01db699458bf2f5c3615c329848785d"
+  integrity sha1-U+6+NNAdtplFi/L1w2FcMphIeF0=
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"
