@@ -1,3 +1,4 @@
+import { AlyceTheme } from '@alycecom/ui';
 import { Theme } from '@mui/material';
 
 export const styles = {
@@ -52,5 +53,10 @@ export const styles = {
   utilizationContainer: {
     textAlign: 'right',
     color: 'primary.main',
+  },
+  warningIcon: {
+    cursor: 'unset',
+    color: ({ palette }: AlyceTheme) => palette.error.main,
+    marginRight: ({ spacing }: AlyceTheme) => spacing(2),
   },
 } as const;

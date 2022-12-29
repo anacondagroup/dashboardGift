@@ -3,31 +3,21 @@ import { Box, Typography } from '@mui/material';
 import { Tooltip, Icon, Divider, SearchField } from '@alycecom/ui';
 import { Control } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { PauseGiftingOnOption, RefreshPeriod, TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
+import { TBudgetCreateParams, useGetTeamMembersQuery } from '@alycecom/services';
 
 import { TEAM_MEMBERS_TOOLTIP_MESSAGE } from '../../../../../constants/budget.constants';
-import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
 import { loadTeamBudgetUtilization } from '../../../../../../../store/budgetUtilization/budgetUtilization.actions';
 import { resetUsersSelection } from '../../../../../store/ui/teamBudget/teamBudget.reducer';
-import {
-  getMembersWithUtilization,
-  getTeamBudgetUtilization,
-  getTeamBudgetUtilizationTotal,
-} from '../../../../../../../store/budgetUtilization/budgetUtilization.selectors';
+import { getBudgetByTeamId } from '../../../../../store/teams/budgets/budgets.selectors';
 
 import TeamMembersTable from './TeamMembersBudgetTable';
 import TeamMembersBudgetFooter from './TeamMembersBudgetFooter';
 import { styles } from './TeamMembersBudget.styles';
 
 export interface ITeamMembersBudgetProps {
-  teamId: number | null;
+  teamId: number;
   control: Control<TBudgetCreateParams>;
-  refreshPeriod: RefreshPeriod;
-  onMemberBudgetDefinition: () => void;
-  memberBudgetsTotal: number;
-  existingBudget?: IBudget;
-  pauseGiftingOn: PauseGiftingOnOption;
 }
 
 function getSearchedMembers(users: IUser[], searchValue: string): IUser[] {
@@ -36,19 +26,9 @@ function getSearchedMembers(users: IUser[], searchValue: string): IUser[] {
   );
 }
 
-const TeamMembersBudget = ({
-  teamId,
-  control,
-  refreshPeriod,
-  memberBudgetsTotal,
-  onMemberBudgetDefinition,
-  existingBudget,
-  pauseGiftingOn,
-}: ITeamMembersBudgetProps): JSX.Element => {
+const TeamMembersBudget = ({ teamId, control }: ITeamMembersBudgetProps): JSX.Element => {
   const dispatch = useDispatch();
-
-  const teamUtilizations = useSelector(getTeamBudgetUtilization);
-  const teamUtilizationTotal = useSelector(getTeamBudgetUtilizationTotal);
+  const existingBudget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
 
   const [searchValue, setSearchValue] = useState('');
   const handleOnChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value);
@@ -78,13 +58,6 @@ const TeamMembersBudget = ({
     dispatch(resetUsersSelection());
   }, [dispatch]);
 
-  const membersWithUtilization = useSelector(getMembersWithUtilization);
-
-  const removedMembersHasUtilization = useMemo(() => {
-    const currentTeamMemberIds = existingBudget?.teamMembers.map(user => user.userId);
-    return !membersWithUtilization.every(userId => currentTeamMemberIds?.includes(userId));
-  }, [existingBudget?.teamMembers, membersWithUtilization]);
-
   return (
     <Box data-testid="TeamMembersBudget">
       <Box sx={styles.headContainer}>
@@ -103,20 +76,10 @@ const TeamMembersBudget = ({
             users={searchedTeamMembers}
             teamId={teamId ?? 0}
             teamMembersHaveLoaded={teamMembersHaveLoaded && !isFetching}
-            teamUtilizations={teamUtilizations}
             control={control}
-            refreshPeriod={refreshPeriod}
-            onMemberBudgetDefinition={onMemberBudgetDefinition}
-            existingBudget={existingBudget}
-            pauseGiftingOn={pauseGiftingOn}
           />
         </Box>
-        <TeamMembersBudgetFooter
-          refresh={refreshPeriod}
-          totalMemberBudgets={memberBudgetsTotal}
-          totalMembersUtilization={teamUtilizationTotal}
-          removedMembersHasUtilization={removedMembersHasUtilization}
-        />
+        <TeamMembersBudgetFooter existingBudget={existingBudget} />
       </Box>
     </Box>
   );
