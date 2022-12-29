@@ -3,8 +3,8 @@ import { Box, ButtonGroup, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { getEmailTypeId } from '../../store/brandingSettings/brandingSettings.selectors';
-import { EmailType } from '../../store/emailTypes/emailTypes.types';
-import { setEmailTypeId } from '../../store/brandingSettings/brandingSettings.actions';
+import { EmailType } from '../../constants/emailTypes.constants';
+import { setEmailTypeId } from '../../store/brandingSettings/brandingSettings.reducer';
 
 import { styles } from './SwitchEmailContentButton.styles';
 

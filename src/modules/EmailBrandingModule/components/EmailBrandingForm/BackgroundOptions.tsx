@@ -1,14 +1,14 @@
 import React, { memo, useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Collapse, FormControlLabel, Radio, RadioGroup, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { Controller, useFormContext } from 'react-hook-form';
 import { AlyceTheme, ColorPicker } from '@alycecom/ui';
 import classNames from 'classnames';
-import { useDispatch, useSelector } from 'react-redux';
 
 import { EmailBrandingFields, IBrandingSettings, BgOptions } from '../../store/emailBranding.types';
 import { getBackground, getInitialBrandingSettings } from '../../store/brandingSettings/brandingSettings.selectors';
-import { setBackgroundOption } from '../../store/brandingSettings/brandingSettings.actions';
+import { setBackgroundOption } from '../../store/brandingSettings/brandingSettings.reducer';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   sectionTitle: {
@@ -45,6 +45,7 @@ const BackgroundOptions = ({ onChangeField }: IBackgroundOptionsProps) => {
     formState: { errors },
     setValue,
   } = useFormContext();
+
   const background = useSelector(getBackground);
   const { headerItemsOpacity = 0.5 } = useSelector(getInitialBrandingSettings) || {};
 

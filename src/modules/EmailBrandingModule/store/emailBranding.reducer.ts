@@ -1,19 +1,13 @@
 import { combineReducers } from 'redux';
 
-import emailTypesReducer, { IEmailTypesState } from './emailTypes/emailTypes.reducer';
-import brandingSettingsReducer, { IBrandingSettingsState } from './brandingSettings/brandingSettings.reducer';
-import emailPreviewReducer, { IEmailPreviewState } from './emailPreview/emailPreview.reducer';
+import { brandingSettings, TBrandingSettingsState } from './brandingSettings/brandingSettings.reducer';
 
 export interface IEmailBrandingState {
-  emailTypes: IEmailTypesState;
-  brandingSettings: IBrandingSettingsState;
-  email: IEmailPreviewState;
+  brandingSettings: TBrandingSettingsState;
 }
 
 const reducer = combineReducers<IEmailBrandingState>({
-  emailTypes: emailTypesReducer,
-  brandingSettings: brandingSettingsReducer,
-  email: emailPreviewReducer,
+  brandingSettings,
 });
 
 export default reducer;

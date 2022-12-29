@@ -1,8 +1,9 @@
 import React, { ChangeEvent, memo, useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Box, TextField, Tooltip, Typography } from '@mui/material';
 import { ColorPicker, Divider, FileInput, Icon } from '@alycecom/ui';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useUploadBrandingImageMutation } from '@alycecom/services';
 
 import {
   EmailBrandingFields,
@@ -10,11 +11,11 @@ import {
   IBrandingSettings,
   IUploadImageParams,
 } from '../../store/emailBranding.types';
+import { resetLogoImage } from '../../store/brandingSettings/brandingSettings.reducer';
 import {
   getBrandingSettings,
   getInitialBrandingSettings,
 } from '../../store/brandingSettings/brandingSettings.selectors';
-import { resetLogoImage, uploadBrandingImageRequest } from '../../store/brandingSettings/brandingSettings.actions';
 
 import LogoFilePreview from './LogoFilePreview';
 import BackgroundOptions from './BackgroundOptions';
@@ -44,8 +45,11 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
     formState: { errors },
     setValue,
   } = useFormContext();
+
   const { companyLogoId: initialLogoId } = useSelector(getInitialBrandingSettings) || {};
   const { companyLogoUrl, companyLogoId } = useSelector(getBrandingSettings);
+
+  const [uploadBrandingImageRequest] = useUploadBrandingImageMutation();
 
   const handleRemoveImage = useCallback(
     event => {
@@ -66,9 +70,9 @@ const BrandingForm = ({ onChangeField }: IBrandingFormProps) => {
 
   const handleUploadImageField = useCallback(
     (data: IUploadImageParams) => {
-      dispatch(uploadBrandingImageRequest(data));
+      uploadBrandingImageRequest(data);
     },
-    [dispatch],
+    [uploadBrandingImageRequest],
   );
 
   useEffect(() => {
