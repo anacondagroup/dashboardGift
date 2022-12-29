@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TableCellTooltip, NumberFormat } from '@alycecom/ui';
+import { TableCellTooltip, NumberFormat, Icon } from '@alycecom/ui';
 import {
   Table,
   TableBody,
@@ -30,7 +30,6 @@ import {
 import { EntityId } from '@alycecom/utils';
 
 import { IUser } from '../../../../../../UsersManagement/store/usersManagement.types';
-import { IBudget } from '../../../../../store/teams/budgets/budgets.types';
 import BulkEdit from '../fields/BulkEdit';
 import {
   BudgetBulkEditOption,
@@ -38,6 +37,8 @@ import {
 } from '../../../../../../../store/budgetUtilization/budgetUtilization.types';
 import { toggleAllUsersSelection, toggleUserSelection } from '../../../../../store/ui/teamBudget/teamBudget.reducer';
 import { getIsAllUsersSelected, getSelectedUsersIds } from '../../../../../store/ui/teamBudget/teamBudget.selectors';
+import { getTeamBudgetUtilization } from '../../../../../../../store/budgetUtilization/budgetUtilization.selectors';
+import { getBudgetByTeamId } from '../../../../../store/teams/budgets/budgets.selectors';
 
 import BulkEditBudgetModal from './BulkEditBudgetModal';
 import { styles } from './TeamMembersBudgetTable.styles';
@@ -55,7 +56,9 @@ const CustomTableCell = ({ children, testId, ...props }: ICustomTableCellProps):
   </TableCell>
 );
 
-const PauseGiftingOnIndex = {
+const PauseGiftingOnIndex: {
+  [key: string]: keyof IBudgetUtilizationByTeam;
+} = {
   [PauseGiftingOnOption.Claimed]: 'amountClaimed',
   [PauseGiftingOnOption.Sent]: 'amountSent',
 };
@@ -65,11 +68,6 @@ export interface ITeamMembersBudgetTableProps {
   teamId: number;
   teamMembersHaveLoaded: boolean;
   control: Control<TBudgetCreateParams>;
-  refreshPeriod: RefreshPeriod;
-  teamUtilizations: IBudgetUtilizationByTeam[];
-  onMemberBudgetDefinition: () => void;
-  existingBudget?: IBudget;
-  pauseGiftingOn: PauseGiftingOnOption;
 }
 
 const CustomTextInput = (props: TextFieldProps) => <TextField {...props} sx={styles.budgetField} />;
@@ -79,23 +77,24 @@ const TeamMembersBudgetTable = ({
   teamId,
   teamMembersHaveLoaded,
   control,
-  refreshPeriod,
-  teamUtilizations,
-  onMemberBudgetDefinition,
-  existingBudget,
-  pauseGiftingOn,
 }: ITeamMembersBudgetTableProps): JSX.Element => {
   const dispatch = useDispatch();
+  const existingBudget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const teamUtilizations = useSelector(getTeamBudgetUtilization);
+  const isAllUsersSelected = useSelector(getIsAllUsersSelected);
+  const selectedUsersIds = useSelector(getSelectedUsersIds);
 
   const { fields, append } = useFieldArray({
     name: BudgetCreateField.TeamMemberBudgets,
     control,
   });
 
-  const { setValue, getValues } = useFormContext();
+  const { setValue, watch } = useFormContext();
 
-  const isAllUsersSelected = useSelector(getIsAllUsersSelected);
-  const selectedUsersIds = useSelector(getSelectedUsersIds);
+  const refreshPeriod: RefreshPeriod = watch(BudgetCreateField.RefreshPeriod);
+  const teamMemberBudgets: ITeamMemberBudget[] = watch(BudgetCreateField.TeamMemberBudgets);
+  const pauseGiftingOn: PauseGiftingOnOption = watch(BudgetCreateField.PauseOption);
+  const pausingGiftingOnFieldName = PauseGiftingOnIndex[pauseGiftingOn];
 
   const [showBulkEditModal, toggleBulkEditModalState] = useState<boolean>(false);
 
@@ -162,7 +161,6 @@ const TeamMembersBudgetTable = ({
 
   const onBulkEditSaveClick = useCallback(
     (newBudget: number) => {
-      const teamMemberBudgets = getValues(BudgetCreateField.TeamMemberBudgets);
       const newValues = teamMemberBudgets.map((teamMemberBudget: ITeamMemberBudget) => {
         if (selectedUsersIds.find((user: EntityId) => Number(user) === teamMemberBudget.userId)) {
           return {
@@ -174,8 +172,13 @@ const TeamMembersBudgetTable = ({
       });
       setValue(BudgetCreateField.TeamMemberBudgets, newValues);
     },
-    [setValue, selectedUsersIds, getValues],
+    [setValue, selectedUsersIds, teamMemberBudgets],
   );
+
+  const onMemberBudgetDefinition = useCallback(() => {
+    const totalBudget = teamMemberBudgets.reduce((prev, curr) => prev + curr.budget, 0);
+    setValue(BudgetCreateField.Amount, totalBudget);
+  }, [setValue, teamMemberBudgets]);
 
   return (
     <>
@@ -231,9 +234,11 @@ const TeamMembersBudgetTable = ({
                 const userUtilization = teamUtilizations.find(
                   utilization => userForField && utilization.userId === userForField.id,
                 );
-                const userUtilizationValue = userUtilization
-                  ? userUtilization[PauseGiftingOnIndex[pauseGiftingOn] as keyof typeof userUtilization]
-                  : 0;
+                const userUtilizationValue = userUtilization ? Number(userUtilization[pausingGiftingOnFieldName]) : 0;
+                const teamMemberBudgetFieldName = `${BudgetCreateField.TeamMemberBudgets}.${index}.budget` as const;
+
+                const isUtilizationOverBudget =
+                  !Number.isNaN(userUtilizationValue) && userUtilizationValue > teamMemberBudgets[index].budget;
 
                 return userForField ? (
                   <TableRow key={field.id}>
@@ -262,7 +267,7 @@ const TeamMembersBudgetTable = ({
                       <Box sx={styles.budgetAndRefreshContainer}>
                         <Controller
                           control={control}
-                          name={`${BudgetCreateField.TeamMemberBudgets}.${index}.budget` as const}
+                          name={teamMemberBudgetFieldName}
                           render={({ field: { onChange, value } }) => (
                             <ReactNumberFormat
                               style={styles.budgetField as React.CSSProperties}
@@ -294,7 +299,14 @@ const TeamMembersBudgetTable = ({
                       </Box>
                     </CustomTableCell>
                     <TableCell sx={styles.utilizationContainer}>
-                      <NumberFormat format="$ 0,0.00">{userUtilizationValue}</NumberFormat>
+                      {isUtilizationOverBudget && (
+                        <Icon
+                          icon="exclamation-triangle"
+                          data-testid="TeamMembersBudgetTable.WarningIcon"
+                          sx={styles.warningIcon}
+                        />
+                      )}
+                      <NumberFormat format="$0,0.00">{userUtilizationValue}</NumberFormat>
                     </TableCell>
                   </TableRow>
                 ) : null;

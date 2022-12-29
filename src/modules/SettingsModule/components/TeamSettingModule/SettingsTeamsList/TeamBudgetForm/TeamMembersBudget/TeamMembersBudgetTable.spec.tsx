@@ -33,22 +33,7 @@ const DEFAULT_TABLE_PROPS = {
     },
   ],
   teamId: 1,
-  teamUtilizations: [
-    {
-      userId: 0,
-      teamId: 1,
-      budgetAmount: 1000,
-      amountSent: 200,
-      amountClaimed: 100,
-      period: 'weekly',
-    },
-  ],
   teamMembersHaveLoaded: false,
-  isAllSelected: false,
-  refreshPeriod: RefreshPeriod.Monthly,
-  handleSelectUser: jest.fn(),
-  onMemberBudgetDefinition: () => {},
-  handleSelectAllTeamMembers: jest.fn(),
 };
 
 const useDispatchMock = useDispatch as jest.MockedFunction<typeof useDispatch>;
@@ -70,6 +55,24 @@ describe('TeamMembersBudgetTable', () => {
               selectedUserIds: [],
             },
           },
+          teams: {
+            budgets: {
+              entities: {},
+              ids: [],
+            },
+          },
+        },
+        budgetUtilization: {
+          teamUtilization: [
+            {
+              userId: 0,
+              teamId: 1,
+              budgetAmount: 1000,
+              amountSent: 200,
+              amountClaimed: 100,
+              period: RefreshPeriod.Weekly,
+            },
+          ],
         },
       }),
     );
@@ -121,10 +124,12 @@ describe('TeamMembersBudgetTable', () => {
 
     const mockedUser = screen.getByTestId(`TeamMembersBudget.Table.${DEFAULT_TABLE_PROPS.users[0].id}.Name`);
     const mockedUserName = screen.getByText(`${firstName} ${lastName}`);
+    const warningIcon = screen.getByTestId('TeamMembersBudgetTable.WarningIcon');
 
     await waitFor(() => {
       expect(mockedUser).toBeInTheDocument();
       expect(mockedUserName).toBeInTheDocument();
+      expect(warningIcon).toBeInTheDocument();
     });
   });
 });

@@ -4,9 +4,7 @@ import { Box, Button, Grid, Theme, Typography } from '@mui/material';
 import { Divider, GlobalFonts, Icon, Tooltip } from '@alycecom/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import {
-  BudgetCreateField,
   BudgetType,
-  ITeamMemberBudget,
   MessageType,
   showGlobalMessage,
   TBudgetCreateParams,
@@ -119,19 +117,11 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
     handleSubmit,
     formState: { errors },
     control,
-    setValue,
-    watch,
-    reset,
   } = methods;
 
   const isUsersLoading = useSelector(getIsLoading);
-  const teamBudgets: ITeamMemberBudget[] = watch('teamMembers');
-  const sumOfMemberBudgets = teamBudgets.reduce((prev, curr) => prev + curr.budget, 0);
   const team = useSelector(useMemo(() => getTeamById(teamId), [teamId]));
   const teamIds = useSelector(getTeamIds);
-
-  const refreshPeriod = watch('period');
-  const pauseGiftingOn = watch('pauseGiftingOn');
 
   const handleCancel = useCallback(() => {
     dispatch(setTeamSidebarStep({ step: null }));
@@ -201,14 +191,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
     }
   }, [createBudgetError, editBudgetError, dispatch]);
 
-  const onMemberBudgetDefinition = useCallback(() => {
-    const totalBudget = teamBudgets.reduce((prev, curr) => prev + curr.budget, 0);
-    setValue(BudgetCreateField.Amount, totalBudget);
-  }, [setValue, teamBudgets]);
-
   const onSubmit = budget ? handleEditBudget : handleCreateBudget;
-
-  useEffect(() => reset(), [reset]);
 
   return (
     <FormProvider {...methods}>
@@ -250,15 +233,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
               </Grid>
             </Grid>
           </Grid>
-          <TeamMembersBudget
-            teamId={teamId}
-            control={control}
-            refreshPeriod={refreshPeriod}
-            onMemberBudgetDefinition={onMemberBudgetDefinition}
-            memberBudgetsTotal={sumOfMemberBudgets}
-            existingBudget={budget}
-            pauseGiftingOn={pauseGiftingOn}
-          />
+          <TeamMembersBudget teamId={teamId} control={control} />
         </Box>
 
         <StepSectionFooter
