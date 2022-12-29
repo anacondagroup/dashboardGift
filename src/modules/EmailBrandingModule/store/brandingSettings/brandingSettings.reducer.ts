@@ -1,138 +1,97 @@
-import { createReducer } from 'redux-act';
-import { TErrors } from '@alycecom/services';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { propOr } from 'ramda';
-import { StateStatus } from '@alycecom/utils';
+import { appApi } from '@alycecom/services';
 
 import { BgOptions, IBrandingSettings } from '../emailBranding.types';
-import { EmailType } from '../emailTypes/emailTypes.types';
-import { loadEmailPreviewSuccess } from '../emailPreview/emailPreview.actions';
+import { EmailType } from '../../constants/emailTypes.constants';
 
-import {
-  loadBrandingSettingsFail,
-  loadBrandingSettingsRequest,
-  loadBrandingSettingsSuccess,
-  resetBrandingSettings,
-  resetLogoImage,
-  setBackgroundOption,
-  setBrandingSettings,
-  setEmailTypeId,
-  updateBrandingSettingsFail,
-  updateBrandingSettingsRequest,
-  updateBrandingSettingsSuccess,
-  uploadBrandingImageFail,
-  uploadBrandingImageSuccess,
-} from './brandingSettings.actions';
 import { EMPTY_BRANDING_SETTINGS } from './brandingSettings.constants';
 
-export interface IBrandingSettingsState {
-  status: StateStatus;
-  isSaveInProgress: boolean;
+export type TBrandingSettingsState = {
   settings: IBrandingSettings;
   initialSettings?: IBrandingSettings;
   emailTypeId: EmailType;
   isEmailTypeChanged: boolean;
   background: BgOptions;
-  errors: TErrors;
-}
+};
 
-export const initialState: IBrandingSettingsState = {
-  status: StateStatus.Idle,
-  isSaveInProgress: false,
+const initialState: TBrandingSettingsState = {
   settings: EMPTY_BRANDING_SETTINGS,
   initialSettings: undefined,
   emailTypeId: EmailType.initialEmailSenderToRecipient,
   isEmailTypeChanged: true,
   background: BgOptions.empty,
-  errors: {},
 };
 
-const reducer = createReducer<IBrandingSettingsState>({}, initialState);
-
-reducer
-  .on(loadBrandingSettingsRequest, state => ({
-    ...state,
-    status: StateStatus.Pending,
-  }))
-  .on(loadBrandingSettingsSuccess, (state, payload) => ({
-    ...state,
-    status: StateStatus.Fulfilled,
-    settings: payload,
-    initialSettings: payload,
-    background: payload.headerItemsOpacity === 0 ? BgOptions.solid : BgOptions.alycePattern,
-  }))
-  .on(loadBrandingSettingsFail, state => ({
-    ...state,
-    status: StateStatus.Rejected,
-  }));
-
-reducer
-  .on(uploadBrandingImageSuccess, (state, payload) => ({
-    ...state,
-    settings: {
-      ...state.settings,
-      companyLogoUrl: payload.url,
-      companyLogoId: payload.id,
-    },
-  }))
-  .on(uploadBrandingImageFail, (state, payload) => ({
-    ...state,
-    errors: payload,
-  }));
-
-reducer.on(setBackgroundOption, (state, payload) => ({
-  ...state,
-  background: payload,
-}));
-
-reducer.on(setBrandingSettings, (state, payload) => ({
-  ...state,
-  settings: {
-    ...state.settings,
-    ...payload,
+export const {
+  name,
+  reducer: brandingSettings,
+  actions: { setBrandingSettings, setEmailTypeId, setBackgroundOption, resetLogoImage },
+  getInitialState,
+} = createSlice({
+  name: 'brandingSettings' as const,
+  initialState,
+  reducers: {
+    setBrandingSettings: (state, { payload }: PayloadAction<Partial<IBrandingSettings>>) => ({
+      ...state,
+      settings: {
+        ...state.settings,
+        ...payload,
+      },
+    }),
+    setEmailTypeId: (state, { payload }: PayloadAction<EmailType>) => ({
+      ...state,
+      emailTypeId: payload,
+      isEmailTypeChanged: true,
+    }),
+    setBackgroundOption: (state, { payload }: PayloadAction<BgOptions>) => ({
+      ...state,
+      background: payload,
+    }),
+    resetLogoImage: state => ({
+      ...state,
+      settings: {
+        ...state.settings,
+        companyLogoUrl: propOr('', 'companyLogoUrl', state.initialSettings),
+        companyLogoId: propOr(0, 'companyLogoId', state.initialSettings),
+      },
+    }),
   },
-}));
-
-reducer.on(setEmailTypeId, (state, payload) => ({
-  ...state,
-  emailTypeId: payload,
-  isEmailTypeChanged: true,
-}));
-
-reducer.on(resetBrandingSettings, state => ({
-  ...state,
-  ...initialState,
-}));
-
-reducer.on(resetLogoImage, state => ({
-  ...state,
-  settings: {
-    ...state.settings,
-    companyLogoUrl: propOr('', 'companyLogoUrl', state.initialSettings),
-    companyLogoId: propOr(0, 'companyLogoId', state.initialSettings),
-  },
-}));
-
-reducer
-  .on(updateBrandingSettingsRequest, state => ({
-    ...state,
-    isSaveInProgress: true,
-  }))
-  .on(updateBrandingSettingsSuccess, (state, payload) => ({
-    ...state,
-    isSaveInProgress: false,
-    settings: payload,
-    initialSettings: payload,
-    background: payload.headerItemsOpacity === 0 ? BgOptions.solid : BgOptions.alycePattern,
-  }))
-  .on(updateBrandingSettingsFail, (state, payload) => ({
-    ...state,
-    isSaveInProgress: false,
-    errors: payload,
-  }));
-
-reducer.on(loadEmailPreviewSuccess, state => ({
-  ...state,
-  isEmailTypeChanged: false,
-}));
-
-export default reducer;
+  extraReducers: builder =>
+    builder
+      .addMatcher(appApi.endpoints.getBrandingSettingsByTeamId.matchFulfilled, (state, { payload }) => ({
+        ...state,
+        settings: {
+          ...state.settings,
+          ...payload,
+        },
+        initialSettings: {
+          ...state.initialSettings,
+          ...payload,
+        },
+        background: payload.headerItemsOpacity === 0 ? BgOptions.solid : BgOptions.alycePattern,
+      }))
+      .addMatcher(appApi.endpoints.putBrandingSettings.matchFulfilled, (state, { payload }) => ({
+        ...state,
+        settings: {
+          ...state.settings,
+          ...payload,
+        },
+        initialSettings: {
+          ...state.initialSettings,
+          ...payload,
+        },
+      }))
+      .addMatcher(appApi.endpoints.uploadBrandingImage.matchFulfilled, (state, { payload }) => ({
+        ...state,
+        settings: {
+          ...state.settings,
+          companyLogoUrl: payload.url,
+          companyLogoId: payload.id,
+        },
+      }))
+      .addMatcher(appApi.endpoints.getEmailPreview.matchFulfilled, state => ({
+        ...state,
+        isEmailTypeChanged: false,
+      })),
+});

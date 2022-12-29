@@ -27,7 +27,6 @@ import settingsEpic from '../modules/SettingsModule/store/settings.epics';
 import marketplace from '../modules/MarketplaceModule/store/marketplace.reducer';
 import marketplaceEpics from '../modules/MarketplaceModule/store/marketplace.epics';
 import emailBranding from '../modules/EmailBrandingModule/store/emailBranding.reducer';
-import emailBrandingEpics from '../modules/EmailBrandingModule/store/emailBranding.epics';
 import usersManagement from '../modules/UsersManagement/store/usersManagement.reducer';
 import usersManagementEpics from '../modules/UsersManagement/store/usersManagement.epics';
 import { activate, activateEpics } from '../modules/ActivateModule/store';
@@ -121,7 +120,6 @@ export const rootEpic = combineEpics(
   ...campaignsEpics,
   ...teamsEpics,
   ...confirmationEpics,
-  ...emailBrandingEpics,
   ...usersManagementEpics,
   ...Timezones.epics,
   ...activateEpics,

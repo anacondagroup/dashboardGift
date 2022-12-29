@@ -1,26 +1,23 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
+import { useDebounce } from 'react-use';
 import { Box, Button, Drawer, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ActionButton, AlyceTheme, ModalConfirmationMessage } from '@alycecom/ui';
 import { FormProvider, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useRouting } from '@alycecom/hooks';
+import { MessageType, showGlobalMessage, usePutBrandingSettingsMutation } from '@alycecom/services';
 
+import { EmailBrandingFields, IBrandingSettings } from '../../store/emailBranding.types';
+import { setBrandingSettings } from '../../store/brandingSettings/brandingSettings.reducer';
+import { brandingSettingsDefaultValue, validationSchema } from '../../store/brandingSettings/brandingSettings.schemas';
+import EmailBrandingForm from '../EmailBrandingForm/EmailBrandingForm';
 import {
   getBrandingSettings,
   getInitialBrandingSettings,
-  getIsSaveInProgress,
 } from '../../store/brandingSettings/brandingSettings.selectors';
-import { EmailBrandingFields, IBrandingSettings } from '../../store/emailBranding.types';
-import {
-  loadBrandingSettingsRequest,
-  setBrandingSettings,
-  updateBrandingSettingsRequest,
-} from '../../store/brandingSettings/brandingSettings.actions';
-import { brandingSettingsDefaultValue, validationSchema } from '../../store/brandingSettings/brandingSettings.schemas';
-import EmailBrandingForm from '../EmailBrandingForm/EmailBrandingForm';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, zIndex }) => ({
   sidebar: {
@@ -50,8 +47,13 @@ const EmailBrandingSidebar = () => {
   const dispatch = useDispatch();
   const go = useRouting();
   const initialBranding = useSelector(getInitialBrandingSettings);
+
   const branding = useSelector(getBrandingSettings);
-  const isSaveInProgress = useSelector(getIsSaveInProgress);
+
+  const [
+    updateBrandingSettings,
+    { isLoading: isSavingSettings, isSuccess: isUpdateSuccess },
+  ] = usePutBrandingSettingsMutation();
 
   const methods = useForm<IBrandingSettings>({
     mode: 'all',
@@ -64,6 +66,8 @@ const EmailBrandingSidebar = () => {
     formState: { isValid, isDirty },
   } = methods;
 
+  const [brandingValues, setBrandingValues] = useState<IBrandingSettings | undefined>(initialBranding);
+
   const handleDiscardChanges = useCallback(() => {
     go(`/settings/teams/${teamId}/settings-and-permissions/general`);
   }, [go, teamId]);
@@ -71,21 +75,31 @@ const EmailBrandingSidebar = () => {
   const handleChangeField = useCallback(
     (data: Partial<IBrandingSettings>) => {
       const values = getValues();
-      const brandingValues = { ...values, ...data };
-      validationSchema.isValid(brandingValues).then(isValidData => {
+      const newBrandingValues = { ...values, ...data };
+      validationSchema.isValid(newBrandingValues).then(isValidData => {
         if (isValidData) {
-          dispatch(setBrandingSettings(brandingValues));
+          setBrandingValues(newBrandingValues);
         }
       });
     },
-    [dispatch, getValues],
+    [setBrandingValues, getValues],
+  );
+
+  useDebounce(
+    () => {
+      if (brandingValues) {
+        dispatch(setBrandingSettings(brandingValues));
+      }
+    },
+    300,
+    [brandingValues, dispatch],
   );
 
   const handleApply = useCallback(
     (data: IBrandingSettings) => {
-      dispatch(updateBrandingSettingsRequest({ settings: { ...branding, ...data }, teamId: Number(teamId) }));
+      updateBrandingSettings({ settings: { ...branding, ...data }, teamId: Number(teamId) });
     },
-    [dispatch, teamId, branding],
+    [teamId, branding, updateBrandingSettings],
   );
 
   useEffect(() => {
@@ -107,12 +121,19 @@ const EmailBrandingSidebar = () => {
   }, [reset, initialBranding]);
 
   useEffect(() => {
-    if (teamId) {
-      dispatch(loadBrandingSettingsRequest({ teamId: Number(teamId) }));
+    if (isUpdateSuccess) {
+      batch(() => {
+        dispatch(
+          showGlobalMessage({
+            type: MessageType.Success,
+            text: `Success! Your styling changes will be applied to your emails`,
+          }),
+        );
+      });
     }
-  }, [dispatch, teamId]);
+  }, [isUpdateSuccess, dispatch]);
 
-  const isSaveDisabled = !isDirty || !isValid || isSaveInProgress;
+  const isSaveDisabled = !isDirty || !isValid || isSavingSettings;
 
   const [isOpenDiscardModal, setIsOpenDiscardModal] = useState<boolean>(false);
   const handleOpenDiscardModal = useCallback(() => {
@@ -154,7 +175,7 @@ const EmailBrandingSidebar = () => {
                   className={classes.discardButton}
                   variant="outlined"
                   onClick={handleOpenDiscardModal}
-                  disabled={isSaveInProgress}
+                  disabled={isSavingSettings}
                 >
                   Cancel
                 </Button>

@@ -1,25 +1,12 @@
 import React, { memo, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
 import { useSetBeaconConfig } from '@alycecom/hooks';
-
-import { loadEmailTypesRequest } from '../store/emailTypes/emailTypes.actions';
-import { resetEmailBranding } from '../store/emailBranding.actions';
 
 import EmailBrandingSidebar from './EmailBrandingSidebar/EmailBrandingSidebar';
 import EmailPreview from './EmailPreview/EmailPreview';
 import SwitchEmailContentButton from './SwitchEmailContentButton/SwitchEmailContentButton';
 
 const EmailBrandingModule = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(loadEmailTypesRequest());
-    return () => {
-      dispatch(resetEmailBranding());
-    };
-  }, [dispatch]);
-
   const setBeaconConfig = useSetBeaconConfig();
 
   useEffect(
