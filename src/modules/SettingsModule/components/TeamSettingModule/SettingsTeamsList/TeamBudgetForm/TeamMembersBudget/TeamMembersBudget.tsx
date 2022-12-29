@@ -21,8 +21,12 @@ export interface ITeamMembersBudgetProps {
 }
 
 function getSearchedMembers(users: IUser[], searchValue: string): IUser[] {
-  return users.filter(user =>
-    `${user.firstName}${user.lastName}${user.email}`.toLowerCase().includes(searchValue.toLowerCase()),
+  const valueFormatted = searchValue.toLowerCase().trim().replace(/\s+/g, ' ');
+  return users.filter(
+    user =>
+      `${user.firstName}${user.lastName}`.toLowerCase().includes(valueFormatted) ||
+      `${user.firstName} ${user.lastName}`.toLowerCase().includes(valueFormatted) ||
+      `${user.email}`.toLowerCase().includes(valueFormatted),
   );
 }
 
@@ -40,7 +44,7 @@ const TeamMembersBudget = ({ teamId, control }: ITeamMembersBudgetProps): JSX.El
         const entitiesAsUsers = Object.values(result.data?.entities ?? []) as IUser[];
         return {
           ...result,
-          searchedTeamMembers: getSearchedMembers(entitiesAsUsers, searchValue),
+          searchedTeamMembers: searchValue ? getSearchedMembers(entitiesAsUsers, searchValue) : entitiesAsUsers,
         };
       },
     },
