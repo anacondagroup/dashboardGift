@@ -1,6 +1,6 @@
 import React, { memo, useState, useMemo } from 'react';
-import { GlobalFonts, LoadingLabel, Tooltip } from '@alycecom/ui';
-import { Box, Theme, Typography } from '@mui/material';
+import { LoadingLabel, Tooltip, Icon } from '@alycecom/ui';
+import { Box, Typography } from '@mui/material';
 import { TBudgetUtilization } from '@alycecom/services';
 import { useSelector } from 'react-redux';
 import { sort, ascend, prop } from 'ramda';
@@ -11,57 +11,14 @@ import { getIsLoading } from '../../../modules/SettingsModule/store/teams/teams/
 import { ITeam } from '../../../store/teams/teams.types';
 
 import TeamBudgetUtilizations from './TeamBudgetUtilizations';
-
-const styles = {
-  container: {
-    display: 'flex',
-    margin: ({ spacing }: Theme) => spacing(0.5, 2, 3, 1),
-  },
-  noBudgetContainer: {
-    marginRight: 2,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  budgetsContainer: {
-    alignSelf: 'center',
-    justifyContent: 'center',
-  },
-  loadingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    gap: ({ spacing }: Theme) => spacing(1),
-    marginRight: ({ spacing }: Theme) => spacing(1),
-  },
-  budgetLine: {
-    display: 'flex',
-    maxWidth: 600,
-    justifyContent: 'space-between',
-    gap: ({ spacing }: Theme) => spacing(2),
-  },
-  text: GlobalFonts['.Body-Regular-Center-White'],
-  emphasizedText: GlobalFonts['.Body-Regular-Center-White-Bold'],
-  warningDot: {
-    width: 10,
-    height: 10,
-    borderRadius: '50%',
-    backgroundColor: ({ palette }: Theme) => palette.additional.red80,
-    marginTop: ({ spacing }: Theme) => spacing(0.75),
-    marginLeft: ({ spacing }: Theme) => spacing(0.75),
-  },
-  tooltip: {
-    paddingTop: ({ spacing }: Theme) => spacing(0.5),
-    '& .MuiTooltip-tooltip': {
-      maxWidth: 400,
-    },
-  },
-} as const;
+import { styles } from './ToolbarUserBudget.styles';
 
 interface IToolbarUserBudgetProps {
   budgetUtilizations: TBudgetUtilization[];
   budgetUtilizationIsLoading: boolean;
 }
+
+const MAX_TEAM_NAME_LENGTH = 20;
 
 const ToolbarUserBudget = ({
   budgetUtilizations,
@@ -74,11 +31,18 @@ const ToolbarUserBudget = ({
 
   const isLoading = budgetUtilizationIsLoading || teamsIsLoading;
 
-  const firstTeamsUtilization = budgetUtilizations.find(utilization => utilization.teamId === sortedTeams[0].id);
+  const [firstTeam] = sortedTeams;
+  const firstTeamsUtilization = useMemo(
+    () => budgetUtilizations.find(utilization => utilization.teamId === firstTeam?.id),
+    [budgetUtilizations, firstTeam],
+  );
 
   const shouldShowZeroBudgetWarning = firstTeamsUtilization && firstTeamsUtilization.availableBudgetAmount <= 0;
+  const isTeamHasLongName = firstTeam?.name?.length > MAX_TEAM_NAME_LENGTH;
+  const hasMoreThenOneTeam = sortedTeams.length > 1;
 
   const [showModal, toggleModalState] = useState<boolean>(false);
+  const [isBudgetListVisible, setIsBudgetListVisible] = useState<boolean>(false);
 
   const { availableBudget, pendingGiftCosts } = getBudgetUtilizationText(firstTeamsUtilization);
 
@@ -95,15 +59,21 @@ const ToolbarUserBudget = ({
     <Tooltip
       sx={styles.tooltip}
       title={
-        <TeamBudgetUtilizations
-          teams={sortedTeams}
-          budgetUtilizations={budgetUtilizations}
-          showModal={showModal}
-          toggleModalState={toggleModalState}
-        />
+        hasMoreThenOneTeam ? (
+          <TeamBudgetUtilizations
+            teams={sortedTeams}
+            budgetUtilizations={budgetUtilizations}
+            showModal={showModal}
+            toggleModalState={toggleModalState}
+          />
+        ) : (
+          ''
+        )
       }
       arrow
       placement="bottom"
+      onOpen={() => setIsBudgetListVisible(true)}
+      onClose={() => setIsBudgetListVisible(false)}
     >
       <Box sx={styles.container} data-testid="ToolbarUserBudget">
         <Box sx={styles.budgetsContainer}>
@@ -119,6 +89,12 @@ const ToolbarUserBudget = ({
               {pendingGiftCosts}
             </Typography>
           </Box>
+          <Box sx={styles.budgetLine}>
+            <Tooltip title={isTeamHasLongName ? firstTeam.name : ''} arrow placement="top">
+              <Typography sx={styles.teamName}>{firstTeam.name}</Typography>
+            </Tooltip>
+            {hasMoreThenOneTeam && <Icon sx={styles.icon} icon={isBudgetListVisible ? 'angle-down' : 'angle-up'} />}
+          </Box>
         </Box>
         {shouldShowZeroBudgetWarning && (
           <Box sx={styles.warningDot} data-testid="ToolbarUserBudget.ZeroBudgetWarning" />
@@ -127,4 +103,5 @@ const ToolbarUserBudget = ({
     </Tooltip>
   );
 };
+
 export default memo(ToolbarUserBudget);
