@@ -136,7 +136,7 @@ const RoiInfluencedARRBarChart = <T, M extends object>({
 
   return (
     <Box sx={styles.container}>
-      <svg width="100%" height={height}>
+      <svg width="100%" height={height} fill={colors.common.white}>
         <rect x={0} y={0} width="100%" height={height} fill="url(#teal)" rx={14} />
         <Group top={margin.top} left={margin.left}>
           <GridRows scale={yScale} height={yMax} width={xMax} stroke={colors.grey.mediumLight} numTicks={3} />

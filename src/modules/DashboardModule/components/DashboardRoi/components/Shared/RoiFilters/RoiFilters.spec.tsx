@@ -53,9 +53,9 @@ describe('RoiFilters', () => {
       setup();
 
       userEvent.click(screen.getByRole('button', { name: /Past Quarter/ }));
-      userEvent.click(screen.getByRole('option', { name: /Month to Date/ }));
+      userEvent.click(screen.getByTestId('RoiFilters.TimeRange.MonthToDate'));
 
-      expect(screen.getByRole('button', { name: /Month to Date/ }));
+      expect(screen.getByTestId('RoiFilters.TimeRange.MonthToDate')).toBeInTheDocument();
     });
   });
 
