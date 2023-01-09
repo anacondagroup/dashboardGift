@@ -12,7 +12,7 @@ const server = setupTestServer(getTeamListMock, getCampaignsListMock, getTeamMem
 describe('RoiFilters', () => {
   useMswServer(server);
   mockOffsetHeightAndWidth();
-
+  jest.mock('../../../../../../../store/teams/teams.selectors');
   const setup = () => {
     renderWithReduxProvider(<RoiFilters />);
     return {

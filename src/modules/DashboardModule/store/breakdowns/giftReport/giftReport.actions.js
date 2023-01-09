@@ -12,9 +12,10 @@ import { GIFT_REPORT } from './giftReport.types';
  * @prop {number | null} data.teamId - Pass team id for build report by team.
  * @prop {number | null} data.memberId - Pass member id when teamId passed to build report by member of the team.
  * @prop {number | null} data.campaignId - Pass campaign id to build report by campaign.
+ * @prop {boolean | null} data.includeArchived - Pass flag to includeArchived campaigns.
  * @returns {Object} - Send gift reports action.
  */
-export const sendGiftReport = ({ email, from, to, memberId, teamId, campaignId }) => ({
+export const sendGiftReport = ({ email, from, to, memberId, teamId, campaignId, includeArchived }) => ({
   type: GIFT_REPORT.SEND,
-  meta: { email, from, to, memberId, teamId, campaignId },
+  meta: { email, from, to, memberId, teamId, campaignId, includeArchived },
 });

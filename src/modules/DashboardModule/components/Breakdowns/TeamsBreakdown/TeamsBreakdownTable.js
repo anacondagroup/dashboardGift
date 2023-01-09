@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { TableCellTooltip, TableLoadingLabel } from '@alycecom/ui';
+import { DISPLAY_DATE_FORMAT, TableCellTooltip, TableLoadingLabel } from '@alycecom/ui';
 import { TrackEvent } from '@alycecom/services';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -12,7 +12,9 @@ import {
   TableSortLabel,
   TableFooter,
   TablePagination,
+  Typography,
 } from '@mui/material';
+import moment from 'moment';
 
 import { teamBreakdownShape } from '../../../shapes/teamBreakdown.shape';
 import { usePagination } from '../../../../../hooks/usePagination';
@@ -95,6 +97,11 @@ export const TeamsBreakdownTableComponent = ({
                           to={`/teams/${team.id}?${linkQueryParams}`}
                         >
                           {team.name}
+                          {Boolean(team.archivedAt) && (
+                            <Typography display="inline" noWrap color="#99A1BD">
+                              &nbsp;(Archived {moment(team.archivedAt).format(DISPLAY_DATE_FORMAT)})
+                            </Typography>
+                          )}
                         </RouterLink>
                       )}
                       title={team.name}

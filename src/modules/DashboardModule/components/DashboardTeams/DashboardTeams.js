@@ -27,6 +27,7 @@ const DashboardTeams = () => {
     teamsDirection = 'asc',
     dateRangeFrom,
     dateRangeTo,
+    includeArchived,
   } = useUrlQuery([
     'campaignId',
     'teamsSearch',
@@ -36,6 +37,7 @@ const DashboardTeams = () => {
     'dateRangeTo',
     'teamId',
     'contactId',
+    'includeArchived',
   ]);
   const updateUrl = useSetUrlQuery();
 
@@ -70,13 +72,14 @@ const DashboardTeams = () => {
         subHeader="Here’s a breakdown of how teams are performing with Alyce"
       />
       <Grid container justifyContent="flex-end">
-        <GiftInvitationReportButton useDateSelect />
+        <GiftInvitationReportButton useDateSelect includeArchived={includeArchived} />
       </Grid>
       <TeamsBreakdownLoader
         sort={teamsSort}
         sortDirection={teamsDirection}
         campaignId={campaignId}
         search={teamsSearch}
+        includeArchived={includeArchived}
         dateRangeFrom={dateRangeFrom}
         dateRangeTo={dateRangeTo}
         render={({ breakdown, isLoading }) => (

@@ -14,6 +14,7 @@ const pickMemoProps = R.pick([
   'sortDirection',
   'search',
   'forceUpdate',
+  'includeArchived',
 ]);
 const pickRenderProps = R.pick([
   'breakdown',
@@ -25,6 +26,7 @@ const pickRenderProps = R.pick([
   'search',
   'isLoading',
   'isLoaded',
+  'includeArchived',
 ]);
 
 const mapStateToProps = state => ({

@@ -17,6 +17,7 @@ jest.mock('react-redux', () => ({
 jest.mock('@alycecom/modules/dist/Auth/store/auth.selectors');
 jest.mock('../../../store/breakdowns/giftReport/giftReport.actions');
 jest.mock('../../../hooks/useTrackGiftInvitationReport');
+jest.mock('../../../../../store/teams/teams.selectors');
 
 describe('GiftInvitationReportButton unit', () => {
   const dispatch = jest.fn();
@@ -89,6 +90,7 @@ describe('GiftInvitationReportButton unit', () => {
       from: '11.11.11',
       to: '12.12.12',
       memberId: 1,
+      includeArchived: false,
       teamId: 2,
       campaignId: 3,
     });
@@ -114,6 +116,7 @@ describe('GiftInvitationReportButton unit', () => {
       from: null,
       to: null,
       memberId: null,
+      includeArchived: false,
       teamId: null,
       campaignId: null,
     });

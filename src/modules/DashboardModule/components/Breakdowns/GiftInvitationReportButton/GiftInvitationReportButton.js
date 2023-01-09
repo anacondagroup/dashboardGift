@@ -29,7 +29,15 @@ const useStyles = makeStyles(({ spacing, palette }) => ({
   },
 }));
 
-const GiftInvitationReportButton = ({ campaignId, memberId, teamId, dateRangeFrom, dateRangeTo, useDateSelect }) => {
+const GiftInvitationReportButton = ({
+  campaignId,
+  memberId,
+  teamId,
+  includeArchived,
+  dateRangeFrom,
+  dateRangeTo,
+  useDateSelect,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const defaultEmail = useSelector(getUserEmail);
@@ -63,6 +71,7 @@ const GiftInvitationReportButton = ({ campaignId, memberId, teamId, dateRangeFro
     dispatch(
       sendGiftReport({
         email,
+        includeArchived,
         from: range.from || dateRangeFrom,
         to: range.to || dateRangeTo,
         memberId: memberId && Number(memberId),
@@ -81,6 +90,7 @@ const GiftInvitationReportButton = ({ campaignId, memberId, teamId, dateRangeFro
     dateRangeTo,
     dateRangeFrom,
     range,
+    includeArchived,
     trackGiftInvitationReport,
   ]);
 
@@ -155,6 +165,7 @@ GiftInvitationReportButton.propTypes = {
   memberId: PropTypes.number,
   teamId: PropTypes.number,
   useDateSelect: PropTypes.bool,
+  includeArchived: PropTypes.bool,
 };
 
 GiftInvitationReportButton.defaultProps = {
@@ -164,6 +175,7 @@ GiftInvitationReportButton.defaultProps = {
   memberId: null,
   teamId: null,
   useDateSelect: false,
+  includeArchived: false,
 };
 
 export default GiftInvitationReportButton;
