@@ -12,6 +12,7 @@ const teamsApiParams = R.pick([
   'teamsSearch',
   'teamsSort',
   'teamsDirection',
+  'includeArchived',
 ]);
 
 export const [
@@ -31,6 +32,7 @@ export const getApiCallQuery = R.compose(
     dateRangeFrom: 'date_range_from',
     dateRangeTo: 'date_range_to',
     teamsSearch: 'search',
+    includeArchived: 'include_archived',
   }),
   teamsApiParams,
   getUrlParams,
