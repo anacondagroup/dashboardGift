@@ -54,7 +54,7 @@ const ArchiveTeamConfirmation = (): JSX.Element => {
           }),
         );
         dispatch(resetState());
-        dispatch(loadTeamsSettingsRequest());
+        dispatch(loadTeamsSettingsRequest({}));
       });
     }
   }, [dispatch, isSuccess]);

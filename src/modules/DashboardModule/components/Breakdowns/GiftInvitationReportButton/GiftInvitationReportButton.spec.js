@@ -17,6 +17,7 @@ jest.mock('react-redux', () => ({
 jest.mock('@alycecom/modules/dist/Auth/store/auth.selectors');
 jest.mock('../../../store/breakdowns/giftReport/giftReport.actions');
 jest.mock('../../../hooks/useTrackGiftInvitationReport');
+jest.mock('../../../../../store/teams/teams.selectors');
 
 describe('GiftInvitationReportButton unit', () => {
   const dispatch = jest.fn();

@@ -5,7 +5,9 @@ import { SortDirection } from '@alycecom/utils';
 import {
   Box,
   Button,
+  FormControlLabel,
   Grid,
+  Switch,
   Table,
   TableBody,
   TableCell,
@@ -67,6 +69,11 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.asc);
   const [search, onSearch] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [includeArchived, setIncludeArchived] = useState<boolean>(true);
+
+  const handleIncludeArchived = useCallback(() => {
+    setIncludeArchived(!includeArchived);
+  }, [includeArchived]);
 
   const handleSort = useCallback(
     column => {
@@ -93,11 +100,11 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(loadTeamsSettingsRequest());
+    dispatch(loadTeamsSettingsRequest({ includeArchived }));
     return () => {
       dispatch(clearTeamsSetting());
     };
-  }, [dispatch]);
+  }, [dispatch, includeArchived]);
 
   useEffect(() => {
     if (hasBudgetManagementSetup) {
@@ -126,6 +133,12 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
                 Create a team
               </Button>
             </Box>
+          </Grid>
+          <Grid>
+            <FormControlLabel
+              control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
+              label="Include archived"
+            />
           </Grid>
         </Box>
         {hasTeams && (

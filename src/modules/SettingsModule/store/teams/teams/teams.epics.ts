@@ -9,8 +9,8 @@ import { ITeam } from './teams.types';
 const loadTeamsEpic: Epic = (action$, state$, { apiService }) =>
   action$.pipe(
     ofType(loadTeamsSettingsRequest),
-    switchMap(() =>
-      apiService.get(`/enterprise/dashboard/settings/teams`).pipe(
+    switchMap(({ payload: { includeArchived = true } }) =>
+      apiService.get(`/enterprise/dashboard/settings/teams?includeArchived=${includeArchived}`).pipe(
         map((response: { success: true; teams: ITeam[] }) => loadTeamsSettingsSuccess(response.teams)),
         catchError(handleError(handlers.handleAnyError(loadTeamsSettingsFail))),
       ),

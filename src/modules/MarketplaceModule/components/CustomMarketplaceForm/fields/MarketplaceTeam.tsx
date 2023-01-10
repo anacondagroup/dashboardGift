@@ -9,7 +9,7 @@ import {
   AutocompleteGetTagProps,
   AutocompleteRenderOptionState,
 } from '@mui/material';
-import { useGetUserTeamsQuery, usersTeamsAdapter } from '@alycecom/services';
+import { useGetUserTeamsExcludeArchivedQuery, usersTeamsAdapter } from '@alycecom/services';
 import { makeStyles } from '@mui/styles';
 import { Controller } from 'react-hook-form';
 import { EntityId } from '@alycecom/utils';
@@ -28,7 +28,7 @@ const useStyles = makeStyles<AlyceTheme>(() => ({
 
 const MarketplaceTeam = ({ error, control }: IFieldProps<never, false>): JSX.Element => {
   const classes = useStyles();
-  const { selectEntities, selectIds } = useGetUserTeamsQuery(undefined, {
+  const { selectEntities, selectIds } = useGetUserTeamsExcludeArchivedQuery(undefined, {
     selectFromResult: result => ({
       ...result,
       ...usersTeamsAdapter.getSelectors(() => result?.data ?? usersTeamsAdapter.getInitialState()),
