@@ -37,7 +37,7 @@ export const createTeamEpic: Epic = (action$, state$, { apiService, messagesServ
           return [
             createTeam.fulfilled(),
             setTeamSidebarStep({ step: sideBarStep, teamId: data.teamId }),
-            loadTeamsSettingsRequest(),
+            loadTeamsSettingsRequest({}),
             loadTeamsRequest(),
             ...(isNewGroup ? [appApi.util.invalidateTags([{ type: BillingApiTag.BillingGroup, id: 'LIST' }])] : []),
             TrackEvent.actions.trackEvent({
@@ -85,7 +85,7 @@ export const renameTeamEpic: Epic = (action$, state$, { apiService, messagesServ
             return [
               renameTeam.fulfilled(),
               setTeamSidebarStep({ step: sideBarStep, teamId }),
-              loadTeamsSettingsRequest(),
+              loadTeamsSettingsRequest({}),
               TrackEvent.actions.trackEvent({
                 name: 'Team — renamed',
                 payload: { adminId },

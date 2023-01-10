@@ -115,7 +115,7 @@ const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
             text: 'Team has been unarchived',
           }),
         );
-        dispatch(loadTeamsSettingsRequest());
+        dispatch(loadTeamsSettingsRequest({}));
       });
     }
   }, [dispatch, isSuccess]);

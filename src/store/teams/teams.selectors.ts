@@ -10,6 +10,9 @@ const getTeamsState = (state: IRootState) => state.teams;
 
 export const getTeams = R.pipe(getTeamsState, state => state.teams);
 
+// @ts-ignore
+export const getUnarchivedTeams = R.pipe(getTeamsState, state => state.teams.filter(team => team.archivedAt !== null));
+
 export const getIsLoaded = R.pipe(getTeamsState, state => state.isLoaded);
 
 export const makeGetTeamById = (teamId: string): Selector<IRootState, ITeam | undefined> =>

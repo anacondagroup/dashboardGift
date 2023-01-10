@@ -59,6 +59,7 @@ export interface ITeam {
 }
 
 export interface ITeamExtraData extends ITeam {
+  archivedAt: null;
   belongsToTeam?: boolean;
 }
 

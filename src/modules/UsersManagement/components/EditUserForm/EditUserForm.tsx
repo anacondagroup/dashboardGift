@@ -47,6 +47,7 @@ const EditUserForm = (): JSX.Element => {
   const isLoading = useSelector(getIsOperationPending);
   const externalErrors = useSelector(getErrors);
   const teams = useSelector(getTeams);
+  const activeTeams = teams.filter(team => team.archivedAt !== null);
   const selectedUser = useSelector(getSingleSelectedUser);
   const isItCurrentUser = useSelector(getIsCurrentUserSelected);
 
@@ -137,7 +138,7 @@ const EditUserForm = (): JSX.Element => {
                         limitTags={3}
                         disableClearable
                         disableCloseOnSelect
-                        options={teams}
+                        options={activeTeams}
                         value={value}
                         getOptionLabel={option => option.name}
                         isOptionEqualToValue={checkOptionIsSelected}

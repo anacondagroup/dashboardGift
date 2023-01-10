@@ -30,7 +30,9 @@ const TeamBudgetUtilizations = ({
   showModal,
   toggleModalState,
 }: ITeamBudgetUtilizations) => {
-  const firstThreeTeams = teams.slice(0, 3);
+  // @ts-ignore
+  const activeTeams = teams.filter(team => team.archivedAt === null);
+  const firstThreeTeams = activeTeams.slice(0, 3);
 
   return (
     <Box>
@@ -48,13 +50,13 @@ const TeamBudgetUtilizations = ({
           />
         );
       })}
-      {teams.length > 3 && (
+      {activeTeams.length > 3 && (
         <Typography sx={styles.showAllText} onClick={() => toggleModalState(true)}>
           Show All
         </Typography>
       )}
       <TeamBudgetUtilizationsModal
-        teams={teams}
+        teams={activeTeams}
         budgetUtilizations={budgetUtilizations}
         showModal={showModal}
         toggleModalState={toggleModalState}
