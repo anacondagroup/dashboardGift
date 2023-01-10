@@ -2,7 +2,6 @@ export interface ITeam {
   archivedAt?: string | null;
   id: number;
   name: string;
-  archivedAt?: string | null;
   settings: {
     /* eslint-disable camelcase */
     country_id: number;
