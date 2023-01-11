@@ -58,6 +58,7 @@ export const getDealTypesValues = (
 export const ALYCE_FOUNDATION_DATE = '2015-12-01';
 export const ROI_DATA_PERIODS: TDateRangeOption[] = [
   {
+    key: 'all-times',
     label: 'All Times',
     value: {
       from: ALYCE_FOUNDATION_DATE,
@@ -66,6 +67,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.AllTimes',
   },
   {
+    key: 'mont-to-date',
     label: 'Month to Date',
     value: {
       from: moment().utc().startOf('month').format(REQUEST_DATE_FORMAT),
@@ -74,6 +76,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.MonthToDate',
   },
   {
+    key: 'year-to-date',
     label: 'Year to Date',
     value: {
       from: moment().utc().startOf('year').format(REQUEST_DATE_FORMAT),
@@ -82,6 +85,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.YearToDate',
   },
   {
+    key: 'past-week',
     label: 'Past Week',
     value: {
       from: moment().utc().subtract(1, 'weeks').startOf('week').format(REQUEST_DATE_FORMAT),
@@ -90,6 +94,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.PastWeek',
   },
   {
+    key: 'past-month',
     label: 'Past Month',
     value: {
       from: moment().utc().subtract(1, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
@@ -98,6 +103,7 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.PastMonth',
   },
   {
+    key: 'past-quarter',
     label: 'Past Quarter',
     value: {
       from: moment().utc().subtract(3, 'months').startOf('month').format(REQUEST_DATE_FORMAT),
@@ -106,16 +112,19 @@ export const ROI_DATA_PERIODS: TDateRangeOption[] = [
     testId: 'RoiFilters.TimeRange.PastQuarter',
   },
   {
+    key: 'past-year',
     label: 'Past Year',
     value: {
       from: moment().utc().subtract(365, 'days').startOf('day').format(REQUEST_DATE_FORMAT),
       to: moment().utc().format(REQUEST_DATE_FORMAT),
     },
-    testId: 'RoiFilters.TimeRange.PastQuarter',
+    testId: 'RoiFilters.TimeRange.PastYear',
   },
 ];
 
 export const DEFAULT_ROI_PERIOD = ROI_DATA_PERIODS[5].value;
+
+export const DEFAULT_ROI_PERIOD_NAME = ROI_DATA_PERIODS[5].label;
 
 export const getAvatarLetters = (fullName: string): string =>
   fullName

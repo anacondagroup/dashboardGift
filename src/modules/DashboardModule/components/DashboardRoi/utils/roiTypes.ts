@@ -1,6 +1,7 @@
 import { TRoiPeriod } from '@alycecom/services';
 
 export type TDateRangeOption = {
+  key: string;
   label: string;
   value: TRoiPeriod;
   testId: string;
