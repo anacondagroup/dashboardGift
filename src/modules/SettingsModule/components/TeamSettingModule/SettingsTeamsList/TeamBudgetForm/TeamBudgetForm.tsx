@@ -92,7 +92,7 @@ interface ITeamBudgetFormProps {
 
 const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
   const dispatch = useDispatch();
-  const budget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const budget = useSelector(getBudgetByTeamId(teamId));
 
   const methods = useForm<TBudgetCreateParams>({
     mode: 'all',
