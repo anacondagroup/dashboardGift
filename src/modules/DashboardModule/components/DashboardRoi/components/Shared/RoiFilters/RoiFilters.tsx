@@ -2,10 +2,9 @@ import React, { memo, useCallback, useRef, useState } from 'react';
 import { REQUEST_DATE_FORMAT, SelectFilter, DateRangeSelectorCalendar, DISPLAY_DATE_FORMAT } from '@alycecom/ui';
 import { MenuItem, Box, Grid, Popover } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { TRoiPeriod } from '@alycecom/services';
 import moment from 'moment';
 
-import { getRoiCurrentPeriod } from '../../../store/filters/filters.selectors';
+import { getRoiCurrentPeriodName, getRoiCurrentPeriod } from '../../../store/filters/filters.selectors';
 import { setRoiFilters } from '../../../store/filters';
 import { ALYCE_FOUNDATION_DATE, ROI_DATA_PERIODS } from '../../../utils';
 
@@ -26,7 +25,7 @@ const styles = {
 
 const TODAY = moment().format(REQUEST_DATE_FORMAT);
 const TOMORROW = moment().add(1, 'days').format(REQUEST_DATE_FORMAT);
-const getComputedValue = (value: TRoiPeriod) => `${value.from}-${value.to}`;
+const CUSTOM_RANGE = 'Custom Range';
 
 const RoiFilters = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -36,13 +35,14 @@ const RoiFilters = (): JSX.Element => {
   const [from, setFrom] = useState(TODAY);
   const [to, setTo] = useState(TODAY);
   const period = useSelector(getRoiCurrentPeriod);
+  const currentPeriodName = useSelector(getRoiCurrentPeriodName);
 
-  const handleDateRangeSelect = (newPeriod: typeof period | null) => {
+  const handleDateRangeSelect = (newPeriod: typeof period | null, periodName?: string) => {
     if (newPeriod === null) {
       setIsCalendarOpened(true);
       return;
     }
-    dispatch(setRoiFilters({ period: newPeriod }));
+    dispatch(setRoiFilters({ period: newPeriod, periodName }));
   };
 
   const handleCloseCalendar = useCallback(() => {
@@ -53,7 +53,7 @@ const RoiFilters = (): JSX.Element => {
       setFrom(range.from);
       setTo(range.to);
       setIsCalendarOpened(false);
-      dispatch(setRoiFilters({ period: range }));
+      dispatch(setRoiFilters({ period: range, periodName: CUSTOM_RANGE }));
     },
     [dispatch],
   );
@@ -68,27 +68,23 @@ const RoiFilters = (): JSX.Element => {
           <SelectFilter
             name="filters"
             label="Time Range"
-            value={getComputedValue(period)}
+            value={currentPeriodName}
             fullWidth
             selectProps={{
               ref: selectRef,
             }}
             renderItems={() => [
-              ...ROI_DATA_PERIODS.map(({ label, value, testId }) => (
+              ...ROI_DATA_PERIODS.map(({ key, label, value, testId }) => (
                 <MenuItem
-                  key={getComputedValue(value)}
-                  value={getComputedValue(value)}
+                  key={key}
+                  value={label}
                   data-testid={testId}
-                  onClick={() => handleDateRangeSelect(value)}
+                  onClick={() => handleDateRangeSelect(value, label)}
                 >
                   {label}
                 </MenuItem>
               )),
-              <MenuItem
-                key="custom-range"
-                value={getComputedValue({ from, to })}
-                onClick={() => handleDateRangeSelect(null)}
-              >
+              <MenuItem key="custom-range" value={CUSTOM_RANGE} onClick={() => handleDateRangeSelect(null)}>
                 Custom Range
               </MenuItem>,
             ]}
