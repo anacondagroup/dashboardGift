@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { Tooltip, Icon, Divider, SearchField } from '@alycecom/ui';
 import { Control } from 'react-hook-form';
@@ -32,7 +32,7 @@ function getSearchedMembers(users: IUser[], searchValue: string): IUser[] {
 
 const TeamMembersBudget = ({ teamId, control }: ITeamMembersBudgetProps): JSX.Element => {
   const dispatch = useDispatch();
-  const existingBudget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const existingBudget = useSelector(getBudgetByTeamId(teamId));
 
   const [searchValue, setSearchValue] = useState('');
   const handleOnChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value);

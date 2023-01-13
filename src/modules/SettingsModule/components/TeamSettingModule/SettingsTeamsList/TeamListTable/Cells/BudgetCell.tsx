@@ -28,7 +28,7 @@ export interface IBudgetCellProps {
 const BudgetCell = ({ teamId }: IBudgetCellProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const budget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const budget = useSelector(getBudgetByTeamId(teamId));
   const isLoading = useSelector(getIsBudgetLoading);
 
   const handleChangeBudget = () => {

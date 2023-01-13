@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { TableCellTooltip, NumberFormat, Icon } from '@alycecom/ui';
 import {
@@ -70,6 +70,12 @@ export interface ITeamMembersBudgetTableProps {
   control: Control<TBudgetCreateParams>;
 }
 
+const skeletonLoading = Array.from(Array(4).keys()).map((item: number) => (
+  <CustomTableCell key={item}>
+    <Skeleton width="100%" sx={styles.skeletonContainer} />
+  </CustomTableCell>
+));
+
 const CustomTextInput = (props: TextFieldProps) => <TextField {...props} sx={styles.budgetField} />;
 
 const TeamMembersBudgetTable = ({
@@ -79,7 +85,7 @@ const TeamMembersBudgetTable = ({
   control,
 }: ITeamMembersBudgetTableProps): JSX.Element => {
   const dispatch = useDispatch();
-  const existingBudget = useSelector(useMemo(() => getBudgetByTeamId(teamId), [teamId]));
+  const existingBudget = useSelector(getBudgetByTeamId(teamId));
   const teamUtilizations = useSelector(getTeamBudgetUtilization);
   const isAllUsersSelected = useSelector(getIsAllUsersSelected);
   const selectedUsersIds = useSelector(getSelectedUsersIds);
@@ -123,16 +129,6 @@ const TeamMembersBudgetTable = ({
     }
   }, [users, append, fields, existingBudget, teamMembersHaveLoaded]);
 
-  const skeletonLoading = React.useCallback(
-    () =>
-      Array.from(Array(4).keys()).map((item: number) => (
-        <CustomTableCell key={item}>
-          <Skeleton width="100%" sx={styles.skeletonContainer} />
-        </CustomTableCell>
-      )),
-    [],
-  );
-
   const handleSelectAll = useCallback(
     (checked: Boolean) => {
       const userIds = users.map(user => user.id);
@@ -146,11 +142,6 @@ const TeamMembersBudgetTable = ({
       dispatch(toggleUserSelection({ user: user.id as EntityId, checked, totalUsers: users.length }));
     },
     [users, dispatch],
-  );
-
-  const getIsUserSelected = useCallback(
-    (userId: EntityId) => selectedUsersIds.some((selectedUser: EntityId) => selectedUser === userId),
-    [selectedUsersIds],
   );
 
   const onBulkEditChange = useCallback((option: string) => {
@@ -227,26 +218,29 @@ const TeamMembersBudgetTable = ({
           </TableHead>
           <TableBody>
             {!teamMembersHaveLoaded ? (
-              <TableRow data-testid="TeamMembersBudget.TableLoading">{skeletonLoading()}</TableRow>
+              <TableRow data-testid="TeamMembersBudget.TableLoading">{skeletonLoading}</TableRow>
             ) : (
               fields.map((field, index) => {
                 const userForField: IUser | undefined = users.find(user => user.id === field.userId);
-                const userUtilization = teamUtilizations.find(
-                  utilization => userForField && utilization.userId === userForField.id,
-                );
+                if (!userForField) {
+                  return null;
+                }
+
+                const userUtilization = teamUtilizations.find(utilization => utilization.userId === userForField.id);
                 const userUtilizationValue = userUtilization ? Number(userUtilization[pausingGiftingOnFieldName]) : 0;
                 const teamMemberBudgetFieldName = `${BudgetCreateField.TeamMemberBudgets}.${index}.budget` as const;
 
                 const isUtilizationOverBudget =
                   !Number.isNaN(userUtilizationValue) && userUtilizationValue > teamMemberBudgets[index].budget;
+                const isUserSelected = selectedUsersIds.includes(userForField.id);
 
-                return userForField ? (
+                return (
                   <TableRow key={field.id}>
                     <CustomTableCell>
                       <Checkbox
                         color="primary"
-                        checked={getIsUserSelected(userForField.id)}
-                        onChange={() => handleSelectUser(userForField, getIsUserSelected(userForField.id))}
+                        checked={isUserSelected}
+                        onChange={() => handleSelectUser(userForField, isUserSelected)}
                         data-testid="TeamMembersBudgetTable.UserSelect.SelectAll"
                       />
                     </CustomTableCell>
@@ -309,7 +303,7 @@ const TeamMembersBudgetTable = ({
                       <NumberFormat format="$0,0.00">{userUtilizationValue}</NumberFormat>
                     </TableCell>
                   </TableRow>
-                ) : null;
+                );
               })
             )}
           </TableBody>
