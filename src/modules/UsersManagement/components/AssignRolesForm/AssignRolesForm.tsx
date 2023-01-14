@@ -41,6 +41,7 @@ const AssignRolesForm = (): JSX.Element => {
   const userDraftsCount = useSelector(getUserDraftsCount);
   const isBulkFlow = useSelector(getIsBulkFlow);
 
+  const activeTeams = teams.filter(team => team.archivedAt === null);
   const stepsCount = isBulkFlow ? 4 : 2;
 
   const methods = useForm<IUserAssignParams>({
@@ -137,7 +138,7 @@ const AssignRolesForm = (): JSX.Element => {
                         limitTags={3}
                         disableClearable
                         disableCloseOnSelect
-                        options={teams}
+                        options={activeTeams}
                         value={value}
                         getOptionLabel={option => option.name}
                         isOptionEqualToValue={checkOptionIsSelected}

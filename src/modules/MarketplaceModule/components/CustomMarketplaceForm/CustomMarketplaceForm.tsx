@@ -34,6 +34,7 @@ import {
 } from '../../store/customMarketplace/customMarketplace.actions';
 import { DataChangeReason } from '../../store/customMarketplace/customMarketplace.reducer';
 import { MARKETPLACE_ROUTES } from '../../routePaths';
+import { getTeams } from '../../../../store/teams/teams.selectors';
 import { MarketplaceMode } from '../../types';
 
 import MarketplaceName from './fields/MarketplaceName';
@@ -95,6 +96,7 @@ const CustomMarketplaceForm = ({ onCancel }: ICustomMarketplaceFormProps): JSX.E
   const { isLoading: isTeamsLoading } = useGetUserTeamsQuery(undefined, { skip: true });
   const isCustomMarketplaceLoading = useSelector(getCustomMarketplaceLoading);
   const isLoaded = useSelector(getIsLoaded);
+  const teams = useSelector(getTeams);
   const isCountriesLoaded = useSelector(CommonData.selectors.getIsCommonDataLoaded);
   const dataChangeReason = useSelector(getDataChangeReason);
   const externalErrors = useSelector(getCustomMarketplaceErrors);
@@ -124,7 +126,7 @@ const CustomMarketplaceForm = ({ onCancel }: ICustomMarketplaceFormProps): JSX.E
     if (!id && !!defaultSelectedTeam) {
       setValue(CustomMarketplaceField.TeamIds, [defaultSelectedTeam], { shouldDirty: false });
     }
-  }, [defaultSelectedTeam, id, setValue]);
+  }, [defaultSelectedTeam, id, setValue, teams]);
 
   useEffect(() => {
     if (isCreated && id) {

@@ -1,5 +1,16 @@
-import React, { memo, useCallback, useEffect } from 'react';
-import { Autocomplete, Box, Button, FormControl, FormHelperText, Grid, TextField, Typography } from '@mui/material';
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Autocomplete,
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Grid,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { AlyceTheme, ModalConfirmationMessage } from '@alycecom/ui';
 import { Controller, FieldError, FormProvider, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -28,10 +39,11 @@ import usePermissions from '../../../../../hooks/usePermissions';
 import { PermissionKeys } from '../../../../../constants/permissions.constants';
 import { createReport } from '../../../store/reporting/reporting.actions';
 import { setSidebarStep } from '../../../store/reportingSidebar/reportingSidebar.actions';
-import { ITeam } from '../../../../UsersManagement/store/usersManagement.types';
+import { ITeam } from '../../../../../store/teams/teams.types';
 import { formattedSendDay } from '../../../../SettingsModule/helpers/reporting.helpers';
 import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 import { useSetFormDirtyEffect } from '../../../hooks/useSetFormDirtyEffect';
+import { renderTeamLabel } from '../../../../../helpers';
 
 import ReportingFrequency from './ReportingFrequency';
 import ReportingCriteria from './ReportingCriteria';
@@ -72,6 +84,10 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
     marginBottom: spacing(4),
     marginTop: spacing(2),
   },
+  checkboxLabel: {
+    marginLeft: 0,
+    marginTop: 15,
+  },
 }));
 
 interface ICreateReport {
@@ -83,6 +99,7 @@ interface ICreateReport {
 const CreateReport = ({ stepName, stepType, stepTitle }: ICreateReport): JSX.Element => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [includeArchived, setIncludeArchived] = useState(false);
   const trackEvent = useReportingTrackEvent();
   const allTeams: ITeam[] = useSelector(getTeams);
   const canManage: number[] = useSelector(User.selectors.getUserCanManageTeams);
@@ -99,6 +116,17 @@ const CreateReport = ({ stepName, stepType, stepTitle }: ICreateReport): JSX.Ele
   const timeZone = moment.tz.guess();
   const checkOptionIsSelected = useCallback((option: ITeam, value: ITeam): boolean => option.id === value.id, []);
   const handleDiscardModal = useCallback(() => handleClose(), [handleClose]);
+
+  const archivedTeams = teams.filter(item => item.archivedAt !== null);
+  const isShowArchivedToggle = useMemo(() => archivedTeams.length > 0, [archivedTeams]);
+  const targetTeams = includeArchived ? teams : teams.filter(item => item.archivedAt === null);
+  const handleIncludeArchived = useCallback(
+    (_, status) => {
+      trackEvent('Include archived — clicked', { page: 'giftingInsights', includeArchived: status ? 'yes' : 'no' });
+      setIncludeArchived(status);
+    },
+    [trackEvent, setIncludeArchived],
+  );
 
   const handleGoBackToAutomatedReport = useCallback(() => {
     dispatch(setSidebarStep({ step: ReportingSidebarCategory[stepName].automatedReport }));
@@ -117,7 +145,7 @@ const CreateReport = ({ stepName, stepType, stepTitle }: ICreateReport): JSX.Ele
     mode: 'all',
     defaultValues: {
       ...formDefaultValues,
-      teams: stepName !== GiftingInsights.teamUsage ? teams : [],
+      teams: stepName !== GiftingInsights.teamUsage ? targetTeams : [],
     },
     resolver: yupResolver(AutomatedReportFormSchema),
   });
@@ -150,6 +178,13 @@ const CreateReport = ({ stepName, stepType, stepTitle }: ICreateReport): JSX.Ele
       <FormProvider {...methods}>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <ReportingCriteria />
+          {isShowArchivedToggle && (
+            <FormControlLabel
+              className={classes.checkboxLabel}
+              control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
+              label="Show archived teams"
+            />
+          )}
           <Box className={classNames(classes.box, classes.selectedTeams)}>
             <Controller
               control={control}
@@ -162,9 +197,9 @@ const CreateReport = ({ stepName, stepType, stepTitle }: ICreateReport): JSX.Ele
                     limitTags={3}
                     disableClearable
                     disableCloseOnSelect
-                    options={teams}
+                    options={targetTeams}
                     value={value}
-                    getOptionLabel={option => option.name}
+                    getOptionLabel={renderTeamLabel}
                     isOptionEqualToValue={checkOptionIsSelected}
                     filterSelectedOptions
                     disabled={!areTeamsLoaded}

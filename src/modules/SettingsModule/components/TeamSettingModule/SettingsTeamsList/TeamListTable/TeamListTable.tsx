@@ -18,7 +18,8 @@ import {
   TableSortLabel,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { Features } from '@alycecom/modules';
+import { Features, HasFeature } from '@alycecom/modules';
+import { TrackEvent } from '@alycecom/services';
 
 import { usePagination } from '../../../../../../hooks/usePagination';
 import EmptyDataset from '../../../../../../components/Shared/EmptyDataset';
@@ -60,7 +61,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
 
   const teams = useSelector(getTeams);
   const teamIds = useSelector(getTeamIds);
-
+  const { trackEvent } = TrackEvent.useTrackEvent();
   const hasBudgetManagementSetup = useSelector(
     Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP),
   );
@@ -71,9 +72,13 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [includeArchived, setIncludeArchived] = useState<boolean>(true);
 
-  const handleIncludeArchived = useCallback(() => {
-    setIncludeArchived(!includeArchived);
-  }, [includeArchived]);
+  const handleIncludeArchived = useCallback(
+    (_, status) => {
+      trackEvent('Include archived — clicked', { page: 'teamsSettings', includeArchived: status ? 'yes' : 'no' });
+      setIncludeArchived(!includeArchived);
+    },
+    [trackEvent, includeArchived],
+  );
 
   const handleSort = useCallback(
     column => {
@@ -134,12 +139,14 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
               </Button>
             </Box>
           </Grid>
-          <Grid>
-            <FormControlLabel
-              control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
-              label="Include archived"
-            />
-          </Grid>
+          <HasFeature featureKey={Features.FLAGS.ARCHIVE_TEAMS}>
+            <Grid>
+              <FormControlLabel
+                control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
+                label="Include archived"
+              />
+            </Grid>
+          </HasFeature>
         </Box>
         {hasTeams && (
           <Table>

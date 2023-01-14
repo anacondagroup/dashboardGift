@@ -91,7 +91,10 @@ const SettingsCreateCampaign = ({ parentUrl }) => {
 
   const enterpriseTeams = useMemo(() => {
     const result = teams.filter(
-      teamItem => !!teamItem.settings.enterprise_mode_enabled && (managedTeams || []).includes(teamItem.id),
+      teamItem =>
+        teamItem.archivedAt === null &&
+        !!teamItem.settings.enterprise_mode_enabled &&
+        (managedTeams || []).includes(teamItem.id),
     );
     if (result.length) {
       onUpdateTeam({ teamId: result[0].id });

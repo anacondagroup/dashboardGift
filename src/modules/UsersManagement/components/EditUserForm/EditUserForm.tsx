@@ -47,7 +47,7 @@ const EditUserForm = (): JSX.Element => {
   const isLoading = useSelector(getIsOperationPending);
   const externalErrors = useSelector(getErrors);
   const teams = useSelector(getTeams);
-  const activeTeams = teams.filter(team => team.archivedAt !== null);
+  const activeTeams = teams.filter(team => team.archivedAt === null);
   const selectedUser = useSelector(getSingleSelectedUser);
   const isItCurrentUser = useSelector(getIsCurrentUserSelected);
 

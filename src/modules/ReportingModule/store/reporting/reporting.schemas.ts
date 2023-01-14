@@ -1,7 +1,7 @@
 import { array, object, string } from 'yup';
 import moment from 'moment-timezone';
 
-import { ITeam } from '../../../UsersManagement/store/usersManagement.types';
+import { ITeam } from '../../../../store/teams/teams.types';
 
 import { monthDays, frequency, hoursList, reportingTimespan, maximumValidDate } from './reporting.constants';
 

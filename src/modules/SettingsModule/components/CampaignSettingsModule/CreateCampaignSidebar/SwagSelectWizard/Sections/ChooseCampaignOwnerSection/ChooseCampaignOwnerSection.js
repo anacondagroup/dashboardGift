@@ -51,11 +51,15 @@ const ChooseCampaignOwnerSection = ({ title, order, status, data, campaignId, is
   const dispatch = useDispatch();
   const user = useSelector(User.selectors.getUser);
 
-  const transformMemberToOption = useCallback(member => ({ label: member.name, value: member.id }), []);
+  const transformMemberToOption = useCallback(
+    member => ({ label: member.name, value: member.id, archivedAt: member.archivedAt }),
+    [],
+  );
   const { teamsOptions, teamId, setTeamId, isTeamsLoading } = useTeamSelect({
     selectedId: data.team && data.team.id,
     transformMemberToOption,
   });
+
   const { membersOptions, ownerId, setOwnerId, isMembersLoading } = useTeamOwnerSelect(teamId, {
     selectedId: user.id,
     transformMemberToOption,

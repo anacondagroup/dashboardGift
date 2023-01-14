@@ -136,14 +136,21 @@ const DetailsForm = ({ onSubmit, children }: IDetailsFormProps): JSX.Element => 
   }, [reset, data]);
 
   useApplyManualFormErrorsEffect<TDetailsFormValues>(setError, errors);
-  const { useIds, isFulfilled } = CampaignSettings.hooks.useTeams();
-  const teamIds = useIds();
+  const { useEntities, isFulfilled } = CampaignSettings.hooks.useTeams();
+  const teamsMap = useEntities();
+  const teams = useMemo(
+    () =>
+      Object.keys(teamsMap)
+        .map(teamKey => teamsMap[teamKey])
+        .filter(team => team?.archivedAt === null),
+    [teamsMap],
+  );
 
   useEffect(() => {
-    if (isFulfilled && teamIds[0] && !campaignId) {
-      setValue(DetailsFormFields.Team, teamIds[0]);
+    if (isFulfilled && teams[0].id && !campaignId) {
+      setValue(DetailsFormFields.Team, teams[0].id);
     }
-  }, [setValue, isFulfilled, teamIds, campaignId]);
+  }, [setValue, isFulfilled, teams, campaignId]);
 
   useEffect(() => {
     if (data?.teamMemberIds) {

@@ -34,7 +34,7 @@ const useTeamSelect = ({
   }, [dispatch]);
 
   useEffect(() => {
-    setTeamsOptions(teams.map(transformMemberToOption));
+    setTeamsOptions(teams.filter(team => team?.archivedAt === null).map(transformMemberToOption));
   }, [teams, transformMemberToOption]);
 
   useEffect(() => {

@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { SelectFilter } from '@alycecom/ui';
 import { Control, useController } from 'react-hook-form';
-import { EntityId } from '@alycecom/utils';
 import { CampaignSettings } from '@alycecom/modules';
 import { MenuItem, TextFieldProps } from '@mui/material';
 
@@ -15,10 +14,15 @@ export interface IAssignedTeamProps extends Omit<TextFieldProps, 'error'> {
 
 const Team = ({ control, ...otherProps }: IAssignedTeamProps): JSX.Element => {
   const { campaignId } = useSwag();
-  const { useIds, useEntities, isPending, isFulfilled } = CampaignSettings.hooks.useTeams();
-  const teamIds = useIds();
+  const { useEntities, isPending, isFulfilled } = CampaignSettings.hooks.useTeams();
   const teamsMap = useEntities();
-  const getTeamLabel = (id: EntityId) => teamsMap[id]?.name ?? '';
+  const teams = useMemo(
+    () =>
+      Object.keys(teamsMap)
+        .map(teamKey => teamsMap[teamKey])
+        .filter(team => team?.archivedAt === null),
+    [teamsMap],
+  );
 
   const {
     fieldState: { error },
@@ -29,10 +33,10 @@ const Team = ({ control, ...otherProps }: IAssignedTeamProps): JSX.Element => {
   });
 
   useEffect(() => {
-    if (isFulfilled && teamIds[0] && !campaignId) {
-      onChange(teamIds[0]);
+    if (isFulfilled && teams[0].id && !campaignId) {
+      onChange(teams[0].id);
     }
-  }, [onChange, isFulfilled, teamIds, campaignId]);
+  }, [onChange, isFulfilled, teams, campaignId]);
 
   return (
     <SelectFilter
@@ -52,9 +56,9 @@ const Team = ({ control, ...otherProps }: IAssignedTeamProps): JSX.Element => {
       helperText={error?.message}
       classes={otherProps.classes}
       renderItems={() =>
-        teamIds.map(id => (
-          <MenuItem key={id} value={id}>
-            {getTeamLabel(id)}
+        teams.map(team => (
+          <MenuItem key={team.id} value={team.id}>
+            {team.name}
           </MenuItem>
         ))
       }

@@ -9,10 +9,12 @@ const teamsMock = [
   {
     id: 1,
     name: 'Test team 1',
+    archivedAt: null,
   },
   {
     id: 2,
     name: 'Test team 2',
+    archivedAt: null,
   },
 ];
 
@@ -20,14 +22,17 @@ const adminsOfFirstTeamMock = [
   {
     id: 3,
     name: 'Admin 1 of first team',
+    archivedAt: null,
   },
   {
     id: 4,
     name: 'Admin 2 of first team',
+    archivedAt: null,
   },
   {
     id: 1122,
     name: 'Charlie Kelly',
+    archivedAt: null,
   },
 ];
 
@@ -35,14 +40,17 @@ const adminsOfSecondTeamMock = [
   {
     id: 5,
     name: 'Admin 1 of second team',
+    archivedAt: null,
   },
   {
     id: 6,
     name: 'Admin 2 of second team',
+    archivedAt: null,
   },
   {
     id: 1122,
     name: 'Charlie Kelly',
+    archivedAt: null,
   },
 ];
 

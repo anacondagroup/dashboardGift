@@ -3,11 +3,15 @@ import { useEffect } from 'react';
 import { EntityId, TDictionary } from '@alycecom/utils';
 import { CampaignSettings, ITeam } from '@alycecom/modules';
 
+interface ExtendTeam {
+  archivedAt?: string | null;
+}
+
 interface ITeamsAdapter {
   ids: EntityId[];
   isLoading: boolean;
   isLoaded: boolean;
-  entities: TDictionary<ITeam>;
+  entities: TDictionary<ITeam & ExtendTeam>;
 }
 
 export const useTeams = (): ITeamsAdapter => {
