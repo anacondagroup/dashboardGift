@@ -22,8 +22,5 @@ export interface ITeam {
     name: string;
   } | null;
   status: TeamStatus;
-  archivedAt: {
-    date: string;
-    timezone: string;
-  } | null;
+  archivedAt?: string | null;
 }

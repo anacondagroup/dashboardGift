@@ -24,11 +24,11 @@
     "yalc:link": "yarn install && yalc add @alycecom/modules @alycecom/services @alycecom/ui @alycecom/hooks @alycecom/utils"
   },
   "dependencies": {
-    "@alycecom/hooks": "119.0.0",
-    "@alycecom/modules": "119.0.0",
-    "@alycecom/services": "119.0.0",
-    "@alycecom/ui": "119.0.0",
-    "@alycecom/utils": "119.0.0",
+    "@alycecom/hooks": "119.1.0",
+    "@alycecom/modules": "119.1.0",
+    "@alycecom/services": "119.1.0",
+    "@alycecom/ui": "119.1.0",
+    "@alycecom/utils": "119.1.0",
     "@date-io/date-fns": "^1.3.9",
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",

@@ -11,7 +11,7 @@ const loadTeamsEpic: Epic = (action$, state$, { apiService, messagesService: { e
   action$.pipe(
     ofType(loadTeamsRequest),
     mergeMap(() =>
-      apiService.get(`/enterprise/dashboard/teams`).pipe(
+      apiService.get(`/enterprise/dashboard/teams?includeArchived=true`).pipe(
         map((response: { teams: ITeam[] }) => loadTeamsSuccess(response.teams)),
         catchError(error => errorHandler({ callbacks: loadTeamsFail, message: error.error || '' })(error)),
       ),

@@ -1,7 +1,6 @@
 import React from 'react';
 import { SelectFilter } from '@alycecom/ui';
 import { Control, useController } from 'react-hook-form';
-import { EntityId } from '@alycecom/utils';
 import { CampaignSettings } from '@alycecom/modules';
 import { Box, MenuItem, TextFieldProps } from '@mui/material';
 
@@ -20,10 +19,11 @@ export interface IAssignedTeamProps extends Omit<TextFieldProps, 'error'> {
 
 const Team = ({ control, onTeamChange, ...otherProps }: IAssignedTeamProps): JSX.Element => {
   const { isEditor } = useProspecting();
-  const { useIds, useEntities, isPending } = CampaignSettings.hooks.useTeams();
-  const teamIds = useIds();
+  const { useEntities, isPending } = CampaignSettings.hooks.useTeams();
   const teamsMap = useEntities();
-  const getTeamLabel = (id: EntityId) => teamsMap[id]?.name ?? '';
+  const teams = Object.keys(teamsMap)
+    .map(teamKey => teamsMap[teamKey])
+    .filter(team => team?.archivedAt === null);
 
   const {
     fieldState: { error },
@@ -37,7 +37,7 @@ const Team = ({ control, onTeamChange, ...otherProps }: IAssignedTeamProps): JSX
     return (
       <>
         <SFormLabel sx={{ pb: 1 }}>Team</SFormLabel>
-        <Box color="primary.main">{teamsMap[value]?.name}</Box>
+        <Box color="primary.main">{teams.find(team => team.id === value)?.name}</Box>
       </>
     );
   }
@@ -61,9 +61,9 @@ const Team = ({ control, onTeamChange, ...otherProps }: IAssignedTeamProps): JSX
       helperText={error?.message}
       classes={otherProps.classes}
       renderItems={() =>
-        teamIds.map(id => (
-          <MenuItem key={id} value={id}>
-            {getTeamLabel(id)}
+        teams.map(team => (
+          <MenuItem key={team.id} value={team.id}>
+            {team.name}
           </MenuItem>
         ))
       }

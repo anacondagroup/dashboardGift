@@ -80,9 +80,7 @@ const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
   const isTeamActive = team?.status === TeamStatus.active;
 
   const isArchivedAtVisible = hasArchiveTeamsActions && isTeamArchived && team?.archivedAt;
-  const archivedText = isArchivedAtVisible
-    ? `Archived ${moment(team?.archivedAt?.date).format(SHORT_DATE_FORMAT)}`
-    : '';
+  const archivedText = isArchivedAtVisible ? `Archived ${moment(team?.archivedAt).format(SHORT_DATE_FORMAT)}` : '';
 
   const menuItems = useMemo(
     () => [

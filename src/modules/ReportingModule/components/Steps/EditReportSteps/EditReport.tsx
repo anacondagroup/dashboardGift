@@ -1,5 +1,16 @@
-import React, { memo, useCallback, useMemo, useEffect } from 'react';
-import { Box, Button, FormControl, FormHelperText, Grid, TextField, Typography, Autocomplete } from '@mui/material';
+import React, { memo, useCallback, useMemo, useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  Grid,
+  TextField,
+  Typography,
+  Autocomplete,
+  Switch,
+  FormControlLabel,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 import { Controller, FieldError, useForm, FormProvider } from 'react-hook-form';
@@ -18,7 +29,7 @@ import {
   reportingTimespan,
 } from '../../../store/reporting/reporting.constants';
 import StepSection from '../../StepSection';
-import { ITeam } from '../../../../UsersManagement/store/usersManagement.types';
+import { ITeam } from '../../../../../store/teams/teams.types';
 import { deleteReport, editReport } from '../../../store/reporting/reporting.actions';
 import { getIsLoaded, getTeams, getTeamsByAdmin } from '../../../../../store/teams/teams.selectors';
 import { PermissionKeys } from '../../../../../constants/permissions.constants';
@@ -38,6 +49,7 @@ import { formattedSendDay } from '../../../../SettingsModule/helpers/reporting.h
 import { useReportingTrackEvent } from '../../../hooks/useReportingTrackEvent';
 import { useSetFormDirtyEffect } from '../../../hooks/useSetFormDirtyEffect';
 import { ReportingFrequencyEnum } from '../../../../SettingsModule/constants/reporting.constants';
+import { renderTeamLabel } from '../../../../../helpers';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   box: {
@@ -83,6 +95,10 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
     marginBottom: spacing(4),
     marginTop: spacing(2),
   },
+  checkboxLabel: {
+    marginLeft: 0,
+    marginTop: 15,
+  },
 }));
 
 interface IEditReport {
@@ -94,6 +110,7 @@ const EditReport = ({ stepType, stepName }: IEditReport): JSX.Element => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const trackEvent = useReportingTrackEvent();
+  const [includeArchived, setIncludeArchived] = useState(false);
   const allTeams: ITeam[] = useSelector(getTeams);
   const canManage: number[] = useSelector(User.selectors.getUserCanManageTeams);
   const isTeamsLoaded = useSelector(getIsLoaded);
@@ -110,9 +127,20 @@ const EditReport = ({ stepType, stepName }: IEditReport): JSX.Element => {
   const report: IReportInfo | undefined = useSelector(getReportToEdit);
   const reportId = useSelector(getReportIdToEdit);
 
+  const archivedTeams = teams.filter(item => item.archivedAt !== null);
+  const isShowArchivedToggle = useMemo(() => archivedTeams.length > 0, [archivedTeams]);
+  const targetTeams = includeArchived ? teams : teams.filter(item => item.archivedAt !== null);
+  const handleIncludeArchived = useCallback(
+    (_, status) => {
+      trackEvent('Include archived — clicked', { page: 'giftingInsights', includeArchived: status ? 'yes' : 'no' });
+      setIncludeArchived(status);
+    },
+    [trackEvent, setIncludeArchived],
+  );
+
   const methods = useForm<TAutomatedReportForm>({
     mode: 'all',
-    defaultValues: { ...formDefaultValues, teams },
+    defaultValues: { ...formDefaultValues, teams: targetTeams },
     resolver: yupResolver(AutomatedReportFormSchema),
   });
   const {
@@ -180,6 +208,13 @@ const EditReport = ({ stepType, stepName }: IEditReport): JSX.Element => {
       <FormProvider {...methods}>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
           <ReportingCriteria />
+          {isShowArchivedToggle && (
+            <FormControlLabel
+              className={classes.checkboxLabel}
+              control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
+              label="Show archived teams"
+            />
+          )}
           <Box className={classNames(classes.box, classes.selectedTeams)}>
             <Controller
               control={control}
@@ -192,9 +227,9 @@ const EditReport = ({ stepType, stepName }: IEditReport): JSX.Element => {
                     limitTags={3}
                     disableClearable
                     disableCloseOnSelect
-                    options={teams}
+                    options={targetTeams}
                     value={value}
-                    getOptionLabel={option => option.name}
+                    getOptionLabel={renderTeamLabel}
                     isOptionEqualToValue={checkOptionIsSelected}
                     filterSelectedOptions
                     disabled={!isTeamsLoaded}

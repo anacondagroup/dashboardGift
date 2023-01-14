@@ -1,10 +1,19 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { AlyceTheme, createRangeItems, DateRangeSelect, REQUEST_DATE_FORMAT } from '@alycecom/ui';
 import { Controller, FieldError, useForm, FormProvider } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import classNames from 'classnames';
-import { Autocomplete, Box, FormControl, FormHelperText, TextField, Typography } from '@mui/material';
+import {
+  Autocomplete,
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Switch,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { User } from '@alycecom/modules';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -18,11 +27,12 @@ import StepSection from '../StepSection';
 import { getIsLoaded, getTeams, getTeamsByAdmin } from '../../../../store/teams/teams.selectors';
 import { TDownloadReportForm, DownloadReportFormSchema } from '../../store/reporting/reporting.schemas';
 import { PermissionKeys } from '../../../../constants/permissions.constants';
-import { ITeam } from '../../../UsersManagement/store/usersManagement.types';
+import { ITeam } from '../../../../store/teams/teams.types';
 import { getDownloadReportPending } from '../../store/reporting/reporting.selectors';
 import { downloadReport } from '../../store/reporting/reporting.actions';
 import { makeHasPermissionSelector } from '../../../../store/common/permissions/permissions.selectors';
 import { useReportingTrackEvent } from '../../hooks/useReportingTrackEvent';
+import { renderTeamLabel } from '../../../../helpers';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   box: {
@@ -50,6 +60,10 @@ const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
     marginTop: spacing(2),
     marginBottom: spacing(4.6),
   },
+  checkboxLabel: {
+    marginLeft: 0,
+    marginTop: 15,
+  },
 }));
 
 interface IDownloadReportProps {
@@ -72,15 +86,25 @@ const DownloadReports = ({ stepName, stepType, stepTitle }: IDownloadReportProps
   const org = useSelector(User.selectors.getOrgId) as number;
   const isDownloadReportPending = useSelector(getDownloadReportPending);
   const userEmail = useSelector(User.selectors.getUserEmail) as string;
-
+  const [includeArchived, setIncludeArchived] = useState(false);
   const teams = !hasOrganizationSettings ? teamsByAdmin : allTeams;
   const rangeItems = useMemo(() => createRangeItems(REQUEST_DATE_FORMAT), []);
+  const archivedTeams = teams.filter(item => item.archivedAt !== null);
+  const isShowArchivedToggle = useMemo(() => archivedTeams.length > 0, [archivedTeams]);
+  const targetTeams = includeArchived ? teams : teams.filter(item => item.archivedAt === null);
+  const handleIncludeArchived = useCallback(
+    (_, status) => {
+      trackEvent('Include archived — clicked', { page: 'giftingInsights', includeArchived: status ? 'yes' : 'no' });
+      setIncludeArchived(status);
+    },
+    [trackEvent, setIncludeArchived],
+  );
 
   const methods = useForm<TDownloadReportForm>({
     mode: 'all',
     defaultValues: {
       reportingTimeframe: rangeItems[4].value,
-      teams: stepName !== GiftingInsights.teamUsage ? teams : [],
+      teams: stepName !== GiftingInsights.teamUsage ? targetTeams : [],
     },
     resolver: yupResolver(DownloadReportFormSchema),
   });
@@ -117,7 +141,7 @@ const DownloadReports = ({ stepName, stepType, stepTitle }: IDownloadReportProps
     <StepSection step={stepType} title={stepTitle}>
       <FormProvider {...methods}>
         <Box component="form" onSubmit={handleSubmit(onSubmit)}>
-          <Box className={classNames(classes.box, classes.reportingTimeframe)}>
+          <Box className={classNames(classes.box, classes.reportingTimeframe)} display="inline-block">
             <Controller
               control={control}
               name="reportingTimeframe"
@@ -140,6 +164,14 @@ const DownloadReports = ({ stepName, stepType, stepTitle }: IDownloadReportProps
             )}
           </Box>
 
+          {isShowArchivedToggle && (
+            <FormControlLabel
+              className={classes.checkboxLabel}
+              control={<Switch checked={includeArchived} onChange={handleIncludeArchived} color="primary" />}
+              label="Show archived teams"
+            />
+          )}
+
           <Box className={classNames(classes.box, classes.selectTeams)}>
             <Controller
               control={control}
@@ -152,9 +184,9 @@ const DownloadReports = ({ stepName, stepType, stepTitle }: IDownloadReportProps
                     limitTags={3}
                     disableClearable
                     disableCloseOnSelect
-                    options={teams}
+                    options={targetTeams}
                     value={value}
-                    getOptionLabel={option => option.name}
+                    getOptionLabel={renderTeamLabel}
                     isOptionEqualToValue={checkOptionIsSelected}
                     filterSelectedOptions
                     disabled={!isLoaded}

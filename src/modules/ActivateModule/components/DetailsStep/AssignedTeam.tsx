@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { MenuItem, TextFieldProps } from '@mui/material';
 import { SelectFilter } from '@alycecom/ui';
 import { Control, Controller, Path, UseFormSetValue } from 'react-hook-form';
-import { EntityId } from '@alycecom/utils';
 import { useSelector } from 'react-redux';
 
 import { useTeams } from '../../hooks/useTeams';
@@ -27,15 +26,21 @@ const AssignedTeam = ({
   ...otherProps
 }: TAssignedTeamProps): JSX.Element => {
   const { mode } = useSelector(getActivateModuleParams);
-  const { ids: teamIds, isLoading, isLoaded, entities: teamsMap } = useTeams();
-  const getTeamLabel = (id: EntityId) => teamsMap[id]?.name ?? '';
+  const { isLoading, isLoaded, entities: teamsMap } = useTeams();
+  const teams = useMemo(
+    () =>
+      Object.keys(teamsMap)
+        .map(teamKey => teamsMap[teamKey])
+        .filter(team => team.archivedAt === null),
+    [teamsMap],
+  );
 
   useEffect(() => {
-    if (isLoaded && teamIds[0] && !draftId) {
+    if (isLoaded && teams[0] && !draftId) {
       // @ts-ignore
-      setValue(name, teamIds[0]);
+      setValue(name, teams[0].id);
     }
-  }, [setValue, isLoaded, teamIds, draftId, name]);
+  }, [setValue, isLoaded, teams, draftId, name]);
 
   return (
     <Controller
@@ -59,9 +64,9 @@ const AssignedTeam = ({
           helperText={error}
           classes={otherProps.classes}
           renderItems={() =>
-            teamIds.map(id => (
-              <MenuItem key={id} value={id}>
-                {getTeamLabel(id)}
+            teams.map(team => (
+              <MenuItem key={team.id} value={team.id}>
+                {team.name}
               </MenuItem>
             ))
           }

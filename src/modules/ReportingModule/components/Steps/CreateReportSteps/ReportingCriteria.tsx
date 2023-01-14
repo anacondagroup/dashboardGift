@@ -9,6 +9,7 @@ import { reportingTimespan } from '../../../store/reporting/reporting.constants'
 const useStyles = makeStyles(({ spacing }) => ({
   reportingTimespan: {
     width: 320,
+    display: 'inline-block',
   },
   title: {
     marginBottom: spacing(2.8),
