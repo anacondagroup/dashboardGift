@@ -73,7 +73,7 @@ const ArchiveTeamConfirmation = (): JSX.Element => {
       isLoading={isLoading}
     >
       <Typography>
-        Once archived, the gifts will be expired, active campaigns will be archived and team data will be excluded from
+        Once archived, the gifts will be expired, active campaigns will be expired and team data will be excluded from
         reporting.
       </Typography>
     </ModalConfirmationMessage>
