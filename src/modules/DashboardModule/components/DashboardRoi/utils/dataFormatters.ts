@@ -24,6 +24,10 @@ export const getRoiDatesRange = (startDate?: Date, endDate?: Date): string => {
   const start = moment(startDate);
   const end = moment(endDate);
 
+  if (start.isSameOrAfter(end)) {
+    return `${start.format('MMM D[/]YYYY')}`;
+  }
+
   const canBeShortened = start.month() === end.month() && start.year() === end.year();
 
   return `${start.format('MMM D')}-${canBeShortened ? '' : end.format('MMM ')}${end.format('D[/]YYYY')}`;
