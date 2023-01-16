@@ -63,12 +63,19 @@ const SfdcRoiInfluencedARR = (): JSX.Element => {
 
   const renderTooltip = (tooltipData: Partial<TTotalInfluencedByDeal>) => {
     const { startDate, endDate } = tooltipData;
-    const dates = `${moment(startDate).format('MMM D, YYYY')} - ${moment(endDate).format('MMM D, YYYY')}`;
+    if (!startDate || !endDate) {
+      return null;
+    }
+    const startDateFormatted = moment(startDate).format('MMM D, YYYY');
+    const endDateFormatted = moment(endDate).format('MMM D, YYYY');
+
+    const tooltipTitle =
+      startDateFormatted === endDateFormatted ? startDateFormatted : `${startDateFormatted} - ${endDateFormatted}`;
     const tooltipDataFiltered = Object.entries(tooltipData).filter(keyEntry => legendKeys.includes(keyEntry[0]));
 
     return (
       <Box display="flex" flexDirection="column">
-        <Box sx={styles.tooltipTitle}>{dates}</Box>
+        <Box sx={styles.tooltipTitle}>{tooltipTitle}</Box>
         {tooltipDataFiltered.map(tooltipValue => (
           <RoiTooltipRow
             key={tooltipValue[0]}
