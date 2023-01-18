@@ -7,6 +7,7 @@ export interface ICampaignsFilters {
   status: CAMPAIGN_STATUS | null;
   search: string | null;
   teamId: number | null;
+  includeArchived: boolean | undefined;
   countryIds: number[] | null;
   sortField: string | null;
   sortDirection: TABLE_SORT | null;

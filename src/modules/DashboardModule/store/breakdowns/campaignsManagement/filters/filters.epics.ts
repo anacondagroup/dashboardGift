@@ -17,6 +17,7 @@ import {
   getSortFieldFilter,
   getStatusFilter,
   getTeamIdFilter,
+  getTeamIsIncludeArchivedFilter,
 } from './filters.selectors';
 import { setFilters } from './filters.actions';
 import { ICampaignsFilters } from './filters.types';
@@ -27,15 +28,23 @@ export const initCampaignsFilterEpic: Epic = (action$, state$) =>
     filter(() => CAMPAIGN_ROUTES.matchAnyCampaignsPath(window.location.pathname) !== null),
     withLatestFrom(state$),
     map(() => {
-      const { status, search, teamId, countryIds, sortField, sortDirection, currentPage, limit } = parse(
-        window.location.search,
-        { arrayFormat: 'comma', parseNumbers: true },
-      ) as Partial<ICampaignsFilters>;
+      const {
+        status,
+        search,
+        teamId,
+        includeArchived,
+        countryIds,
+        sortField,
+        sortDirection,
+        currentPage,
+        limit,
+      } = parse(window.location.search, { arrayFormat: 'comma', parseNumbers: true }) as Partial<ICampaignsFilters>;
       const parsedCountryIds = countryIds?.length ? countryIds : [Number(countryIds)];
       return setFilters({
         status: status ?? null,
         search: search ?? null,
         teamId: teamId ? Number(teamId) : null,
+        includeArchived: includeArchived ?? initialCampaignsFiltersState.includeArchived,
         countryIds: countryIds ? parsedCountryIds : null,
         sortField: sortField || initialCampaignsFiltersState.sortField,
         sortDirection: sortField ? sortDirection : initialCampaignsFiltersState.sortDirection,
@@ -51,10 +60,21 @@ export const syncCampaignsFilterToUrlQueryEpic: Epic = (action$, state$) =>
     filter(() => CAMPAIGN_ROUTES.matchAnyCampaignsPath(window.location.pathname) !== null),
     withLatestFrom(state$),
     map(([, state]) => {
-      const { status, search, teamId, countryIds, sortField, sortDirection, currentPage, limit } = applySpec({
+      const {
+        status,
+        search,
+        teamId,
+        includeArchived,
+        countryIds,
+        sortField,
+        sortDirection,
+        currentPage,
+        limit,
+      } = applySpec({
         status: getStatusFilter,
         search: getSearchFilter,
         teamId: getTeamIdFilter,
+        includeArchived: getTeamIsIncludeArchivedFilter,
         countryIds: getCountriesFilter,
         sortField: getSortFieldFilter,
         sortDirection: getSortDirectionFilter,
@@ -68,6 +88,7 @@ export const syncCampaignsFilterToUrlQueryEpic: Epic = (action$, state$) =>
           status,
           search,
           teamId,
+          includeArchived,
           countryIds,
           sortField,
           sortDirection,

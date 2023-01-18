@@ -10,6 +10,7 @@ export const initialCampaignsFiltersState: ICampaignsFilters = {
   status: CAMPAIGN_STATUS.ACTIVE,
   search: null,
   teamId: null,
+  includeArchived: false,
   sortField: SortField.Updated,
   sortDirection: TABLE_SORT.DESC,
   countryIds: null,
