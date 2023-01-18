@@ -238,7 +238,11 @@ const CampaignTableRow = ({
         action: onSetCampaignExpired,
         ...getActionAvailabilityOptions({
           campaign: rowItem,
-          hasPermission: canEditCampaign,
+          hasPermission: canEditCampaign && rowItem.team.status === TeamStatus.active,
+          prohibitedTooltip:
+            rowItem.team.status !== TeamStatus.active
+              ? 'You cannot unexpire a campaign for an archived team'
+              : undefined,
           implementedForTypes: Object.values(CAMPAIGN_TYPES),
           possibleForStatuses: [CAMPAIGN_STATUS.DISABLED, CAMPAIGN_STATUS.EXPIRED],
         }),

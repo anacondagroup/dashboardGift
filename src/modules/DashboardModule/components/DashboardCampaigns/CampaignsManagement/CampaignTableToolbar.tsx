@@ -12,9 +12,10 @@ import {
 } from '@alycecom/ui';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from '@mui/styles';
-import { Box, Grid, MenuItem } from '@mui/material';
+import { Box, FormControlLabel, Grid, MenuItem, Switch } from '@mui/material';
 import { useDebounce } from 'react-use';
-import { CommonData, CountriesPicker, TCountry, User } from '@alycecom/modules';
+import { CommonData, CountriesPicker, Features, HasFeature, TCountry, User } from '@alycecom/modules';
+import { TrackEvent } from '@alycecom/services';
 
 import {
   getIsCampaignsListLoading,
@@ -33,6 +34,7 @@ import {
 import { ICampaignBreakdownListItem } from '../../../store/breakdowns/campaignsManagement/campaignsBreakdown/campaignsBreakdown.types';
 import { CAMPAIGN_STATUS } from '../../../../../constants/campaignSettings.constants';
 import { TABLE_SORT } from '../../../../../components/Shared/CustomTable/customTable.constants';
+import { getTeamIsIncludeArchivedFilter } from '../../../store/breakdowns/campaignsManagement/filters/filters.selectors';
 
 const useStyles = makeStyles<AlyceTheme>(({ spacing, palette }) => ({
   selector: {
@@ -101,9 +103,13 @@ const CampaignTableToolbar = ({
 }: ICampaignTableToolbarProps) => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { trackEvent } = TrackEvent.useTrackEvent();
 
   const isLoading = useSelector(getIsCampaignsListLoading);
+  const isIncludeArchived = useSelector(getTeamIsIncludeArchivedFilter);
   const teams = useSelector(getTeams);
+
+  const isArchivedTeamsExist = useMemo(() => teams.filter(team => team.archivedAt !== null).length > 0, [teams]);
 
   const countries = useSelector(CommonData.selectors.getCommonCountries);
   const selectedCountries = useSelector(
@@ -142,9 +148,16 @@ const CampaignTableToolbar = ({
   const filteredTeams = useMemo(
     () => [
       { id: ALL_ITEMS, name: 'All teams' },
-      ...teams.filter(team => team.settings.enterprise_mode_enabled).map(team => ({ ...team, id: team.id.toString() })),
+      ...teams
+        .filter(team => {
+          if (!isIncludeArchived) {
+            return team.archivedAt === null && team.settings.enterprise_mode_enabled;
+          }
+          return team.settings.enterprise_mode_enabled;
+        })
+        .map(team => ({ ...team, id: team.id.toString() })),
     ],
-    [teams],
+    [teams, isIncludeArchived],
   );
 
   const teamChangeHandler = useCallback(
@@ -163,6 +176,18 @@ const CampaignTableToolbar = ({
       });
     },
     [setValues],
+  );
+
+  const handleIncludeArchived = useCallback(
+    (_, status) => {
+      trackEvent('Include archived — clicked', { page: 'campaigns', includeArchived: status ? 'yes' : 'no' });
+      const newTeamFilter = teams.find(team => team.id === teamId && team.archivedAt !== null) ? null : teamId;
+      setValues({
+        includeArchived: status,
+        teamId: newTeamFilter,
+      });
+    },
+    [teamId, teams, trackEvent, setValues],
   );
 
   const handleChangeSort = useCallback(
@@ -358,6 +383,16 @@ const CampaignTableToolbar = ({
           </Box>
         </Box>
       </Grid>
+      {isArchivedTeamsExist && (
+        <HasFeature featureKey={Features.FLAGS.ARCHIVE_TEAMS}>
+          <Grid>
+            <FormControlLabel
+              control={<Switch checked={isIncludeArchived} onChange={handleIncludeArchived} color="primary" />}
+              label="Include archived"
+            />
+          </Grid>
+        </HasFeature>
+      )}
     </Box>
   );
 };

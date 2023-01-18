@@ -20,6 +20,8 @@ export const getSearchFilter = pipe(getCampaignsFiltersState, state => state.sea
 
 export const getTeamIdFilter = pipe(getCampaignsFiltersState, state => state.teamId);
 
+export const getTeamIsIncludeArchivedFilter = pipe(getCampaignsFiltersState, state => state.includeArchived);
+
 export const getCountriesFilter = pipe(getCampaignsFiltersState, state => state.countryIds);
 
 export const getSortFieldFilter = pipe(getCampaignsFiltersState, state => state.sortField);
@@ -34,12 +36,13 @@ export const getFiltersAsPayload = createSelector(
   getStatusFilter,
   getSearchFilter,
   getTeamIdFilter,
+  getTeamIsIncludeArchivedFilter,
   getCountriesFilter,
   getSortFieldFilter,
   getSortDirectionFilter,
   getCurrentPageFilter,
   getLimitFilter,
-  (status, search, teamId, countryIds, sortField, sortDirection, currentPage, limit) => {
+  (status, search, teamId, includeArchived, countryIds, sortField, sortDirection, currentPage, limit) => {
     const teamIds = teamId ? [teamId] : null;
     const currentPageValue = currentPage || 1;
     const limitValue = limit || RowLimit.Limit10;
@@ -47,6 +50,7 @@ export const getFiltersAsPayload = createSelector(
       status,
       search,
       teamIds,
+      includeArchived,
       countryIds,
       sort: {
         field: sortField,
