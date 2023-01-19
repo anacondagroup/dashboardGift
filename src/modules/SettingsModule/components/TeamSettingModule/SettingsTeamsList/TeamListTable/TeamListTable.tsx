@@ -70,7 +70,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.asc);
   const [search, onSearch] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [includeArchived, setIncludeArchived] = useState<boolean>(true);
+  const [includeArchived, setIncludeArchived] = useState<boolean>(false);
 
   const handleIncludeArchived = useCallback(
     (_, status) => {
