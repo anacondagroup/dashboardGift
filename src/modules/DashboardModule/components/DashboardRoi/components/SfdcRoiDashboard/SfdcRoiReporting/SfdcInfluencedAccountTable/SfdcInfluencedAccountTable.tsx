@@ -90,7 +90,7 @@ const columns: TRoiColumn<TInfluencedOpportunities>[] = [
   {
     label: 'Roi',
     align: 'right',
-    tooltipText: 'Total influenced opportunity value measured as a return on gift spend\n',
+    tooltipText: 'Total Closed-Won Revenue measured as a return on gift spend\n',
     field: 'roi',
     getFormattedValue: data => toRoi(data.roi),
     styles: {
