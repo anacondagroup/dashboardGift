@@ -55,7 +55,7 @@ const SfdcPipelineSummary = (): JSX.Element => {
           value={data?.data.roi}
           isLoading={isFetching}
           formatter={value => toRoi(value)}
-          tooltipText="Total influenced opportunity value measured as a return on gift spend"
+          tooltipText="Total Closed-Won Revenue measured as a return on gift spend"
         />
       </Box>
     </Box>
