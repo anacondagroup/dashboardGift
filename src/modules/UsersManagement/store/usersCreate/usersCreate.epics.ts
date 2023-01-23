@@ -1,7 +1,7 @@
 import { Epic } from 'redux-observable';
 import { catchError, switchMap, mergeMap, withLatestFrom } from 'rxjs/operators';
 import { ofType } from '@alycecom/utils';
-import { handleError, handlers, MessageType } from '@alycecom/services';
+import { handleError, handlers, MessageType, TAnyResponseError } from '@alycecom/services';
 import { Action } from 'redux';
 import { v4 } from 'uuid';
 
@@ -37,7 +37,18 @@ export const validateUserInfoEpic: Epic = (action$, state$, { apiService }) =>
           }
           return actions;
         }),
-        catchError(handleError(handlers.handleAnyError(validateUserInfoFail))),
+        catchError(
+          handleError(
+            handlers.handleAnyError(
+              (
+                data: Partial<Record<string | number, string[]>>,
+                errors: TAnyResponseError & {
+                  data?: { userId?: number | undefined } | undefined;
+                },
+              ) => validateUserInfoFail(data, errors?.data?.userId),
+            ),
+          ),
+        ),
       ),
     ),
   );

@@ -1,19 +1,18 @@
-import React, { memo, useCallback, useEffect } from 'react';
-import { TextField, Box, Button } from '@mui/material';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import { TextField, Box, Button, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { AlyceTheme, Divider, Icon } from '@alycecom/ui';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useExternalErrors } from '@alycecom/hooks';
 import { User } from '@alycecom/modules';
 
 import { UsersSidebarStep } from '../../store/usersOperation/usersOperation.types';
 import StepSection from '../StepSection/StepSection';
 import { userInfoFormDefaultValues, userInfoFormResolver } from '../../store/usersCreate/usersCreate.schemas';
-import { validateUserInfoRequest } from '../../store/usersCreate/usersCreate.actions';
+import { clearExistUser, validateUserInfoRequest } from '../../store/usersCreate/usersCreate.actions';
 import StepSectionFooter from '../StepSectionFooter/StepSectionFooter';
-import { getErrors, getIsCreatePending } from '../../store/usersCreate/usersCreate.selectors';
-import { setUsersSidebarStep } from '../../store/usersOperation/usersOperation.actions';
+import { getErrors, getExistUserId, getIsCreatePending } from '../../store/usersCreate/usersCreate.selectors';
+import { setSingleSelectedUser, setUsersSidebarStep } from '../../store/usersOperation/usersOperation.actions';
 import UsersInfoList from '../UsersInfoList/UsersInfoList';
 import { TUserCreateParams, UsersCreateFieldName } from '../../store/usersCreate/usersCreate.types';
 import {
@@ -21,6 +20,7 @@ import {
   getUserDraftsCount,
   getUserDrafts,
 } from '../../store/entities/userDrafts/userDrafts.selectors';
+import { getUsers } from '../../store/users/users.selectors';
 
 import MultipleUsersCreateSection from './MultipleUsersCreateSection';
 
@@ -39,6 +39,10 @@ const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
     height: 48,
     color: palette.link.main,
   },
+  error: {
+    fontSize: '0.75 rem',
+    color: '#d03243',
+  },
 }));
 
 const UserInfoForm = (): JSX.Element => {
@@ -51,6 +55,8 @@ const UserInfoForm = (): JSX.Element => {
   const userDraft = useSelector(getFirstUserDraft);
   const userDrafts = useSelector(getUserDrafts);
   const userDraftsCount = useSelector(getUserDraftsCount);
+  const existUserId = useSelector(getExistUserId);
+  const users = useSelector(getUsers);
 
   const hasAddedUsers = userDraftsCount > 0;
 
@@ -65,6 +71,7 @@ const UserInfoForm = (): JSX.Element => {
     formState: { errors },
     register,
     setError,
+    clearErrors,
     reset,
     getValues,
     setValue,
@@ -74,12 +81,22 @@ const UserInfoForm = (): JSX.Element => {
   const lastNameField = register(UsersCreateFieldName.lastName);
   const companyField = register(UsersCreateFieldName.company);
 
+  const handleEditUser = useCallback(() => {
+    const user = users.find(userItem => userItem.id === existUserId);
+    if (user) {
+      dispatch(setSingleSelectedUser(user));
+      dispatch(setUsersSidebarStep(UsersSidebarStep.editUser));
+    } else {
+      dispatch(clearExistUser());
+    }
+  }, [dispatch, users, existUserId]);
+
   const checkUserInfoEmail = useCallback(
     (email: string): boolean => {
       const foundUserIndex = userDrafts.findIndex(user => user.email === email);
       const isEmailExists = foundUserIndex !== -1;
       if (isEmailExists) {
-        setError('email', { type: 'validation', message: 'This email is already added.' });
+        setError(UsersCreateFieldName.email, { type: 'validation', message: 'This email is already added.' });
       }
       return isEmailExists;
     },
@@ -101,7 +118,7 @@ const UserInfoForm = (): JSX.Element => {
     const userData = getValues();
     const { email, firstName, lastName } = userData;
     const isFieldsEmpty = email === '' && firstName === '' && lastName === '';
-
+    dispatch(clearExistUser());
     if (hasAddedUsers && isFieldsEmpty) {
       dispatch(setUsersSidebarStep(UsersSidebarStep.assignRoles));
       return;
@@ -116,12 +133,38 @@ const UserInfoForm = (): JSX.Element => {
     })();
   }, [dispatch, getValues, hasAddedUsers, checkUserInfoEmail, handleSubmit]);
 
-  useExternalErrors<TUserCreateParams>(setError, externalErrors);
+  useEffect(() => {
+    clearErrors();
+    // @ts-ignore
+    Object.entries(externalErrors).forEach((item: string[]) => {
+      setError(item[0] as UsersCreateFieldName, { type: 'validation', message: item[1] });
+    });
+  }, [clearErrors, externalErrors, setError]);
+
+  const { email } = errors;
 
   useEffect(() => {
     const { company = '' } = userDraft || {};
     setValue(UsersCreateFieldName.company, company || orgName);
   }, [orgName, userDraft, setValue]);
+
+  const emailErrorMessage: React.ReactNode = useMemo(() => {
+    const message = email?.message;
+    const link = existUserId ? (
+      <Typography display="inline" className="Body-Regular-Left-Link Text-Pointer" onClick={handleEditUser}>
+        <Icon isDefaultCursor color="inherit" icon="arrow-right" /> View user
+      </Typography>
+    ) : null;
+    if (!email) {
+      return null;
+    }
+
+    return (
+      <div>
+        {message} {link}
+      </div>
+    );
+  }, [handleEditUser, existUserId, email]);
 
   return (
     <StepSection step={UsersSidebarStep.userInfo}>
@@ -140,7 +183,7 @@ const UserInfoForm = (): JSX.Element => {
                 variant="outlined"
                 margin="normal"
                 error={!!errors.email}
-                helperText={!!errors.email && errors.email.message}
+                helperText={emailErrorMessage}
                 inputProps={{
                   autoComplete: 'off',
                 }}

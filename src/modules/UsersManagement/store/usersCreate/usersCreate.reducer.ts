@@ -11,6 +11,7 @@ import {
   createUserFail,
   resetUsersCreateData,
   setAssignRolesData,
+  clearExistUser,
 } from './usersCreate.actions';
 
 export interface IUsersCreateState {
@@ -18,6 +19,7 @@ export interface IUsersCreateState {
   teams: ITeam[];
   role: UserRoles;
   errors: TErrors;
+  existUserId?: number;
 }
 
 export const initialState: IUsersCreateState = {
@@ -25,6 +27,7 @@ export const initialState: IUsersCreateState = {
   teams: [],
   role: UserRoles.member,
   errors: {},
+  existUserId: undefined,
 };
 
 export const usersCreate = createReducer<IUsersCreateState>({}, initialState);
@@ -33,14 +36,20 @@ usersCreate
   .on(validateUserInfoRequest, state => ({
     ...state,
     isCreatePending: true,
+    errors: {},
   }))
   .on(validateUserInfoSuccess, state => ({
     ...state,
     isCreatePending: false,
   }))
-  .on(validateUserInfoFail, (state, payload) => ({
+  .on(clearExistUser, state => ({
+    ...state,
+    existUserId: undefined,
+  }))
+  .on(validateUserInfoFail, (state, payload, userId) => ({
     ...state,
     isCreatePending: false,
+    existUserId: userId,
     errors: payload,
   }));
 
