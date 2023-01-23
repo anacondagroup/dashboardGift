@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 
 import CampaignSidebarSectionWrapper from '../../../CampaignSettings/CreateCampaignSidebar/CampaignSidebarSection/CampaignSidebarSectionWrapper';
@@ -9,6 +9,7 @@ import {
   getSwagDigitalCodesSteps,
   getSwagDigitalCodesTeamId,
 } from '../../../../store/campaign/swagDigitalCodes/swagDigitalCodes.selectors';
+import { loadGeneralSettingsBatchOwnersRequest } from '../../../../store/campaign/batchOwners/batchOwners.actions';
 
 import ChooseCampaignOwnerSection from './Sections/ChooseCampaignOwnerSection/ChooseCampaignOwnerSection';
 import SetDetailsAndDownloadSection from './Sections/SetDetailsAndDownloadSection/SetDetailsAndDownloadSection';
@@ -33,9 +34,14 @@ const STEPS_COMPONENT_MAPPER = {
 
 const GenerateSwagDigitalCodes = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const campaignId = useSelector(getSwagDigitalCodesCampaignId);
   const teamId = useSelector(getSwagDigitalCodesTeamId);
   const swagSelectWizardSteps = useSelector(getSwagDigitalCodesSteps);
+
+  useEffect(() => {
+    dispatch(loadGeneralSettingsBatchOwnersRequest(campaignId));
+  }, [campaignId, dispatch]);
 
   return (
     <Box className={classes.container}>
