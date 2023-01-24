@@ -13,7 +13,13 @@ export const validateUserInfoRequest = createAction(
   (_, shouldGoNextStep: boolean = false) => shouldGoNextStep,
 );
 export const validateUserInfoSuccess = createAction<void>(`${PREFIX}/VALIDATE_USER_INFO_SUCCESS`);
-export const validateUserInfoFail = createAction<TErrors>(`${PREFIX}/VALIDATE_USER_INFO_FAIL`);
+export const validateUserInfoFail = createAction(
+  `${PREFIX}/VALIDATE_USER_INFO_FAIL`,
+  (error: TErrors, _: number | undefined) => error,
+  (_, userId: number | undefined) => userId,
+);
+
+export const clearExistUser = createAction(`${PREFIX}/CREATE_USER_CLEAR_EXIST_USERS`);
 
 export const createUserRequest = createAction<ICreateUsersParams>();
 export const createUserFail = createAction<TErrors>(`${PREFIX}/CREATE_USER_FAIL`);
