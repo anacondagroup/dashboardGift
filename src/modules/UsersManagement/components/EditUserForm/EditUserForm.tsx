@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect } from 'react';
-import { Box, Button, MenuItem, TextField, FormControl, FormHelperText, Typography } from '@mui/material';
+import { Box, Button, MenuItem, TextField, FormControl, FormHelperText, Typography, Chip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { ActionButton, AlyceTheme, SelectFilter } from '@alycecom/ui';
 import { useForm, Controller, FieldError } from 'react-hook-form';
@@ -27,6 +27,7 @@ import {
 } from '../../store/usersOperation/usersOperation.selectors';
 import UserInfo from '../UserInfo/UserInfo';
 import { editUserValidation } from '../../store/usersOperation/usersOperation.schemas';
+import { prepareLabelForTeam } from '../../helpers/teamLabels.helpers';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   cancelButton: {
@@ -140,12 +141,18 @@ const EditUserForm = (): JSX.Element => {
                         disableCloseOnSelect
                         options={activeTeams}
                         value={value}
+                        getOptionDisabled={option => !option.isAdmin}
                         getOptionLabel={option => option.name}
                         isOptionEqualToValue={checkOptionIsSelected}
+                        renderTags={(tagValue, getTagProps) =>
+                          tagValue.map((option, index) => (
+                            <Chip label={option.name} {...getTagProps({ index })} disabled={option?.belongsToTeam} />
+                          ))
+                        }
                         renderOption={(props, option) => (
                           <li {...props}>
                             <Typography data-testid={`UserAssignToTeamModal.Autocomplete.${option.id}`}>
-                              {option.name}
+                              {prepareLabelForTeam(option)}
                             </Typography>
                           </li>
                         )}

@@ -18,8 +18,9 @@ import { IUserAssignParams } from '../../store/usersCreate/usersCreate.types';
 import { ITeam } from '../../store/usersManagement.types';
 import { createUserRequest, setAssignRolesData } from '../../store/usersCreate/usersCreate.actions';
 import UsersInfoList from '../UsersInfoList/UsersInfoList';
-import { getUserDraftsCount } from '../../store/entities/userDrafts/userDrafts.selectors';
+import { getUserDraftsCount } from '../../store/entities/userDrafts';
 import { getIsBulkFlow } from '../../store/usersOperation/usersOperation.selectors';
+import { prepareLabelForTeam } from '../../helpers/teamLabels.helpers';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
   backButton: {
@@ -140,11 +141,12 @@ const AssignRolesForm = (): JSX.Element => {
                         disableCloseOnSelect
                         options={activeTeams}
                         value={value}
+                        getOptionDisabled={option => !option.isAdmin}
                         getOptionLabel={option => option.name}
                         isOptionEqualToValue={checkOptionIsSelected}
                         renderOption={(props, option) => (
                           <Typography {...props} data-testid={`UserAssignToTeamModal.Autocomplete.${option.id}`}>
-                            {option.name}
+                            {prepareLabelForTeam(option)}
                           </Typography>
                         )}
                         onChange={(_, teamsValue) => onChange(teamsValue)}

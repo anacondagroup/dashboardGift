@@ -17,6 +17,7 @@ import { assignUsersToTeamsRequest } from '../../store/usersOperation/usersOpera
 import { userAssignTeamsValidation } from '../../store/usersOperation/usersOperation.schemas';
 import { IUserAssignTeamsParams } from '../../store/usersOperation/usersOperation.types';
 import { getIsAllSelected, getPagination } from '../../store/users/users.selectors';
+import { prepareLabelForTeam } from '../../helpers/teamLabels.helpers';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   avatar: {
@@ -84,6 +85,7 @@ const UserAssignToTeamModal = ({ isOpen, ...ModalProps }: IUserAssignModalProps)
 
   const currentUser = useSelector(User.selectors.getUser);
 
+  const activeTeams = teams.filter(team => team.archivedAt === null);
   const affectedUsersCount = isAllSelected ? total : users.length;
 
   const {
@@ -167,8 +169,9 @@ const UserAssignToTeamModal = ({ isOpen, ...ModalProps }: IUserAssignModalProps)
                 limitTags={3}
                 disableClearable
                 disableCloseOnSelect
-                options={teams}
+                options={activeTeams}
                 value={value}
+                getOptionDisabled={option => !option.isAdmin}
                 getOptionLabel={option => option.name}
                 isOptionEqualToValue={checkOptionIsSelected}
                 renderTags={(tagValue, getTagProps) =>
@@ -179,7 +182,7 @@ const UserAssignToTeamModal = ({ isOpen, ...ModalProps }: IUserAssignModalProps)
                 renderOption={(props, option) => (
                   <li {...props}>
                     <Typography data-testid={`UserAssignToTeamModal.Autocomplete.${option.id}`}>
-                      {option.name}
+                      {prepareLabelForTeam(option)}
                     </Typography>
                   </li>
                 )}

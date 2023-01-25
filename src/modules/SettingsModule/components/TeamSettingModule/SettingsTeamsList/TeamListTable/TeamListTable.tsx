@@ -182,7 +182,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
             </TableHead>
             <TableBody>
               {itemsToShow.map(team => (
-                <TeamRow key={team.id} team={team} onSelect={onSelect} />
+                <TeamRow disabled={!team.isAdmin} key={team.id} team={team} onSelect={onSelect} />
               ))}
             </TableBody>
             {showPagination && (
@@ -214,7 +214,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
         )}
         <TeamSidebar />
       </Box>
-      <ArchiveTeamConfirmation />
+      <ArchiveTeamConfirmation includeArchived={includeArchived} />
     </>
   );
 };

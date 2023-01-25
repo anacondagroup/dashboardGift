@@ -1,8 +1,8 @@
-import { ITeam, UserRoles } from '../usersManagement.types';
+import { ITeamExtraData, UserRoles } from '../usersManagement.types';
 
 export interface IUserAssignParams {
   role: UserRoles;
-  teams: ITeam[];
+  teams: ITeamExtraData[];
 }
 
 export interface ICreateUsersParams {

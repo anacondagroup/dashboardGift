@@ -19,20 +19,27 @@ const styles = {
   noBudgetStyle: {
     fontStyle: 'italic',
   },
+  disabled: {
+    cursor: 'default',
+    color: '#9b9b9b',
+  },
 } as const;
 
 export interface IBudgetCellProps {
   teamId: number;
+  disabled?: boolean;
 }
 
-const BudgetCell = ({ teamId }: IBudgetCellProps): JSX.Element => {
+const BudgetCell = ({ teamId, disabled = false }: IBudgetCellProps): JSX.Element => {
   const dispatch = useDispatch();
 
   const budget = useSelector(getBudgetByTeamId(teamId));
   const isLoading = useSelector(getIsBudgetLoading);
 
   const handleChangeBudget = () => {
-    dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamBudget, teamId }));
+    if (!disabled) {
+      dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamBudget, teamId }));
+    }
   };
 
   const NO_BUDGET_TEXT = 'Define budget / reset period';
@@ -52,7 +59,10 @@ const BudgetCell = ({ teamId }: IBudgetCellProps): JSX.Element => {
         isLoading={isLoading}
         sx={styles.loadingLabel}
         render={() => (
-          <Typography onClick={handleChangeBudget} sx={{ ...styles.budgetText, ...(!budget && styles.noBudgetStyle) }}>
+          <Typography
+            onClick={handleChangeBudget}
+            sx={{ ...styles.budgetText, ...(!budget && styles.noBudgetStyle), ...(disabled && styles.disabled) }}
+          >
             {budgetText}
           </Typography>
         )}

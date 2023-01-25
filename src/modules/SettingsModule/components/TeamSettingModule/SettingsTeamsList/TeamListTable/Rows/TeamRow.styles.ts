@@ -51,6 +51,10 @@ export const styles = {
     fontWeight: 700,
     color: ({ palette }: AlyceTheme) => palette.primary.main,
   },
+  disabled: {
+    cursor: 'default',
+    color: '#9b9b9b',
+  },
 } as const;
 
 // TODO: This styles should be removed after refactoring ActionMenus and LinkButton components from @alycecom/ui package.
