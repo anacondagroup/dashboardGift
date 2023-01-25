@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/material';
 
 import CampaignSidebarSectionWrapper from '../../../CampaignSettings/CreateCampaignSidebar/CampaignSidebarSection/CampaignSidebarSectionWrapper';
@@ -12,6 +12,7 @@ import {
   getSwagPhysicalCodesTeamId,
   getSwagPhysicalOrderData,
 } from '../../../../store/campaign/swagPhysicalCodes/swagPhysicalCodes.selectors';
+import { loadGeneralSettingsBatchOwnersRequest } from '../../../../store/campaign/batchOwners/batchOwners.actions';
 
 import ChooseCampaignOwnerSection from './Sections/ChooseCampaignOwnerSection/ChooseCampaignOwnerSection';
 import CardOrderOptionsSection from './Sections/CardOrderOptionsSection/CardOrderOptionsSection';
@@ -39,9 +40,14 @@ const STEPS_COMPONENT_MAPPER = {
 
 const GenerateSwagPhysicalCodes = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const campaignId = useSelector(getSwagPhysicalCodesCampaignId);
   const teamId = useSelector(getSwagPhysicalCodesTeamId);
   const sections = useSelector(getSwagPhysicalCodesSections);
+
+  useEffect(() => {
+    dispatch(loadGeneralSettingsBatchOwnersRequest(campaignId));
+  }, [campaignId, dispatch]);
 
   return (
     <Box className={classes.container}>
