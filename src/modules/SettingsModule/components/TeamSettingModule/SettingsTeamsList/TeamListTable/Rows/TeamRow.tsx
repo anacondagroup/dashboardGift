@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
-import { ActionsMenu, Icon, LinkButton, TableLoadingLabel, Divider } from '@alycecom/ui';
+import { ActionsMenu, Icon, LinkButton, TableLoadingLabel, Divider, Tooltip } from '@alycecom/ui';
 import { Typography, TableCell, Box, TableRow } from '@mui/material';
 import classNames from 'classnames';
 import moment from 'moment/moment';
@@ -21,9 +21,10 @@ import { styles, useStyles } from './TeamRow.styles';
 export interface ITeamRowProps {
   team: Partial<ITeam> & Pick<ITeam, 'id'>;
   onSelect: (id: number) => void;
+  disabled?: boolean;
 }
 
-const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
+const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Element => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
@@ -63,13 +64,13 @@ const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
   }, [setIsMenuOpened]);
 
   const handleEditTeam = () => {
-    if (!team.group) {
+    if (!team.group && !disabled) {
       dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamInfo, team: team as ITeam, teamId: team.id }));
     }
   };
 
   const handleSelectTeam = () => {
-    if (team) {
+    if (team && !disabled) {
       onSelect(team.id);
     }
   };
@@ -124,47 +125,56 @@ const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
         <TableLoadingLabel
           isLoading={isLoading}
           render={() => (
-            <Box sx={styles.teamNameWrapper}>
-              <Typography
-                sx={styles.teamNameLink}
-                onClick={handleSelectTeam}
-                data-testid={`TeamManagement.Table.${team.id}.Settings`}
-              >
-                {team.name}
-              </Typography>
-              <Box sx={styles.teamInfoWrapper}>
-                {isArchivedAtVisible && (
-                  <>
-                    <Typography sx={styles.archivedDate}>{archivedText}</Typography>
-                    <Divider mx={1} height={16} orientation="vertical" />
-                  </>
-                )}
-                <LinkButton
-                  className={classNames(classes.editLink, {
-                    [classes.blockedLink]: !!team?.group,
-                  })}
-                  onClick={handleEditTeam}
+            <Tooltip
+              title={
+                disabled
+                  ? 'You don’t have permission to edit this team. Only team admins who have been specifically assigned to this team have the ability to make changes to its settings.'
+                  : ''
+              }
+            >
+              <Box sx={styles.teamNameWrapper}>
+                <Typography
+                  sx={{ ...styles.teamNameLink, ...(disabled && styles.disabled) }}
+                  onClick={handleSelectTeam}
+                  data-testid={`TeamManagement.Table.${team.id}.Settings`}
                 >
-                  {team?.group ? `Billing group: ${team?.group.name}` : 'Define billing group'}
-                </LinkButton>
+                  {team.name}
+                </Typography>
+                <Box sx={styles.teamInfoWrapper}>
+                  {isArchivedAtVisible && (
+                    <>
+                      <Typography sx={styles.archivedDate}>{archivedText}</Typography>
+                      <Divider mx={1} height={16} orientation="vertical" />
+                    </>
+                  )}
+                  <LinkButton
+                    disabled={disabled}
+                    className={classNames(classes.editLink, {
+                      [classes.blockedLink]: !!team?.group,
+                    })}
+                    onClick={handleEditTeam}
+                  >
+                    {team?.group ? `Billing group: ${team?.group.name}` : 'Define billing group'}
+                  </LinkButton>
+                </Box>
+                {hasArchiveTeamsActions && isMenuOpened && !disabled && (
+                  <ActionsMenu<ITeam>
+                    menuId={`menu-id-${team.id}`}
+                    ActionButtonProps={{
+                      classes: {
+                        root: classNames(classes.actionButton, {
+                          [classes.visibleActionButton]: isMenuOpened,
+                        }),
+                      },
+                      endIcon: <Icon icon="chevron-down" />,
+                      'data-testid': `TeamsManagement.Table.${team.id}.Actions`,
+                    }}
+                    menuItems={menuItems}
+                    menuData={team as ITeam}
+                  />
+                )}
               </Box>
-              {hasArchiveTeamsActions && isMenuOpened && (
-                <ActionsMenu<ITeam>
-                  menuId={`menu-id-${team.id}`}
-                  ActionButtonProps={{
-                    classes: {
-                      root: classNames(classes.actionButton, {
-                        [classes.visibleActionButton]: isMenuOpened,
-                      }),
-                    },
-                    endIcon: <Icon icon="chevron-down" />,
-                    'data-testid': `TeamsManagement.Table.${team.id}.Actions`,
-                  }}
-                  menuItems={menuItems}
-                  menuData={team as ITeam}
-                />
-              )}
-            </Box>
+            </Tooltip>
           )}
         />
       </TableCell>
@@ -186,7 +196,7 @@ const TeamRow = ({ team, onSelect }: ITeamRowProps): JSX.Element => {
           )}
         />
       </TableCell>
-      {hasBudgetManagementSetup && <BudgetCell teamId={team.id} />}
+      {hasBudgetManagementSetup && <BudgetCell disabled={disabled} teamId={team.id} />}
     </TableRow>
   );
 };

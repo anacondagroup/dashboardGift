@@ -14,6 +14,7 @@ export interface ITeam {
   id: number;
   name: string;
   admins: ITeamAdmin[];
+  isAdmin: boolean;
   members: {
     amount: number;
   };

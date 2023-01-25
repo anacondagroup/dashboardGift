@@ -24,8 +24,11 @@ const useStyles = makeStyles<AlyceTheme>(({ palette }) => ({
     backgroundColor: palette.secondary.main,
   },
 }));
+type TArchiveTeamConfirmation = {
+  includeArchived?: boolean;
+};
 
-const ArchiveTeamConfirmation = (): JSX.Element => {
+const ArchiveTeamConfirmation = ({ includeArchived }: TArchiveTeamConfirmation): JSX.Element => {
   const dispatch = useDispatch();
   const classes = useStyles();
 
@@ -54,10 +57,10 @@ const ArchiveTeamConfirmation = (): JSX.Element => {
           }),
         );
         dispatch(resetState());
-        dispatch(loadTeamsSettingsRequest({}));
+        dispatch(loadTeamsSettingsRequest({ includeArchived }));
       });
     }
-  }, [dispatch, isSuccess]);
+  }, [dispatch, isSuccess, includeArchived]);
 
   return (
     <ModalConfirmationMessage
