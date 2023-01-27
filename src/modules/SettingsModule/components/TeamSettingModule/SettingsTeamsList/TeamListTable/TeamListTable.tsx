@@ -66,7 +66,7 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
     Features.selectors.hasFeatureFlag(Features.FLAGS.BUDGET_MANAGEMENT_SETUP),
   );
 
-  const [sortColumn, setSortColumn] = useState('name');
+  const [sortColumn, setSortColumn] = useState<string | undefined>(undefined);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.asc);
   const [search, onSearch] = useState<string>('');
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -92,7 +92,9 @@ const TeamListTable = ({ onSelect }: ITeamListTableProps): JSX.Element => {
 
   const handledItems = useMemo<ITeam[]>(() => {
     const direction = sortDirection === SortDirection.asc ? R.ascend : R.descend;
-    const sortByColumn: (teams: ITeam[]) => ITeam[] = R.sort(direction(R.path(sortColumn.split('.'))));
+    const sortByColumn: (teams: ITeam[]) => ITeam[] = sortColumn
+      ? R.sort(direction(R.path(sortColumn.split('.'))))
+      : R.identity;
     const searchByName = ({ name }: ITeam) => R.includes(R.toLower(search), R.toLower(name));
     const filterFn: (teams: ITeam[]) => ITeam[] = search ? R.filter(searchByName) : R.identity;
     return R.pipe(filterFn, sortByColumn)(teams);
