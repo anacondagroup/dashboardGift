@@ -1,14 +1,14 @@
-import React, { memo, useMemo, useState } from 'react';
-import { Box, Grid, Menu, MenuItem } from '@mui/material';
-import { Button, Icon } from '@alycecom/ui';
+import React, { memo, useMemo } from 'react';
+import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { useHistory, useLocation } from 'react-router-dom';
+import { AlyceTheme } from '@alycecom/ui';
 
 import { ROI_ROUTES } from '../../../routePaths';
 import { RoiFilters } from '../RoiFilters';
 
 const MENU_ITEMS = [
   {
-    label: 'ROI Reporting',
+    label: 'Revenue Impact',
     value: ROI_ROUTES.REPORTING,
   },
   {
@@ -20,22 +20,17 @@ const MENU_ITEMS = [
 const styles = {
   container: {
     justifyContent: 'space-between',
-    pt: 1,
-    pb: 3,
+    mt: 1,
+    mb: 3,
+    borderBottom: 1,
+    borderColor: ({ palette }: AlyceTheme) => palette.divider,
   },
-
-  titleButton: {
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '32px',
+  tabs: {
+    color: ({ palette }: AlyceTheme) => palette.primary.main,
+  },
+  selectedTab: {
     fontWeight: 'bold',
-    lineHeight: '1.17',
-    color: 'primary.main',
-    background: 'transparent',
-    paddingTop: 0,
   },
-
-  menuItem: {},
 } as const;
 
 const RoiDashboardHeader = (): JSX.Element => {
@@ -47,41 +42,26 @@ const RoiDashboardHeader = (): JSX.Element => {
     [pathname],
   );
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [menuItemWidth, setMenuItemWidth] = useState(120);
-
-  const open = Boolean(anchorEl);
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    setMenuItemWidth(event.currentTarget.clientWidth);
-  };
-  const handleMenuItemClick = (menuItem: typeof MENU_ITEMS[number]) => {
-    setAnchorEl(null);
-    push(menuItem.value);
+  const handleTabChange = (_: React.SyntheticEvent, newMenuItem: typeof MENU_ITEMS[number]) => {
+    push(newMenuItem.value);
   };
 
   return (
     <Grid container sx={styles.container}>
-      <Grid item xs="auto" alignItems="flex-start">
-        <Button sx={styles.titleButton} onClick={handleMenuClick}>
-          <Box mr={2}>{selectedMenuItem?.label}</Box>
-          <Icon icon="angle-down" fontSize={2} />
-        </Button>
-        <Menu
-          id="basic-menu"
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleMenuItemClick}
-          MenuListProps={{
-            'aria-labelledby': 'basic-button',
-          }}
-        >
+      <Grid item xs="auto" alignItems="flex-start" alignSelf="end">
+        <Tabs value={selectedMenuItem} onChange={handleTabChange} aria-label="Tabs for revenue impact dashboard">
           {MENU_ITEMS.map(menuItem => (
-            <MenuItem key={menuItem.value} onClick={() => handleMenuItemClick(menuItem)} sx={{ width: menuItemWidth }}>
-              {menuItem.label}
-            </MenuItem>
+            <Tab
+              key={menuItem.value}
+              label={
+                <Typography sx={[styles.tabs, selectedMenuItem?.value === menuItem.value && styles.selectedTab]}>
+                  {menuItem.label}
+                </Typography>
+              }
+              value={menuItem}
+            />
           ))}
-        </Menu>
+        </Tabs>
       </Grid>
       <RoiFilters />
     </Grid>

@@ -97,7 +97,7 @@ const SfdcRoiInfluencedARR = (): JSX.Element => {
     <Card>
       <CardContent>
         <Box sx={styles.header}>
-          <StyledRoiSectionTitle sx={styles.title}>Influenced ARR by Deal Type</StyledRoiSectionTitle>
+          <StyledRoiSectionTitle sx={styles.title}>Influenced Revenue by Deal Type</StyledRoiSectionTitle>
           <RoiDealTypesFilter
             dealTypes={dealTypesListResponse?.data || []}
             dealTypesSelected={selectedDealTypes}

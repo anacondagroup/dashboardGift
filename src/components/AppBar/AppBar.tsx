@@ -114,7 +114,7 @@ const AppBar = () => {
             textColor="inherit"
             classes={selectedTab === '/' && !isROIEnabled ? { indicator: classes.tabsIndicator } : undefined}
           >
-            <TabLink to="/" label={isROIEnabled ? 'Dashboard' : 'Home'} value="/" />
+            <TabLink to="/" label={isROIEnabled ? 'Dashboards' : 'Home'} value="/" />
             <TabLink to="/teams" label="Teams" value="teams" />
             <TabLink to="/campaigns" label="Campaigns" value="campaigns" />
             <TabLink
