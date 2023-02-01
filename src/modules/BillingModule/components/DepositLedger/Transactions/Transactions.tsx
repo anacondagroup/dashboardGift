@@ -109,6 +109,10 @@ const Transactions = () => {
     [trackEvent],
   );
 
+  const handleClickInvoiceLink = useCallback(() => {
+    trackEvent('Invoice reference — clicked');
+  }, [trackEvent]);
+
   /* eslint-disable react/prop-types */
   const columns = useMemo<IColumn<TRowData>[]>(
     () => [
@@ -168,7 +172,7 @@ const Transactions = () => {
         id: 'reference',
         name: 'Reference',
         hideSorting: true,
-        render: ({ id, references, typeId }) => {
+        render: ({ id, references, typeId, invoiceUrl }) => {
           let ref: JSX.Element;
           let refTitle = '';
 
@@ -198,6 +202,20 @@ const Transactions = () => {
             ref = <span>{refTitle}</span>;
           }
 
+          if ((typeId === TransactionType.Deposit || typeId === TransactionType.Withdrawal) && invoiceUrl !== null) {
+            refTitle = `invoice`;
+            ref = (
+              <Link
+                data-testid={`DepositLedger.List.Invoice.Link.${id}`}
+                href={invoiceUrl}
+                target="_blank"
+                onClick={handleClickInvoiceLink}
+              >
+                invoice
+              </Link>
+            );
+          }
+
           return (
             <span data-testid={`DepositLedger.List.Reference.${id}`}>
               <TableCellTooltip title={refTitle} renderLabel={() => ref} />
@@ -216,7 +234,7 @@ const Transactions = () => {
         ),
       },
     ],
-    [typeNamesMap, showRemainingDeposit, handleClickGiftLink],
+    [typeNamesMap, showRemainingDeposit, handleClickGiftLink, handleClickInvoiceLink],
   );
 
   return (
