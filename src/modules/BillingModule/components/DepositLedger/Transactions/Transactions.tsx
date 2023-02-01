@@ -202,7 +202,7 @@ const Transactions = () => {
             ref = <span>{refTitle}</span>;
           }
 
-          if ((typeId === TransactionType.Deposit || typeId === TransactionType.Withdrawal) && invoiceUrl !== null) {
+          if ((typeId === TransactionType.Deposit || typeId === TransactionType.Withdraw) && invoiceUrl !== null) {
             refTitle = `invoice`;
             ref = (
               <Link
