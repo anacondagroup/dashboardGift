@@ -12,11 +12,11 @@ import NonSfdcRoiDashboard from './components/NonSfdcRoiDashboard/NonSfdcRoiDash
 import { RoiWelcomeDialog } from './components/Shared/RoiWelcomeDialog';
 
 const DashboardRoi = (): JSX.Element => {
-  const { data, isSuccess: isOrganizationSettingsFulfilled } = useGetOrganizationSettingsQuery();
+  const { data: orgSettingsData, isSuccess: isOrganizationSettingsFulfilled } = useGetOrganizationSettingsQuery();
   const { isLoaded, isSalesforceConnected } = useRoiDashboardProtector();
   const isRoiEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.ROI));
   const isSFAppEnabled = useSelector(Features.selectors.hasFeatureFlag(Features.FLAGS.SALES_FORCE_APP_ACCESS));
-  const isSfdcRoiDashboardHidden = data?.exclude_salesforce_roi ?? true;
+  const isSfdcRoiDashboardHidden = orgSettingsData?.exclude_salesforce_roi ?? true;
   const isSfdcRoiDashboard = isSFAppEnabled && isSalesforceConnected && !isSfdcRoiDashboardHidden;
 
   if (!isRoiEnabled) {

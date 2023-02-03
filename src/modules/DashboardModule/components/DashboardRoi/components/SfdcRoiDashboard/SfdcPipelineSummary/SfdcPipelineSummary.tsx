@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Box } from '@mui/material';
 import { useGetSfdcSummaryQuery } from '@alycecom/services';
 import { useSelector } from 'react-redux';
@@ -12,6 +12,9 @@ import { getRoiFilters } from '../../../store/filters/filters.selectors';
 const SfdcPipelineSummary = (): JSX.Element => {
   const globalFilters = useSelector(getRoiFilters);
   const { data, isFetching } = useGetSfdcSummaryQuery(globalFilters);
+
+  const totalSpendFormatter = useCallback(value => toFormattedPrice(value, '0,'), []);
+  const roiFormatter = useCallback(value => toRoi(value), []);
 
   return (
     <Box>
@@ -47,14 +50,14 @@ const SfdcPipelineSummary = (): JSX.Element => {
           label="Total Spend"
           value={data?.data.totalSpend}
           isLoading={isFetching}
-          formatter={value => toFormattedPrice(value, '0,')}
+          formatter={totalSpendFormatter}
           tooltipText="Total amount of spend on accepted gifts"
         />
         <RoiSummaryTile
           label="ROI"
           value={data?.data.roi}
           isLoading={isFetching}
-          formatter={value => toRoi(value)}
+          formatter={roiFormatter}
           tooltipText="Total Closed-Won Revenue measured as a return on gift spend"
         />
       </Box>

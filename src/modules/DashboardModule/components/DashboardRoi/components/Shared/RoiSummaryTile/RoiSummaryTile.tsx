@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Paper, Skeleton, Theme } from '@mui/material';
 import { useSpring, animated } from 'react-spring';
 
@@ -103,4 +103,4 @@ const RoiSummaryTile = ({
   );
 };
 
-export default RoiSummaryTile;
+export default memo(RoiSummaryTile);
