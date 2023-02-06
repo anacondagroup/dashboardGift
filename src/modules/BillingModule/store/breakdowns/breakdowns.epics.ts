@@ -6,6 +6,7 @@ import { IListResponse, IResponse } from '@alycecom/services';
 
 import { IInventoryDeposits } from '../../types';
 import { getTeamsFilter } from '../customerOrg';
+import { getDateRange } from '../ui/overviewFilters/overviewFilters.selectors';
 
 import {
   acceptedInvitesFailure,
@@ -109,27 +110,26 @@ export const emailReportEpic: Epic = (
     mergeMap(action => {
       const steps = { sendToEmail: action.payload };
       const { teamIds, groupIds } = getTeamsFilter(state$.value);
-      const sentDateRange = getSentFilters(state$.value);
-      const acceptedDateRange = getAcceptedFilters(state$.value);
+      const dateRange = getDateRange(state$.value);
       const filters = {
         teamIds,
         groupIds,
-        ...(sentDateRange.from && sentDateRange.to
+        ...(dateRange.from && dateRange.to
           ? {
               spentPeriod: {
-                from: sentDateRange.from,
+                from: `${dateRange.from}T00:00:00Z`,
                 fromIncluded: true,
-                to: sentDateRange.to,
+                to: `${dateRange.to}T23:59:59Z`,
                 toIncluded: true,
               },
             }
           : {}),
-        ...(acceptedDateRange.from && acceptedDateRange.to
+        ...(dateRange.from && dateRange.to
           ? {
               acceptedPeriod: {
-                from: acceptedDateRange.from,
+                from: `${dateRange.from}T00:00:00Z`,
                 fromIncluded: true,
-                to: acceptedDateRange.to,
+                to: `${dateRange.to}T23:59:59Z`,
                 toIncluded: true,
               },
             }
