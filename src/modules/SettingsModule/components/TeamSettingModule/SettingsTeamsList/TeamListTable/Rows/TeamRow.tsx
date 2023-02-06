@@ -6,6 +6,7 @@ import moment from 'moment/moment';
 import { useDispatch, useSelector, batch } from 'react-redux';
 import { Features, SHORT_DATE_FORMAT } from '@alycecom/modules';
 import { MessageType, showGlobalMessage, useUnarchiveTeamByIdMutation } from '@alycecom/services';
+import { useRouting } from '@alycecom/hooks';
 
 import { ITeam, TeamStatus } from '../../../../../store/teams/teams/teams.types';
 import { BudgetCell } from '../Cells';
@@ -15,6 +16,7 @@ import { getIsLoading } from '../../../../../store/teams/teams/teams.selectors';
 import { setArchiveTeamModalOpenStatus, setSelectedTeamId } from '../../../../../store/ui/teamsManagement';
 import { loadTeamsSettingsRequest } from '../../../../../store/teams/teams/teams.actions';
 import AdminUser from '../AdminUser';
+import { loadBrandingRequest } from '../../../../../store/teams/branding/branding.actions';
 
 import { styles, useStyles } from './TeamRow.styles';
 
@@ -26,7 +28,7 @@ export interface ITeamRowProps {
 
 const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Element => {
   const classes = useStyles();
-
+  const go = useRouting();
   const dispatch = useDispatch();
 
   const [unarchiveTeamById, { isSuccess }] = useUnarchiveTeamByIdMutation();
@@ -53,6 +55,40 @@ const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Eleme
       unarchiveTeamById(id);
     },
     [unarchiveTeamById],
+  );
+
+  const handleSettingsTeam = useCallback(
+    ({ id }: ITeam) => {
+      go(`/settings/teams/${id}/settings-and-permissions/general`);
+    },
+    [go],
+  );
+
+  const handleTemplatesTeam = useCallback(
+    ({ id }: ITeam) => {
+      go(`/settings/teams/${id}/settings-and-permissions/templates`);
+    },
+    [go],
+  );
+
+  const handleEmailBrandingTeam = useCallback(
+    ({ id }: ITeam) => {
+      go(`/branding/teams/${id}`);
+    },
+    [go],
+  );
+
+  const handleBudgetTeam = useCallback(
+    ({ id }: ITeam) => {
+      dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamBudget, teamId: id }));
+    },
+    [dispatch],
+  );
+  const handleLPBrandingTeam = useCallback(
+    ({ id }: ITeam) => {
+      dispatch(loadBrandingRequest({ teamId: id, showBranding: true }));
+    },
+    [dispatch],
   );
 
   const showActions = useCallback(() => {
@@ -86,10 +122,46 @@ const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Eleme
   const menuItems = useMemo(
     () => [
       {
+        id: 'settings',
+        text: 'Settings',
+        action: handleSettingsTeam,
+        dataTestId: 'TeamsManagement.Actions.Settings',
+        disabled: isTeamArchived,
+      },
+      {
+        id: 'budget',
+        text: 'Budget',
+        action: handleBudgetTeam,
+        hidden: !hasBudgetManagementSetup,
+        dataTestId: 'TeamsManagement.Actions.Budget',
+        disabled: isTeamArchived || !hasBudgetManagementSetup,
+      },
+      {
+        id: 'email-branding',
+        text: 'Email branding',
+        action: handleEmailBrandingTeam,
+        dataTestId: 'TeamsManagement.Actions.EmailBranding',
+        disabled: isTeamArchived,
+      },
+      {
+        id: 'lpbranding',
+        text: 'Landing page branding',
+        action: handleLPBrandingTeam,
+        dataTestId: 'TeamsManagement.Actions.LPBranding',
+        disabled: isTeamArchived,
+      },
+      {
+        id: 'templates',
+        text: 'Templates',
+        action: handleTemplatesTeam,
+        dataTestId: 'TeamsManagement.Actions.Templates',
+        disabled: isTeamArchived,
+      },
+      {
         id: 'archive',
         text: 'Archive team',
         action: handleOpenArchiveTeamsModal,
-        hidden: isTeamArchived,
+        hidden: isTeamArchived || !hasArchiveTeamsActions,
         dataTestId: 'TeamsManagement.Actions.Archive',
         disabled: isTeamArchived,
       },
@@ -97,12 +169,24 @@ const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Eleme
         id: 'unarchive',
         text: 'Unarchive team',
         action: handleUnarchiveTeam,
-        hidden: isTeamActive,
+        hidden: isTeamActive || !hasArchiveTeamsActions,
         dataTestId: 'TeamsManagement.Actions.Unarchive',
         disabled: isTeamActive,
       },
     ],
-    [handleOpenArchiveTeamsModal, handleUnarchiveTeam, isTeamArchived, isTeamActive],
+    [
+      handleOpenArchiveTeamsModal,
+      handleUnarchiveTeam,
+      isTeamArchived,
+      isTeamActive,
+      handleSettingsTeam,
+      handleTemplatesTeam,
+      handleEmailBrandingTeam,
+      hasBudgetManagementSetup,
+      handleBudgetTeam,
+      handleLPBrandingTeam,
+      hasArchiveTeamsActions,
+    ],
   );
 
   useEffect(() => {
@@ -157,7 +241,7 @@ const TeamRow = ({ team, onSelect, disabled = false }: ITeamRowProps): JSX.Eleme
                     {team?.group ? `Billing group: ${team?.group.name}` : 'Define billing group'}
                   </LinkButton>
                 </Box>
-                {hasArchiveTeamsActions && isMenuOpened && !disabled && (
+                {isMenuOpened && !disabled && (
                   <ActionsMenu<ITeam>
                     menuId={`menu-id-${team.id}`}
                     ActionButtonProps={{
