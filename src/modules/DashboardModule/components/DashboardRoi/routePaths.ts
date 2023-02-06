@@ -1,4 +1,4 @@
-export const ROI_ROOT = 'roi';
+export const ROI_ROOT = 'impact';
 
 export const ROI_ROUTES = {
   REPORTING: `/${ROI_ROOT}`,

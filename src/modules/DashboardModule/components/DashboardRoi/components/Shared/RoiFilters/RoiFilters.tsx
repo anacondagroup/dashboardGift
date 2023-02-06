@@ -11,6 +11,9 @@ import { ALYCE_FOUNDATION_DATE, ROI_DATA_PERIODS } from '../../../utils';
 import RoiFilterTypeSelector from './RoiFilterTypeSelector';
 
 const styles = {
+  grid: {
+    mb: 3,
+  },
   filter: {
     width: 300,
     ml: 2,
@@ -59,7 +62,7 @@ const RoiFilters = (): JSX.Element => {
   );
 
   return (
-    <Grid container item xs="auto" alignSelf="end">
+    <Grid container item xs="auto" alignSelf="end" sx={styles.grid}>
       <Grid item>
         <RoiFilterTypeSelector />
       </Grid>
