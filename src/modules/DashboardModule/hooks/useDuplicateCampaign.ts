@@ -10,17 +10,17 @@ import {
 } from '../store/breakdowns/campaignsManagement/campaignsBreakdown/campaignsBreakdown.actions';
 import { ICampaignBreakdownListItem } from '../store/breakdowns/campaignsManagement/campaignsBreakdown/campaignsBreakdown.types';
 
-type ICampaignParam = Pick<ICampaign | ICampaignBreakdownListItem, 'id' | 'type'>;
+export type ICampaignParam = Pick<ICampaign | ICampaignBreakdownListItem, 'id' | 'type'>;
 
-export type TUseDuplicateCampaignValue = (campaign: ICampaignParam) => void;
+export type TUseDuplicateCampaignValue = (campaign: ICampaignParam, teamId?: number | null) => void;
 
 export const useDuplicateCampaign = (): TUseDuplicateCampaignValue => {
   const dispatch = useDispatch();
 
   return useCallback(
-    (campaign: ICampaignParam) => {
+    (campaign: ICampaignParam, teamId?: number | null) => {
       if (campaign.type === CAMPAIGN_TYPES.STANDARD) {
-        dispatch(duplicateCampaign.pending({ id: campaign.id }));
+        dispatch(duplicateCampaign.pending({ id: campaign.id, teamId }));
         return;
       }
 
