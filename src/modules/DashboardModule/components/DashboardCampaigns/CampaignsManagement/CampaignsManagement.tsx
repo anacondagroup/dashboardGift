@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useEffect, useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, MenuItem } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Features, updateSearch, User } from '@alycecom/modules';
 import { useUrlQuery } from '@alycecom/hooks';
 import { TrackEvent } from '@alycecom/services';
 import { useHistory } from 'react-router-dom';
-import { AlyceTheme, ModalConfirmationMessage, RowLimit } from '@alycecom/ui';
+import { AlyceTheme, ModalConfirmationMessage, RowLimit, SelectFilter } from '@alycecom/ui';
 import { makeStyles } from '@mui/styles';
 
 import DashboardCampaignsFilterSection from '../../Sections/DashboardCampaignsFilterSection/DashboardCampaignsFilterSection';
@@ -44,7 +44,8 @@ import {
   expireProspectingCampaignById,
   unexpireProspectingCampaignById,
 } from '../../../../ProspectingCampaignModule/store/prospectingCampaign/prospectingCampaign.actions';
-import { useDuplicateCampaign } from '../../../hooks/useDuplicateCampaign';
+import { ICampaignParam, useDuplicateCampaign } from '../../../hooks/useDuplicateCampaign';
+import { getUnarchivedTeams } from '../../../../../store/teams/teams.selectors';
 
 import CampaignTableRow from './CampaignTableRow';
 import CampaignTableToolbar from './CampaignTableToolbar';
@@ -139,8 +140,11 @@ const CampaignsManagement = (): JSX.Element => {
 
   const [currentActionCampaigns, setCurrentActionCampaigns] = useState<ICampaignBreakdownListItem[]>([]);
   const [isArchiveModalOpened, setArchiveModalOpened] = useState(false);
+  const [isDuplicateModalOpened, setDuplicateModalOpened] = useState(false);
+  const [targetTeam, setTargetTeam] = useState<number | null>(null);
 
   const userId = useSelector(User.selectors.getUserId);
+  const teams = useSelector(getUnarchivedTeams);
   const isLoading = useSelector(getIsCampaignsListLoading);
   const totalAmount = useSelector(getCampaignsListTotalAmount);
   const campaigns = useSelector(getCampaignsList);
@@ -234,7 +238,28 @@ const CampaignsManagement = (): JSX.Element => {
     [history, getCampaignDetailsUrl],
   );
 
+  const handleOpenDuplicateCampaignsModal = useCallback((actionCampaigns: ICampaignBreakdownListItem) => {
+    setCurrentActionCampaigns([actionCampaigns]);
+    setTargetTeam(actionCampaigns.team.id);
+    setDuplicateModalOpened(true);
+  }, []);
+
+  const handleCloseDuplicateCampaignsModal = useCallback(() => {
+    setDuplicateModalOpened(false);
+    setTargetTeam(null);
+  }, []);
+
   const handleDuplicateCampaign = useDuplicateCampaign();
+  const handleDuplicateCampaignAction = useCallback(
+    (campaign: ICampaignBreakdownListItem) => {
+      if (campaign.type === CAMPAIGN_TYPES.STANDARD) {
+        handleOpenDuplicateCampaignsModal((campaign as ICampaignParam) as ICampaignBreakdownListItem);
+      } else {
+        handleDuplicateCampaign(campaign);
+      }
+    },
+    [handleOpenDuplicateCampaignsModal, handleDuplicateCampaign],
+  );
 
   const handleSetCampaignExpired = useCallback(
     (campaign: ICampaignBreakdownListItem) => {
@@ -299,6 +324,14 @@ const CampaignsManagement = (): JSX.Element => {
     }
   }, [dispatch, currentActionCampaigns]);
 
+  const handleSubmitDuplicateCampaigns = useCallback(() => {
+    setDuplicateModalOpened(false);
+    if (currentActionCampaigns.length > 0) {
+      handleDuplicateCampaign(currentActionCampaigns[0], targetTeam);
+      setTargetTeam(null);
+    }
+  }, [handleDuplicateCampaign, currentActionCampaigns, targetTeam]);
+
   const handleUnArchiveCampaigns = useCallback(
     (actionCampaigns: ICampaignBreakdownListItem[]) => {
       if (actionCampaigns.length > 0) {
@@ -331,7 +364,7 @@ const CampaignsManagement = (): JSX.Element => {
               isLoading={isLoading}
               campaignLink={getCampaignDetailsUrl}
               onOpenCampaignSettings={handleOpenCampaignSettings}
-              onDuplicateCampaign={handleDuplicateCampaign}
+              onDuplicateCampaign={handleDuplicateCampaignAction}
               onOpenCampaignDetails={handleOpenCampaignDetails}
               onSetCampaignExpired={handleSetCampaignExpired}
               onDiscardDraft={handleDiscardDraft}
@@ -396,6 +429,39 @@ const CampaignsManagement = (): JSX.Element => {
         <Box>
           This action will expire active campaigns, prevent recipients to access gift links and exclude campaign data
           from reporting.
+        </Box>
+      </ModalConfirmationMessage>
+      <ModalConfirmationMessage
+        title="Duplicate campaign"
+        variant="info"
+        submitButtonText="Duplicate"
+        cancelButtonText="Cancel"
+        width="100%"
+        isOpen={isDuplicateModalOpened}
+        onSubmit={handleSubmitDuplicateCampaigns}
+        onDiscard={handleCloseDuplicateCampaignsModal}
+        customClasses={{
+          submitButton: classes.submitButtonModal,
+          root: classes.rootModal,
+          avatar: classes.modalAvatar,
+        }}
+      >
+        <Box pt={3}>Select the team that the duplicated campaign will be assigned to</Box>
+        <Box pt={3}>
+          <SelectFilter
+            label="Target Team"
+            name="teamId"
+            value={targetTeam}
+            fullWidth
+            onFilterChange={selectValue => setTargetTeam(selectValue.teamId)}
+            renderItems={() =>
+              teams.map(team => (
+                <MenuItem key={team.id} value={team.id} data-testid={team.id} className="Body-Regular-Center-Chambray">
+                  {team.name}
+                </MenuItem>
+              ))
+            }
+          />
         </Box>
       </ModalConfirmationMessage>
     </Box>

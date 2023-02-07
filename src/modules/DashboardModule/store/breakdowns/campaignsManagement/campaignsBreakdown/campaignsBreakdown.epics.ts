@@ -46,17 +46,23 @@ export const loadCampaignManagementListEpic: Epic = (action$, state$, { apiServi
 export const duplicateCampaignEpic: Epic = (action$, state$, { apiService }) =>
   action$.pipe(
     ofType(duplicateCampaign.pending),
-    switchMap(({ payload: { id } }) =>
-      apiService.post(`/enterprise/dashboard/settings/campaigns/${id}/duplicate`).pipe(
-        mergeMap(() => [
-          duplicateCampaign.fulfilled(),
-          showGlobalMessage({
-            type: MessageType.Success,
-            text: `Campaign copied`,
-          }),
-        ]),
-        catchError(handleError(handlers.handleAnyError(duplicateCampaign.rejected))),
-      ),
+    switchMap(({ payload: { id, teamId } }) =>
+      apiService
+        .post(`/enterprise/dashboard/settings/campaigns/${id}/duplicate`, {
+          body: {
+            teamId,
+          },
+        })
+        .pipe(
+          mergeMap(() => [
+            duplicateCampaign.fulfilled(),
+            showGlobalMessage({
+              type: MessageType.Success,
+              text: `Campaign copied`,
+            }),
+          ]),
+          catchError(handleError(handlers.handleAnyError(duplicateCampaign.rejected))),
+        ),
     ),
   );
 

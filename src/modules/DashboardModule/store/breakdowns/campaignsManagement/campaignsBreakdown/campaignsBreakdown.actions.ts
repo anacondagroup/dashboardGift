@@ -20,7 +20,7 @@ export const fetchCampaignsSuccess = createAction<ICampaignBreakdownListSuccessP
 );
 export const fetchCampaignsFail = createAction(`${PREFIX}/FETCH_CAMPAIGNS_FAIL`);
 
-export const duplicateCampaign = createAsyncAction<{ id: number }, void, TErrors>(
+export const duplicateCampaign = createAsyncAction<{ id: number; teamId?: number | null }, void, TErrors>(
   `${PREFIX}/DUPLICATE_CAMPAIGN_REQUEST`,
 );
 

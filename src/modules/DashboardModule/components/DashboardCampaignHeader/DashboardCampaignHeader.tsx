@@ -1,9 +1,17 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Features, User } from '@alycecom/modules';
 import { makeStyles } from '@mui/styles';
-import { ActionsMenu, AlyceTheme, DateRangeSelect, Icon, IMenuItem } from '@alycecom/ui';
-import { Box, Typography } from '@mui/material';
+import {
+  ActionsMenu,
+  AlyceTheme,
+  DateRangeSelect,
+  Icon,
+  IMenuItem,
+  ModalConfirmationMessage,
+  SelectFilter,
+} from '@alycecom/ui';
+import { Box, MenuItem, Typography } from '@mui/material';
 import { Link, useHistory } from 'react-router-dom';
 
 import { deleteAllGiftsFromTransferSelection } from '../../store/breakdowns/giftTransfer/giftTransfer.actions';
@@ -28,6 +36,7 @@ import {
   unexpireProspectingCampaignById,
 } from '../../../ProspectingCampaignModule/store/prospectingCampaign/prospectingCampaign.actions';
 import { useDuplicateCampaign } from '../../hooks/useDuplicateCampaign';
+import { getUnarchivedTeams } from '../../../../store/teams/teams.selectors';
 
 const useStyles = makeStyles<AlyceTheme>(({ palette, spacing }) => ({
   root: {
@@ -76,6 +85,10 @@ const DashboardCampaignHeader = ({
   const dispatch = useDispatch();
   const history = useHistory();
   const user = useSelector(User.selectors.getUser);
+  const teams = useSelector(getUnarchivedTeams);
+
+  const [isDuplicateModalOpened, setDuplicateModalOpened] = useState(false);
+  const [targetTeam, setTargetTeam] = useState<number | null>(null);
 
   const canEditCampaign = useMemo(() => user.canManageTeams.includes(campaign.team_id), [user, campaign]);
   const canCreateCampaign = user.canManageTeams.length > 0;
@@ -166,6 +179,30 @@ const DashboardCampaignHeader = ({
     [history],
   );
 
+  const handleOpenDuplicateCampaignsModal = useCallback(() => {
+    setTargetTeam(campaign.team_id);
+    setDuplicateModalOpened(true);
+  }, [campaign]);
+
+  const handleCloseDuplicateCampaignsModal = useCallback(() => {
+    setDuplicateModalOpened(false);
+    setTargetTeam(null);
+  }, []);
+
+  const handleDuplicateCampaignAction = useCallback(() => {
+    if (campaign.type === CAMPAIGN_TYPES.STANDARD) {
+      handleOpenDuplicateCampaignsModal();
+    } else {
+      handleDuplicateCampaign(campaign);
+    }
+  }, [campaign, handleOpenDuplicateCampaignsModal, handleDuplicateCampaign]);
+
+  const handleSubmitDuplicateCampaigns = useCallback(() => {
+    setDuplicateModalOpened(false);
+    handleDuplicateCampaign(campaign, targetTeam);
+    setTargetTeam(null);
+  }, [campaign, handleDuplicateCampaign, targetTeam]);
+
   const menuItems = useMemo<IMenuItem<ICampaign>[]>(
     () => [
       {
@@ -199,7 +236,7 @@ const DashboardCampaignHeader = ({
       {
         id: 'duplicate',
         text: 'Duplicate',
-        action: handleDuplicateCampaign,
+        action: handleDuplicateCampaignAction,
         ...getActionAvailabilityOptions({
           campaign,
           hasPermission: canCreateCampaign,
@@ -272,12 +309,12 @@ const DashboardCampaignHeader = ({
       canEditCampaign,
       onOpenCampaignSettings,
       onOpenRecipientExperience,
-      handleDuplicateCampaign,
       onOpenReportModal,
       campaign,
       onOpenArchiveCampaignModal,
       onSetCampaignExpired,
       onOpenGiftLinks,
+      handleDuplicateCampaignAction,
     ],
   );
 
@@ -333,6 +370,39 @@ const DashboardCampaignHeader = ({
           />
         </Box>
       </Box>
+      <ModalConfirmationMessage
+        title="Duplicate campaign"
+        variant="info"
+        submitButtonText="Duplicate"
+        cancelButtonText="Cancel"
+        width="100%"
+        isOpen={isDuplicateModalOpened}
+        onSubmit={handleSubmitDuplicateCampaigns}
+        onDiscard={handleCloseDuplicateCampaignsModal}
+        customClasses={{
+          submitButton: classes.submitButtonModal,
+          root: classes.rootModal,
+          avatar: classes.modalAvatar,
+        }}
+      >
+        <Box pt={3}>Select the team that the duplicated campaign will be assigned to</Box>
+        <Box pt={3}>
+          <SelectFilter
+            label="Target Team"
+            name="teamId"
+            value={targetTeam}
+            fullWidth
+            onFilterChange={selectValue => setTargetTeam(selectValue.teamId)}
+            renderItems={() =>
+              teams.map(team => (
+                <MenuItem key={team.id} value={team.id} data-testid={team.id} className="Body-Regular-Center-Chambray">
+                  {team.name}
+                </MenuItem>
+              ))
+            }
+          />
+        </Box>
+      </ModalConfirmationMessage>
     </Box>
   );
 };
