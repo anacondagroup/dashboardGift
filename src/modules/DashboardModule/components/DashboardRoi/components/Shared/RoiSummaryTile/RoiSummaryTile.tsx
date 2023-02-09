@@ -35,6 +35,7 @@ const styles = {
     fontSize: '48px',
     lineHeight: '56px',
     marginBottom: 1,
+    paddingTop: 1.2,
 
     [breakpoints.down(breakpoints.values.lg)]: {
       fontSize: '36px',
@@ -53,7 +54,8 @@ const styles = {
     fontSize: '12px',
     lineHeight: '16px',
     textTransform: 'uppercase',
-    marginBottom: 3,
+    marginBottom: 1.8,
+    gap: 1,
     color: ({ palette }: Theme) => palette.grey.main,
   },
 } as const;

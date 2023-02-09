@@ -6,7 +6,7 @@ const styles = {
   tooltip: {
     width: 190,
   },
-  tooltipIcon: { color: ({ palette }: Theme) => palette.grey.medium, width: 12, height: 12 },
+  tooltipIcon: { color: ({ palette }: Theme) => palette.grey.medium, width: 16, height: 16 },
 } as const;
 
 interface IInfoIconWithTooltipProps {

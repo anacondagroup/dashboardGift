@@ -32,21 +32,21 @@ const columns: TRoiColumn<TInfluencedOpportunities>[] = [
   },
   {
     label: 'Unique Recipients',
-    align: 'center',
+    align: 'right',
     tooltipText: 'Number of recipients that have been sent, viewed, or accepted a gift',
     field: 'uniqueRecipientCount',
     isSortable: true,
   },
   {
     label: 'Accepted Gifts',
-    align: 'center',
+    align: 'right',
     tooltipText: 'Number of gifts that have been accepted',
     field: 'acceptedGiftsCount',
     isSortable: true,
   },
   {
     label: 'Booked Meetings',
-    align: 'center',
+    align: 'right',
     tooltipText: 'Number of meetings that have been booked via Alyce meeting booker',
     field: 'bookedMeetingsCount',
     isSortable: true,
@@ -66,7 +66,7 @@ const columns: TRoiColumn<TInfluencedOpportunities>[] = [
     label: 'Total Influenced',
     align: 'right',
     tooltipText:
-      'Sum of the opportunity value for all opportunities where a gift influenced the opportunity (Influenced Open ARR + Closed-Won ARR)',
+      'Sum of the opportunity value for all opportunities where a gift influenced the opportunity (Influenced Open Revenue + Closed-Won Revenue)',
     field: 'claimedGiftsOpportunitiesSum',
     getFormattedValue: data => toFormattedPrice(data.claimedGiftsOpportunitiesSum),
     styles: {
@@ -76,7 +76,7 @@ const columns: TRoiColumn<TInfluencedOpportunities>[] = [
     isSortable: true,
   },
   {
-    label: 'Closed-won Arr',
+    label: 'Closed-won Revenue',
     align: 'right',
     tooltipText: 'Sum of the opportunity value that was Closed-Won where a gift influenced the opportunity',
     field: 'closedWonOpportunitiesSum',
