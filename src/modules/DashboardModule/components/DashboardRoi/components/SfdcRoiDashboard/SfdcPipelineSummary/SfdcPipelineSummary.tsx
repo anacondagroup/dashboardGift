@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { useGetSfdcSummaryQuery } from '@alycecom/services';
 import { useSelector } from 'react-redux';
 
-import salesforceLogo from '../../../assets/images/salesforce-logo.png';
+import salesforceLogo from '../../../assets/images/salesforce-icon.svg';
 import RoiSummaryTile from '../../Shared/RoiSummaryTile/RoiSummaryTile';
 import { toFormattedPrice, toRoi } from '../../../utils';
 import { StyledRoiSectionTitle } from '../../Shared';
@@ -28,13 +28,13 @@ const SfdcPipelineSummary = (): JSX.Element => {
 
       <Box display="flex" justifyContent="space-between">
         <RoiSummaryTile
-          label="Influenced Open ARR"
+          label="Influenced Open Revenue"
           value={data?.data.claimedGiftsOpportunitiesSum}
           isLoading={isFetching}
           tooltipText="Sum of the opportunity value that is still Open where a gift influenced the opportunity"
         />
         <RoiSummaryTile
-          label="Closed-Won ARR"
+          label="Closed-Won Revenue"
           value={data?.data.closedWonOpportunitiesSum}
           isLoading={isFetching}
           color="green.fruitSalad"

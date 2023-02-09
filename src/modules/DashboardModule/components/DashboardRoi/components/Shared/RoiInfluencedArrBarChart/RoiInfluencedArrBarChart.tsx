@@ -120,7 +120,7 @@ const RoiInfluencedARRBarChart = <T, M extends object>({
       colors.secondary.dark,
       colors.green.fruitSalad80,
       colors.brown.main,
-      colors.red.brickRed10,
+      colors.red.light,
       colors.primary.superLight,
     ].slice(0, dealTypesLength),
   });

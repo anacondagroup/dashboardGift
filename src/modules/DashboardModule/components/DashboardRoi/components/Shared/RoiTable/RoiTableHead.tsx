@@ -33,7 +33,7 @@ const styles = {
       position: 'absolute',
       top: '50%',
       marginTop: '-9px',
-      right: '-40px',
+      right: '-20px',
     },
   },
 } as const;

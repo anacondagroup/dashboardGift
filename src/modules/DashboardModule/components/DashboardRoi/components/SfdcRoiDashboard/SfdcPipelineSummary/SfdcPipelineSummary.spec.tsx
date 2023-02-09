@@ -18,8 +18,8 @@ describe('SfdcPipelineSummary', () => {
   it('should render sfdc summary tiles', () => {
     setup();
 
-    expect(screen.getByText(/Influenced Open ARR/)).toBeInTheDocument();
-    expect(screen.getByText(/Closed-Won ARR/)).toBeInTheDocument();
+    expect(screen.getByText(/Influenced Open Revenue/)).toBeInTheDocument();
+    expect(screen.getByText(/Closed-Won Revenue/)).toBeInTheDocument();
     expect(screen.getByText(/Total Influenced/)).toBeInTheDocument();
     expect(screen.getByText(/Total Spend/)).toBeInTheDocument();
     expect(screen.getByText(/ROI/)).toBeInTheDocument();

@@ -7,6 +7,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: spacing(3),
+    paddingTop: spacing(1),
   },
 }));
 

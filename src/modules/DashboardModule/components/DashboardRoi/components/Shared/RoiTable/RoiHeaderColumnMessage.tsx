@@ -7,13 +7,12 @@ import { TRoiColumn } from './roiTable.types';
 
 const styles = {
   headerCellContent: {
-    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
   },
   tooltipIcon: {
-    position: 'absolute',
-    top: '50%',
-    marginTop: '-6px',
-    right: '-20px',
+    marginLeft: 1,
+    marginRight: 0.5,
   },
 } as const;
 
