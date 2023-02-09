@@ -135,14 +135,14 @@ describe('RoiFilters', () => {
   describe('Team members Filter', () => {
     it('should render Team members filter and should not have default value', async () => {
       setupFilterByTeamMembers();
-      expect(await screen.findByRole('button', { name: 'Select Team Member' })).toBeInTheDocument();
+      expect(await screen.findByRole('button', { name: 'Select Team Members' })).toBeInTheDocument();
     });
 
     // FIXME: Unstable
     xit('should display correct options', async () => {
       setupFilterByTeamMembers();
 
-      const getMembersFilter = await screen.findByRole('button', { name: /Select Team Member/ });
+      const getMembersFilter = await screen.findByRole('button', { name: /Select Team Members/ });
       userEvent.click(getMembersFilter);
 
       expect(await screen.findByRole('option', { name: /John Doe/ })).toBeInTheDocument();
@@ -153,14 +153,14 @@ describe('RoiFilters', () => {
     xit('should allow to select a team member', async () => {
       setupFilterByTeamMembers();
 
-      const getMembersFilter = await screen.findByRole('button', { name: /Select Team Member/ });
+      const getMembersFilter = await screen.findByRole('button', { name: /Select Team Members/ });
       userEvent.click(getMembersFilter);
 
       const optionalTeamMember = await screen.findByRole('option', { name: /John Doe/ });
 
       userEvent.click(optionalTeamMember);
 
-      expect(await screen.findByRole('button', { name: 'Select Team Member (1)' })).toBeInTheDocument();
+      expect(await screen.findByRole('button', { name: 'Select Team Members (1)' })).toBeInTheDocument();
     }, 20000);
 
     // FIXME: Unstable
