@@ -1,6 +1,6 @@
 import { createAction } from 'redux-act';
 
-import { ICampaign, IGift } from './giftTransfer.types';
+import { ICampaign, IGift, IGiftParams } from './giftTransfer.types';
 
 const PREFIX = 'DASHBOARD/BREAKDOWNS/TRANSFER';
 
@@ -34,3 +34,15 @@ export const loadAllowedCampaignsSuccess = createAction<{ campaigns: ICampaign[]
   `${PREFIX}/LOAD_ALLOWED_CAMPAIGNS_SUCCESS`,
 );
 export const loadAllowedCampaignsFail = createAction(`${PREFIX}/LOAD_ALLOWED_CAMPAIGNS_FAIL`);
+
+export const giftExpireRequest = createAction<IGiftParams>(`${PREFIX}/GIFT_EXPIRE_REQUEST`);
+export const giftExpireSuccess = createAction(`${PREFIX}/GIFT_EXPIRE_SUCCESS`);
+export const giftExpireFail = createAction(`${PREFIX}/GIFT_EXPIRE_FAIL`);
+
+export const giftUnExpireRequest = createAction<IGiftParams>(`${PREFIX}/GIFT_UNEXPIRE_REQUEST`);
+export const giftUnExpireSuccess = createAction(`${PREFIX}/GIFT_UNEXPIRE_SUCCESS`);
+export const giftUnExpireFail = createAction(`${PREFIX}/GIFT_UNEXPIRE_FAIL`);
+
+export const giftDisableRequest = createAction<IGiftParams>(`${PREFIX}/GIFT_DISABLE_REQUEST`);
+export const giftDisableSuccess = createAction(`${PREFIX}/GIFT_DISABLE_SUCCESS`);
+export const giftDisableFail = createAction(`${PREFIX}/GIFT_DISABLE_FAIL`);

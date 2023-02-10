@@ -24,6 +24,8 @@ const GiftBreakdownSection = ({ teamId, memberId, campaignId, title, subtitle, p
     >
       <StandardGiftBreakdown
         teamId={teamId}
+        memberId={memberId}
+        campaignId={campaignId}
         placeholder={placeholder}
         breakdown={breakdown}
         isLoading={isLoading}
