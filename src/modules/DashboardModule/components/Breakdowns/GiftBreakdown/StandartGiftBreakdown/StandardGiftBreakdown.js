@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment-timezone';
 import { User } from '@alycecom/modules';
+import { Checkbox } from '@mui/material';
 
 import GiftBreakdownTable from '../GiftBreakdownTable/GiftBreakdownTable';
 import { openSidebarTab } from '../../../../../../services/sidebar.service';
@@ -63,7 +64,7 @@ const standardBreakdownTableColumns = [
   },
 ];
 
-const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isLoading, pagination }) => {
+const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isLoading, pagination, memberId }) => {
   const dispatch = useDispatch();
 
   const team = useSelector(useMemo(() => makeGetTeamById(parseInt(teamId, 10)), [teamId]));
@@ -76,11 +77,16 @@ const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isL
   const isUserTeamAdmin = useMemo(() => teamsIds && teamsIds.includes(teamId), [teamId, teamsIds]);
   const isEnterpriseModeEnabled = useMemo(() => team && team.settings.enterprise_mode_enabled, [team]);
   const displayCheckboxes = isUserTeamAdmin && isEnterpriseModeEnabled;
-  const columns = useMemo(
+
+  const isAllChecked = useMemo(
     () =>
-      displayCheckboxes ? [{ field: 'checkboxes' }, ...standardBreakdownTableColumns] : standardBreakdownTableColumns,
-    [displayCheckboxes],
+      breakdown.reduce((acc, data) => {
+        const isChecked = !!selectedGifts.find(({ id }) => id === data.id);
+        return acc && isChecked;
+      }, true),
+    [breakdown, selectedGifts],
   );
+
   const items = useMemo(
     () =>
       breakdown.map(data => {
@@ -89,15 +95,6 @@ const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isL
       }),
     [breakdown, selectedGifts],
   );
-
-  useEffect(() => {
-    loadAvatars(recipientsIds);
-  }, [loadAvatars, recipientsIds]);
-
-  const openGift = useCallback((gift, updateUrl) => {
-    const giftInfo = { giftId: gift.id, contactId: gift.recipientId, giftStatusId: gift.giftStatusId };
-    openSidebarTab(updateUrl, giftInfo);
-  }, []);
 
   const onChangeGiftCheckbox = useCallback(
     (gift, action) => {
@@ -109,6 +106,39 @@ const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isL
     },
     [dispatch],
   );
+
+  const handleCheckAll = useCallback(
+    e => {
+      items.forEach(item => {
+        onChangeGiftCheckbox(item.data, e.target.checked);
+      });
+    },
+    [items, onChangeGiftCheckbox],
+  );
+
+  const columns = useMemo(
+    () =>
+      displayCheckboxes
+        ? [
+            {
+              field: 'checkboxes',
+              isSortDisabled: true,
+              name: <Checkbox color="primary" checked={isAllChecked} onChange={handleCheckAll} />,
+            },
+            ...standardBreakdownTableColumns,
+          ]
+        : standardBreakdownTableColumns,
+    [handleCheckAll, isAllChecked, displayCheckboxes],
+  );
+
+  useEffect(() => {
+    loadAvatars(recipientsIds);
+  }, [loadAvatars, recipientsIds]);
+
+  const openGift = useCallback((gift, updateUrl) => {
+    const giftInfo = { giftId: gift.id, contactId: gift.recipientId, giftStatusId: gift.giftStatusId };
+    openSidebarTab(updateUrl, giftInfo);
+  }, []);
 
   return (
     <>
@@ -133,7 +163,14 @@ const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isL
           />
         )}
         renderToolbar={({ placeholder: searchBarPlaceholder, search, handleSearch }) => (
-          <GiftBreakdownToolbar placeholder={searchBarPlaceholder} search={search} onSearch={handleSearch} />
+          <GiftBreakdownToolbar
+            placeholder={searchBarPlaceholder}
+            search={search}
+            onSearch={handleSearch}
+            teamId={teamId}
+            memberId={memberId}
+            campaignId={campaignId}
+          />
         )}
       />
       {isSidebarOpen && <GiftTransferSidebar teamId={teamId} campaignId={campaignId} />}
@@ -144,6 +181,7 @@ const StandardGiftBreakdown = ({ teamId, campaignId, placeholder, breakdown, isL
 StandardGiftBreakdown.propTypes = {
   teamId: PropTypes.number,
   campaignId: PropTypes.number,
+  memberId: PropTypes.number,
   // eslint-disable-next-line react/forbid-prop-types
   breakdown: PropTypes.array.isRequired,
   isLoading: PropTypes.bool,
@@ -154,6 +192,7 @@ StandardGiftBreakdown.propTypes = {
 StandardGiftBreakdown.defaultProps = {
   teamId: undefined,
   campaignId: undefined,
+  memberId: undefined,
   isLoading: false,
   placeholder: undefined,
 };

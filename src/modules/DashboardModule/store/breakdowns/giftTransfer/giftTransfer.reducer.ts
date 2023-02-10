@@ -85,3 +85,27 @@ export default createReducer({}, initialGiftTransferState)
     ...state,
     isLoading: false,
   }));
+// .on(giftExpireRequest, state => ({
+//   ...state,
+//   isLoading: true,
+// }))
+// .on(giftExpireSuccess, state => ({
+//   ...state,
+//   isLoading: false,
+// }))
+// .on(giftExpireFail, state => ({
+//   ...state,
+//   isLoading: false,
+// }))
+// .on(giftUnExpireRequest, state => ({
+//   ...state,
+//   isLoading: true,
+// }))
+// .on(giftUnExpireSuccess, state => ({
+//   ...state,
+//   isLoading: false,
+// }))
+// .on(giftUnExpireFail, state => ({
+//   ...state,
+//   isLoading: false,
+// }))

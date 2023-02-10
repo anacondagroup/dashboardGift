@@ -4,13 +4,25 @@ import { ofType } from '@alycecom/utils';
 import { handleError, handlers } from '@alycecom/services';
 import { Epic } from 'redux-observable';
 
+import { giftBreakdownRequest } from '../gift/gift.actions';
+
 import {
+  deleteAllGiftsFromTransferSelection,
+  giftDisableFail,
+  giftDisableRequest,
+  giftDisableSuccess,
+  giftExpireFail,
+  giftExpireRequest,
+  giftExpireSuccess,
   giftTransferringFail,
   giftTransferringProgressFinish,
   giftTransferringProgressRequest,
   giftTransferringProgressSuccess,
   giftTransferringRequest,
   giftTransferringSuccess,
+  giftUnExpireFail,
+  giftUnExpireRequest,
+  giftUnExpireSuccess,
   loadAllowedCampaignsFail,
   loadAllowedCampaignsRequest,
   loadAllowedCampaignsSuccess,
@@ -103,4 +115,74 @@ export const loadAllowedCampaignsEpic: Epic = (action$, state$, { apiService }) 
     ),
   );
 
-export default [loadGiftTransferringId, loadGiftTransferringProgress, loadAllowedCampaignsEpic];
+export const giftExpireEpic: Epic = (action$, state$, { apiService }) =>
+  action$.pipe(
+    ofType(giftExpireRequest),
+    switchMap(({ payload }) =>
+      apiService
+        .post(
+          '/api/v1/gifts/bulk/expire',
+          {
+            body: {
+              giftIds: payload.giftIds,
+            },
+          },
+          true,
+        )
+        .pipe(
+          mergeMap(() => [giftExpireSuccess(), deleteAllGiftsFromTransferSelection(), giftBreakdownRequest(payload)]),
+          catchError(handleError(handlers.handleAnyError(giftExpireFail))),
+        ),
+    ),
+  );
+
+export const giftUnExpireEpic: Epic = (action$, state$, { apiService }) =>
+  action$.pipe(
+    ofType(giftUnExpireRequest),
+    switchMap(({ payload }) =>
+      apiService
+        .post(
+          '/api/v1/gifts/bulk/unexpire',
+          {
+            body: {
+              giftIds: payload.giftIds,
+            },
+          },
+          true,
+        )
+        .pipe(
+          mergeMap(() => [giftUnExpireSuccess(), deleteAllGiftsFromTransferSelection(), giftBreakdownRequest(payload)]),
+          catchError(handleError(handlers.handleAnyError(giftUnExpireFail))),
+        ),
+    ),
+  );
+
+export const giftDisableEpic: Epic = (action$, state$, { apiService }) =>
+  action$.pipe(
+    ofType(giftDisableRequest),
+    switchMap(({ payload }) =>
+      apiService
+        .post(
+          '/api/v1/gifts/bulk/disable',
+          {
+            body: {
+              giftIds: payload.giftIds,
+            },
+          },
+          true,
+        )
+        .pipe(
+          mergeMap(() => [giftDisableSuccess(), deleteAllGiftsFromTransferSelection(), giftBreakdownRequest(payload)]),
+          catchError(handleError(handlers.handleAnyError(giftDisableFail))),
+        ),
+    ),
+  );
+
+export default [
+  giftExpireEpic,
+  giftUnExpireEpic,
+  giftDisableEpic,
+  loadGiftTransferringId,
+  loadGiftTransferringProgress,
+  loadAllowedCampaignsEpic,
+];

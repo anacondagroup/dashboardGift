@@ -111,10 +111,10 @@ const StandardGiftBreakdownRow = ({
           scope="row"
         >
           {data.campaignId ? (
-            <Checkbox color="secondary" checked={isChecked} onChange={onCheckboxChange} />
+            <Checkbox color="primary" checked={isChecked} onChange={onCheckboxChange} />
           ) : (
             <HoverPopover hint="You can't move this gift as it doesn't belong to any campaign">
-              <Checkbox color="secondary" checked={isChecked} onChange={onCheckboxChange} disabled={!data.campaignId} />
+              <Checkbox color="primary" checked={isChecked} onChange={onCheckboxChange} disabled={!data.campaignId} />
             </HoverPopover>
           )}
         </TableCell>
