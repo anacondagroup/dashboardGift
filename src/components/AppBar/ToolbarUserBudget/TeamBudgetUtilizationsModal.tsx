@@ -1,7 +1,6 @@
 import React, { memo } from 'react';
 import { Button, GlobalFonts } from '@alycecom/ui';
 import { Box, Modal, Theme, Typography } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { TBudgetUtilization } from '@alycecom/services';
 
 import { ITeam } from '../../../store/teams/teams.types';
@@ -34,11 +33,6 @@ const styles = {
     justifyContent: 'flex-end',
     marginTop: ({ spacing }: Theme) => spacing(2),
   },
-  closeIcon: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-  },
   okButton: {
     color: ({ palette }: Theme) => palette.common.white,
     backgroundColor: ({ palette }: Theme) => palette.green.dark,
@@ -61,11 +55,10 @@ const TeamBudgetUtilizationsModal = ({
   showModal,
   toggleModalState,
 }: ITeamBudgetUtilizationsModalProps) => (
-  <Modal open={showModal} onBackdropClick={() => toggleModalState(false)} disableAutoFocus>
+  <Modal open={showModal} onBackdropClick={() => toggleModalState(false)}>
     <Box sx={styles.budgetAllocationModal}>
       <Box sx={styles.modalHeaderContainer}>
         <Typography sx={styles.modalHeader}>Your budget allocation</Typography>
-        <CloseIcon sx={styles.closeIcon} color="action" onClick={() => toggleModalState(false)} />
       </Box>
       <Box sx={styles.teamsContainer}>
         {teams.map((team, index) => {

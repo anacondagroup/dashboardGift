@@ -6,7 +6,6 @@ import { TBudgetUtilization } from '@alycecom/services';
 import { ITeam } from '../../../store/teams/teams.types';
 
 import TeamUtilization from './TeamUtilization';
-import TeamBudgetUtilizationsModal from './TeamBudgetUtilizationsModal';
 
 const styles = {
   divider: {
@@ -19,19 +18,11 @@ const styles = {
 } as const;
 
 interface ITeamBudgetUtilizations {
-  teams: ITeam[];
+  activeTeams: ITeam[];
   budgetUtilizations: TBudgetUtilization[];
-  showModal: boolean;
   toggleModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const TeamBudgetUtilizations = ({
-  teams,
-  budgetUtilizations,
-  showModal,
-  toggleModalState,
-}: ITeamBudgetUtilizations) => {
-  // @ts-ignore
-  const activeTeams = teams.filter(team => team.archivedAt === null);
+const TeamBudgetUtilizations = ({ activeTeams, budgetUtilizations, toggleModalState }: ITeamBudgetUtilizations) => {
   const firstThreeTeams = activeTeams.slice(0, 3);
 
   return (
@@ -55,12 +46,6 @@ const TeamBudgetUtilizations = ({
           Show All
         </Typography>
       )}
-      <TeamBudgetUtilizationsModal
-        teams={activeTeams}
-        budgetUtilizations={budgetUtilizations}
-        showModal={showModal}
-        toggleModalState={toggleModalState}
-      />
     </Box>
   );
 };
