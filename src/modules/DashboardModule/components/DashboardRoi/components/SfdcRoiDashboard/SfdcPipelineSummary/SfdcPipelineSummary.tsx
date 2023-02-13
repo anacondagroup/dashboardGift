@@ -44,14 +44,14 @@ const SfdcPipelineSummary = (): JSX.Element => {
           label="Total Influenced"
           value={data?.data.totalInfluenced}
           isLoading={isFetching}
-          tooltipText="Sum of the opportunity value for all opportunities where a gift influenced the opportunity (Influenced Open Revenue + Closed-Won Revenue)"
+          tooltipText="Sum of the opportunity value for all opportunities where a gift influenced the opportunity (Influenced Open ARR + Closed-Won ARR)"
         />
         <RoiSummaryTile
           label="Total Spend"
           value={data?.data.totalSpend}
           isLoading={isFetching}
           formatter={totalSpendFormatter}
-          tooltipText="Total gift spend"
+          tooltipText="Total amount of spend on accepted gifts"
         />
         <RoiSummaryTile
           label="ROI"
