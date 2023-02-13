@@ -42,7 +42,7 @@ const RoiTeamMembersFilter = (): JSX.Element => {
   return (
     <Box sx={styles.filter}>
       <MultiAutocomplete<typeof teamMembers[number], true>
-        label="Select Team Member"
+        label="Select Team Members"
         name="teamMemberFilter"
         value={selectedTeamMembers}
         options={teamMembers}
