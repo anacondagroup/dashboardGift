@@ -12,6 +12,7 @@ import { ITeam } from '../../../store/teams/teams.types';
 
 import TeamBudgetUtilizations from './TeamBudgetUtilizations';
 import { styles } from './ToolbarUserBudget.styles';
+import TeamBudgetUtilizationsModal from './TeamBudgetUtilizationsModal';
 
 interface IToolbarUserBudgetProps {
   budgetUtilizations: TBudgetUtilization[];
@@ -45,6 +46,7 @@ const ToolbarUserBudget = ({
   const [isBudgetListVisible, setIsBudgetListVisible] = useState<boolean>(false);
 
   const { availableBudget, pendingGiftCosts } = getBudgetUtilizationText(firstTeamsUtilization);
+  const activeTeams = sortedTeams.filter(team => team.archivedAt === null);
 
   if (isLoading) {
     return (
@@ -61,9 +63,8 @@ const ToolbarUserBudget = ({
       title={
         hasMoreThenOneTeam ? (
           <TeamBudgetUtilizations
-            teams={sortedTeams}
+            activeTeams={activeTeams}
             budgetUtilizations={budgetUtilizations}
-            showModal={showModal}
             toggleModalState={toggleModalState}
           />
         ) : (
@@ -73,7 +74,10 @@ const ToolbarUserBudget = ({
       arrow
       placement="bottom"
       onOpen={() => setIsBudgetListVisible(true)}
-      onClose={() => setIsBudgetListVisible(false)}
+      onClose={() => {
+        setIsBudgetListVisible(false);
+        toggleModalState(false);
+      }}
     >
       <Box sx={styles.container} data-testid="ToolbarUserBudget">
         <Box sx={styles.budgetsContainer}>
@@ -99,6 +103,12 @@ const ToolbarUserBudget = ({
         {shouldShowZeroBudgetWarning && (
           <Box sx={styles.warningDot} data-testid="ToolbarUserBudget.ZeroBudgetWarning" />
         )}
+        <TeamBudgetUtilizationsModal
+          teams={activeTeams}
+          budgetUtilizations={budgetUtilizations}
+          showModal={showModal}
+          toggleModalState={toggleModalState}
+        />
       </Box>
     </Tooltip>
   );

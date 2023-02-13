@@ -13,7 +13,6 @@ interface ITeamBudgetProps {
   control: Control<TBudgetCreateParams>;
   error?: string;
 }
-
 const TeamBudget = ({ control, error }: ITeamBudgetProps): JSX.Element => (
   <Controller
     control={control}
