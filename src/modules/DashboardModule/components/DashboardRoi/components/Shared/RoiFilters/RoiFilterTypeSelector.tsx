@@ -36,7 +36,7 @@ const ROI_FILTER_TYPES = [
   },
   {
     type: TActiveFilterSelection.TeamMembers,
-    label: 'Team Member',
+    label: 'Team Members',
   },
 ];
 

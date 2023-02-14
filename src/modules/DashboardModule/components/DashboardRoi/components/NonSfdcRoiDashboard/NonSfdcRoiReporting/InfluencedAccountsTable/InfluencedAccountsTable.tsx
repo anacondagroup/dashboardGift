@@ -31,19 +31,20 @@ const columns: TRoiColumn<TInfluencedAccounts>[] = [
   {
     label: 'Unique Recipients',
     align: 'right',
-    tooltipText: 'Number of recipients that have been sent, viewed, or accepted a gift',
+    tooltipText:
+      'Number of unique individuals tied to an opportunitiy within this account who have been sent one or more gifts',
     field: 'uniqueRecipients',
     isSortable: true,
   },
   {
     label: 'Accepted Gifts',
     align: 'right',
-    tooltipText: 'Number of gifts that have been accepted',
+    tooltipText: 'Number of gifts accepted that are tied to opportunities within the account',
     field: 'acceptedGifts',
     isSortable: true,
   },
   {
-    label: 'Booked Meetings',
+    label: 'Meetings Booked',
     align: 'right',
     tooltipText: 'Number of meetings that have been booked via Alyce meeting booker',
     field: 'meetingsBooked',
@@ -52,7 +53,7 @@ const columns: TRoiColumn<TInfluencedAccounts>[] = [
   {
     label: 'Total Spend',
     align: 'right',
-    tooltipText: 'Total amount of spend on accepted gifts',
+    tooltipText: 'Total spend on gifts tied to opportunities within this account',
     field: 'totalSpent',
     getFormattedValue: data => toFormattedPrice(data.totalSpent, NumberFormattingOptions.LargeWithDecimals),
     isSortable: true,
