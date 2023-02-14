@@ -38,7 +38,7 @@ const RoiTableNoData = ({ colSpan }: IRoiTableNoDataProps): JSX.Element => (
         <img src={noSearchResultsSvg} alt="No result found" />
         <Box sx={styles.textWrapper}>
           <Typography sx={styles.header}>No results found</Typography>
-          <Typography>Try adjusting your search to find what you are looking for</Typography>
+          <Typography>Try adjusting your filters</Typography>
         </Box>
       </Box>
     </TableCell>

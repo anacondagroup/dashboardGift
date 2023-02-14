@@ -27,8 +27,7 @@ export const NotFoundMessage = ({
       <img src={noSearchResultsSvg} alt="No result found" />
       <Box display="flex" width={250} flexDirection="column" alignItems="center" color={textColor}>
         <Typography style={{ fontWeight: 700, color: headerColor }}>No results found</Typography>
-        <Typography>Try adjusting your search</Typography>
-        <Typography>to find what you are looking for</Typography>
+        <Typography>Try adjusting your filters</Typography>
       </Box>
     </Box>
   );
