@@ -4,6 +4,7 @@ import { Grid, Paper } from '@mui/material';
 import Filters from './Filters';
 import Overview from './Overview';
 import GiftingActivity from './GiftingActivity';
+import GiftDepositFormDownload from './GiftDepositFormDownload';
 
 const styles = {
   overviewWrapper: {
@@ -15,6 +16,7 @@ const styles = {
 
 const BillingOverview = (): JSX.Element => (
   <Grid container>
+    <GiftDepositFormDownload />
     <Grid item container xs={12}>
       <Paper sx={styles.overviewWrapper} elevation={4}>
         <Filters />

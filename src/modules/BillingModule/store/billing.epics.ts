@@ -5,6 +5,7 @@ import editBillingGroupsEpics from './editBillingGroups/editBillingGroups.epics'
 import billingGroupsContactsEpics from './billingGroupsContacts/billingGroupsContacts.epics';
 import giftDeposits from './giftDeposits/giftDeposits.epics';
 import editTeamsEpics from './editTeams/editTeams.epics';
+import uiEpics from './ui/ui.epics';
 
 export default [
   ...breakdownsEpics,
@@ -14,4 +15,5 @@ export default [
   ...editBillingGroupsEpics,
   ...billingGroupsContactsEpics,
   ...editTeamsEpics,
+  ...uiEpics,
 ];
