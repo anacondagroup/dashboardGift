@@ -14,6 +14,7 @@ import TeamInfoForm from '../TeamInfoForm/TeamInfoForm';
 import TeamBudgetForm from '../TeamBudgetForm/TeamBudgetForm';
 import TeamSidebarProgressStepper from '../TeamSidebarProgressStepper/TeamSidebarProgressStepper';
 import { STEPS } from '../../../../constants/teamSidebarProgress.constants';
+import TeamSettingsForm from '../TeamSettingsForm/TeamSettingsForm';
 
 import TeamSidebarHeader from './TeamSidebarHeader';
 import BaseSidebarHeader from './BaseSidebarHeader';
@@ -53,6 +54,7 @@ const TeamSidebar = (): JSX.Element => {
         {hasBudgetManagementSetup && <TeamSidebarProgressStepper steps={STEPS} activeStep={activeStep} />}
         {activeStep === TeamSidebarStep.TeamInfo && <TeamInfoForm />}
         {activeStep === TeamSidebarStep.TeamBudget && teamId && <TeamBudgetForm teamId={teamId} />}
+        {activeStep === TeamSidebarStep.TeamSettings && <TeamSettingsForm teamId={teamId} />}
       </Box>
     </Drawer>
   );

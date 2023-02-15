@@ -22,7 +22,7 @@ import {
 import { getIsLoading } from '../../../../../UsersManagement/store/users/users.selectors';
 import { TEAM_BUDGET_TOOLTIP_MESSAGE } from '../../../../constants/budget.constants';
 import { getBudgetByTeamId } from '../../../../store/teams/budgets/budgets.selectors';
-import { getTeamById, getTeamIds } from '../../../../store/teams/teams/teams.selectors';
+import { getTeamById, getTeams } from '../../../../store/teams/teams/teams.selectors';
 import { loadBudgets } from '../../../../store/teams/budgets/budgets.actions';
 
 import TeamBudget from './fields/TeamBudget';
@@ -121,7 +121,9 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
 
   const isUsersLoading = useSelector(getIsLoading);
   const team = useSelector(useMemo(() => getTeamById(teamId), [teamId]));
-  const teamIds = useSelector(getTeamIds);
+  const teams = useSelector(getTeams);
+
+  const teamIds = teams.filter(item => item.archivedAt === null).map(item => item.id);
 
   const handleCancel = useCallback(() => {
     dispatch(setTeamSidebarStep({ step: null }));
@@ -159,6 +161,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
     if (isCreateSuccessfull || isEditSuccessfull) {
       dispatch(setTeamSidebarStep({ step: null, teamId: undefined }));
       dispatch(loadBudgets({ teamIds }));
+      dispatch(setTeamSidebarStep({ step: TeamSidebarStep.TeamSettings, teamId }));
     }
 
     if (isCreateSuccessfull) {
@@ -173,12 +176,12 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
     if (isEditSuccessfull) {
       dispatch(
         showGlobalMessage({
-          text: 'Update Saved Succesfully!',
+          text: 'Update Saved Successfully!',
           type: MessageType.Success,
         }),
       );
     }
-  }, [isCreateSuccessfull, isEditSuccessfull, teamIds, dispatch]);
+  }, [isCreateSuccessfull, isEditSuccessfull, teamIds, dispatch, teamId]);
 
   useEffect(() => {
     if (createBudgetError || editBudgetError) {
@@ -261,7 +264,7 @@ const TeamBudgetForm = ({ teamId }: ITeamBudgetFormProps): JSX.Element => {
               disabled={isBudgetLoading || isUsersLoading}
               data-testid="TeamBudgetForm.Save"
             >
-              Save
+              Next
             </Button>
           }
         />
