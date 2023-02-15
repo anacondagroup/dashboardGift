@@ -48,8 +48,8 @@ const GiftDepositFormDownload = (): JSX.Element => {
         action={ButtonItem}
       >
         <b>To add a deposit, download Gift Deposit Form.</b> Fill out the Gift Deposit Form and send the file to{' '}
-        <a href="mailto:finance@alyce.com" className="Body-Regular-Left-Link-Bold">
-          finance@alyce.com
+        <a href="mailto:accounting@alyce.com" className="Body-Regular-Left-Link-Bold">
+          accounting@alyce.com
         </a>
       </Alert>
     </Grid>
