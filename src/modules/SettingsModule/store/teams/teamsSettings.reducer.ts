@@ -11,6 +11,10 @@ import managersReducer, { IManagersState } from './managers/managers.reducer';
 import { TTeamOperationState, teamOperation } from './teamOperation/teamOperation.reducer';
 import { TBudgetState, reducer as budgetReducer } from './budgets/budgets.reducer';
 import { TTeamState, reducer as teamReducer } from './team/team.reducer';
+import {
+  reducer as notificationSettings,
+  INotificationSettingsState,
+} from './notificationSettings/notificationSettings.reducer';
 
 // TODO Remove once all properties of teams settings state is defined
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -20,6 +24,7 @@ export interface ITeamsSettingsState {
   giftInvites: any;
   customTemplates: any;
   generalSettings: IGeneralSettingsState;
+  notificationSettings: INotificationSettingsState;
   branding: IBrandingState;
   emailBranding: IEmailBrandingState;
   managers: IManagersState;
@@ -34,6 +39,7 @@ export const reducer = combineReducers<ITeamsSettingsState>({
   giftInvites: giftInvitesSettingsReducer,
   customTemplates: customTemplatesReducer,
   generalSettings,
+  notificationSettings,
   branding: brandingReducer,
   emailBranding: emailBrandingReducer,
   managers: managersReducer,

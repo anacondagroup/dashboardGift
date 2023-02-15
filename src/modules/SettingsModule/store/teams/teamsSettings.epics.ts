@@ -8,6 +8,7 @@ import { managersEpics } from './managers/managers.epics';
 import { teamOperationEpics } from './teamOperation/teamOperation.epics';
 import { budgetEpics } from './budgets/budgets.epics';
 import { teamEpics } from './team/team.epics';
+import { notificationSettingsEpic } from './notificationSettings/notificationSettings.epics';
 
 export const teamSettingsEpics = [
   ...teamGiftInvitationMethodsSettingsEpics,
@@ -20,4 +21,5 @@ export const teamSettingsEpics = [
   ...teamOperationEpics,
   ...budgetEpics,
   ...teamEpics,
+  ...notificationSettingsEpic,
 ];

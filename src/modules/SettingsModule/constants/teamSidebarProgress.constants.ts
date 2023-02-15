@@ -3,6 +3,7 @@ import { TProgressStep, TeamSidebarStep } from '../store/teams/teamOperation/tea
 export const STEPS: Array<TProgressStep> = [
   { step: TeamSidebarStep.TeamInfo, label: 'Name', position: 0 },
   { step: TeamSidebarStep.TeamBudget, label: 'Budget', position: 1 },
+  { step: TeamSidebarStep.TeamSettings, label: 'Settings', position: 2 },
 ];
 
 export const MAX_BUDGET: number = 99999999.99;
