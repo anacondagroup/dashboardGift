@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useReducer, useEffect, useState } from 're
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, Grid, TextField, Typography } from '@mui/material';
-import { updateSearch, Auth, User } from '@alycecom/modules';
+import { updateSearch, Auth, User, Features } from '@alycecom/modules';
 import { TrackEvent } from '@alycecom/services';
 import { useRouting, useScrollTop, useUrlQuery, useSetUrlQuery } from '@alycecom/hooks';
 import { ModalConfirmationMessage } from '@alycecom/ui';
@@ -79,6 +79,9 @@ const DashboardSingleCampaign = ({ campaignId }) => {
   const isUserLoading = useSelector(User.selectors.getIsUserLoading);
   const isCampaignsLoading = useSelector(getIsCampaignsLoading);
   const isHeaderLoading = isUserLoading || isCampaignsLoading;
+  const isDashboardStatisticsEnabled = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.DASHBOARD_STATISTICS_V3),
+  );
 
   const {
     dateRangeFrom,
@@ -271,8 +274,7 @@ const DashboardSingleCampaign = ({ campaignId }) => {
               </>
             )}
             <DashboardKpi kpi={kpi} isLoading={isLoading} campaignType={campaignType} />
-
-            {campaignType === CAMPAIGN_TYPES.STANDARD && (
+            {!isDashboardStatisticsEnabled && campaignType === CAMPAIGN_TYPES.STANDARD && (
               <DashboardSection
                 hidePaper
                 isLoading={isLoading}
@@ -286,7 +288,7 @@ const DashboardSingleCampaign = ({ campaignId }) => {
               </DashboardSection>
             )}
 
-            {campaignType === CAMPAIGN_TYPES.ACTIVATE && (
+            {!isDashboardStatisticsEnabled && campaignType === CAMPAIGN_TYPES.ACTIVATE && (
               <DashboardSection
                 hidePaper
                 isLoading={isLoading}

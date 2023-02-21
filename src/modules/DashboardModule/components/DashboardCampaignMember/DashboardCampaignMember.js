@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-import { Auth, User } from '@alycecom/modules';
+import { Auth, Features, User } from '@alycecom/modules';
 import { TrackEvent } from '@alycecom/services';
 import { useRouting, useScrollTop, useUrlQuery, useSetUrlQuery } from '@alycecom/hooks';
 
@@ -31,6 +31,10 @@ const DashboardCampaignMember = ({ memberId, campaignId }) => {
   const isUserLoading = useSelector(User.selectors.getIsUserLoading);
   const teamId = useSelector(useMemo(() => makeGetTeamIdByCampaignId(campaignId), [campaignId]));
   const { fullName: memberName = '' } = useSelector(useMemo(() => makeGetMemberById(memberId), [memberId])) || {};
+
+  const isDashboardStatisticsEnabled = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.DASHBOARD_STATISTICS_V3),
+  );
 
   const { dateRangeFrom, dateRangeTo } = useUrlQuery(['dateRangeFrom', 'dateRangeTo']);
   const updateUrlFunc = useSetUrlQuery();
@@ -126,17 +130,19 @@ const DashboardCampaignMember = ({ memberId, campaignId }) => {
               />
             </Grid>
             <DashboardKpi kpi={kpi} isLoading={isLoading} />
-            <DashboardSection
-              hidePaper
-              isLoading={isLoading}
-              title={`Status of ${total} gift invites`}
-              icon="heart-rate"
-              subtitle={`This shows you the current status of all the gifts that have been sent in the ${memberName} campaign.`}
-              isReportLoading={isOverviewReportLoading}
-              onDownloadReport={downloadOverviewReport}
-            >
-              <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
-            </DashboardSection>
+            {!isDashboardStatisticsEnabled && (
+              <DashboardSection
+                hidePaper
+                isLoading={isLoading}
+                title={`Status of ${total} gift invites`}
+                icon="heart-rate"
+                subtitle={`This shows you the current status of all the gifts that have been sent in the ${memberName} campaign.`}
+                isReportLoading={isOverviewReportLoading}
+                onDownloadReport={downloadOverviewReport}
+              >
+                <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
+              </DashboardSection>
+            )}
           </>
         )}
       />
