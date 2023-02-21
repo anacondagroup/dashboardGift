@@ -4,12 +4,16 @@ import PropTypes from 'prop-types';
 import { Box, Paper, Button, Typography, MenuItem, TextField, Autocomplete } from '@mui/material';
 
 import { loadAllowedCampaignsRequest } from '../../../../store/breakdowns/giftTransfer/giftTransfer.actions';
-import { getAllowedCampaigns } from '../../../../store/breakdowns/giftTransfer/giftTransfer.selectors';
+import {
+  getAllowedCampaigns,
+  getGiftsCountFromTransferSelection,
+} from '../../../../store/breakdowns/giftTransfer/giftTransfer.selectors';
 
 const SelectCampaign = ({ classes, onSelect, teamId, campaignId }) => {
   const dispatch = useDispatch();
 
   const campaigns = useSelector(getAllowedCampaigns);
+  const selectedGiftsCount = useSelector(getGiftsCountFromTransferSelection);
   const items = useMemo(
     () =>
       campaigns.map(item => ({
@@ -29,9 +33,11 @@ const SelectCampaign = ({ classes, onSelect, teamId, campaignId }) => {
     onSelect(campaign.value);
   }, [campaign, onSelect]);
 
+  const giftLabel = selectedGiftsCount > 1 ? 'these gifts' : 'this gift';
+
   return (
     <Paper square className={classes.paper}>
-      <Typography className="H4-Chambray">What campaign should we add these gifts to?</Typography>
+      <Typography className="H4-Chambray">Which campaign should we add {giftLabel} to?</Typography>
       <Box mt={2}>
         <Autocomplete
           value={campaign}
