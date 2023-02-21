@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-import { updateSearch, User } from '@alycecom/modules';
+import { Features, updateSearch, User } from '@alycecom/modules';
 import { useScrollTop, useUrlQuery, useSetUrlQuery } from '@alycecom/hooks';
 
 import DashboardHeader from '../../../../components/Dashboard/Header/DashboardHeader';
@@ -38,6 +38,9 @@ const DashboardTeam = ({ teamId }) => {
   const isTeamsLoading = useSelector(getTeamsIsLoading);
   const isUserLoading = useSelector(User.selectors.getIsUserLoading);
   const currentTeam = useSelector(useMemo(() => makeGetTeamById(teamId), [teamId]));
+  const isDashboardStatisticsEnabled = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.DASHBOARD_STATISTICS_V3),
+  );
 
   const {
     dateRangeFrom,
@@ -131,17 +134,19 @@ const DashboardTeam = ({ teamId }) => {
               <GiftInvitationReportButton teamId={teamId} dateRangeFrom={dateRangeFrom} dateRangeTo={dateRangeTo} />
             </Grid>
             <DashboardKpi kpi={kpi} isLoading={isLoading} />
-            <DashboardSection
-              hidePaper
-              isLoading={isLoading}
-              title={`Status of ${total} gift invites`}
-              icon="heart-rate"
-              subtitle={`This shows the current statuses of all the gifts that have been sent by ${teamName}.`}
-              isReportLoading={isOverviewReportLoading}
-              onDownloadReport={downloadOverviewReport}
-            >
-              <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
-            </DashboardSection>
+            {!isDashboardStatisticsEnabled && (
+              <DashboardSection
+                hidePaper
+                isLoading={isLoading}
+                title={`Status of ${total} gift invites`}
+                icon="heart-rate"
+                subtitle={`This shows the current statuses of all the gifts that have been sent by ${teamName}.`}
+                isReportLoading={isOverviewReportLoading}
+                onDownloadReport={downloadOverviewReport}
+              >
+                <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
+              </DashboardSection>
+            )}
           </>
         )}
       />

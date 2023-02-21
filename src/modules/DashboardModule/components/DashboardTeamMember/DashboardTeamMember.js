@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid } from '@mui/material';
-import { updateSearch, Auth, User } from '@alycecom/modules';
+import { updateSearch, Auth, User, Features } from '@alycecom/modules';
 import { TrackEvent } from '@alycecom/services';
 import { useRouting, useScrollTop, useUrlQuery, useSetUrlQuery } from '@alycecom/hooks';
 
@@ -34,6 +34,9 @@ const DashboardTeamMember = ({ memberId, teamId }) => {
   const isUserLoading = useSelector(User.selectors.getIsUserLoading);
   const isMembersLoading = useSelector(getMembersIsLoading);
   const { fullName: memberName = '' } = useSelector(useMemo(() => makeGetMemberById(memberId), [memberId])) || {};
+  const isDashboardStatisticsEnabled = useSelector(
+    Features.selectors.hasFeatureFlag(Features.FLAGS.DASHBOARD_STATISTICS_V3),
+  );
 
   const {
     dateRangeFrom,
@@ -154,17 +157,19 @@ const DashboardTeamMember = ({ memberId, teamId }) => {
               />
             </Grid>
             <DashboardKpi kpi={kpi} isLoading={isLoading} />
-            <DashboardSection
-              hidePaper
-              isLoading={isLoading}
-              title={`Status of ${total} gift invites`}
-              icon="heart-rate"
-              subtitle={`This shows the current statuses of all the gifts that have been sent by ${memberName}.`}
-              isReportLoading={isOverviewReportLoading}
-              onDownloadReport={downloadOverviewReport}
-            >
-              <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
-            </DashboardSection>
+            {!isDashboardStatisticsEnabled && (
+              <DashboardSection
+                hidePaper
+                isLoading={isLoading}
+                title={`Status of ${total} gift invites`}
+                icon="heart-rate"
+                subtitle={`This shows the current statuses of all the gifts that have been sent by ${memberName}.`}
+                isReportLoading={isOverviewReportLoading}
+                onDownloadReport={downloadOverviewReport}
+              >
+                <DashboardGiftStatuses isLoading={isLoading} statuses={statuses} />
+              </DashboardSection>
+            )}
           </>
         )}
       />
