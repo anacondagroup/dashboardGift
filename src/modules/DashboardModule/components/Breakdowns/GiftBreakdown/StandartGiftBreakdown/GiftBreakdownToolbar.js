@@ -164,28 +164,29 @@ const GiftBreakdownToolbar = ({ placeholder, search, onSearch, teamId, campaignI
   );
 
   const tooltip = !selectedGiftsCount ? 'Select at least one gift' : null;
+  const giftLabel = selectedGiftsCount > 1 ? 'gifts' : 'gift';
 
   const menuItems = useMemo(
     () => [
       {
         id: 'expire',
-        text: 'Expire gift',
+        text: `Expire ${giftLabel}`,
         action: handleExpireGifts,
-        tooltip: isDisableExpire ? 'Only sent pending gifts are available for Expire action' : tooltip,
+        tooltip: isDisableExpire ? 'Only pending gifts may be expired' : tooltip,
         dataTestId: 'GiftBreakdown.Actions.Expire',
         disabled: isDisableExpire || !selectedGiftsCount,
       },
       {
         id: 'unexpire',
-        text: 'Unexpire gift',
+        text: `Unexpire ${giftLabel}`,
         action: handleUnexpireGifts,
         dataTestId: 'GiftBreakdown.Actions.Unexpire',
-        tooltip: isDisableUnExpire ? 'Only expired gifts are available for Unexpire action' : tooltip,
+        tooltip: isDisableUnExpire ? 'Only expired gifts may be un-expired' : tooltip,
         disabled: isDisableUnExpire || !selectedGiftsCount,
       },
       {
         id: 'move',
-        text: 'Move gifts',
+        text: `Move ${giftLabel}`,
         action: handleMoveGifts,
         dataTestId: 'GiftBreakdown.Actions.Move',
         tooltip,
@@ -193,9 +194,9 @@ const GiftBreakdownToolbar = ({ placeholder, search, onSearch, teamId, campaignI
       },
       {
         id: 'disabled',
-        text: 'Disabled gifts',
+        text: `Disable ${giftLabel}`,
         action: handleDisabledGifts,
-        tooltip: isDisableDisable ? 'Only not sent gifts are available for Disable action' : tooltip,
+        tooltip: isDisableDisable ? 'Only unsent gifts may be disabled' : tooltip,
         dataTestId: 'GiftBreakdown.Actions.Disable',
         disabled: isDisableDisable || !selectedGiftsCount,
       },
@@ -210,6 +211,7 @@ const GiftBreakdownToolbar = ({ placeholder, search, onSearch, teamId, campaignI
       handleDisabledGifts,
       isDisableDisable,
       selectedGiftsCount,
+      giftLabel,
     ],
   );
 

@@ -7,6 +7,7 @@ import { SidebarHeader as HeaderTopBar } from '@alycecom/ui';
 
 import giftingFlowImage from '../../../../../assets/images/contact-details-top-bar.svg';
 import {
+  getGiftsCountFromTransferSelection,
   getGiftTransferId,
   getGiftTransferSidebarState,
 } from '../../../store/breakdowns/giftTransfer/giftTransfer.selectors';
@@ -47,6 +48,7 @@ const useStyles = makeStyles(theme => ({
 const GiftTransferSidebar = ({ teamId, campaignId }) => {
   const isSidebarOpen = useSelector(getGiftTransferSidebarState);
   const transferringId = useSelector(getGiftTransferId);
+  const selectedGiftsCount = useSelector(getGiftsCountFromTransferSelection);
 
   const dispatch = useDispatch();
   const classes = useStyles();
@@ -59,11 +61,13 @@ const GiftTransferSidebar = ({ teamId, campaignId }) => {
     dispatch(closeGiftTransferSidebar());
   }, [dispatch]);
 
+  const giftLabel = selectedGiftsCount > 1 ? 'these gifts' : 'this gift';
+
   return (
     <Drawer open={isSidebarOpen} anchor="right" onClose={onCloseSidebar}>
       <Box>
         <HeaderTopBar onClose={onCloseSidebar} bgTheme="green-gradient" bgImage={giftingFlowImage}>
-          <Typography className={classes.title}>Let`s move these gifts to another campaign</Typography>
+          <Typography className={classes.title}>Let&apos;s move {giftLabel} to another campaign</Typography>
         </HeaderTopBar>
       </Box>
       {!transferringId && (

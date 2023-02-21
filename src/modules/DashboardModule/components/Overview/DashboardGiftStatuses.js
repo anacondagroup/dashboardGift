@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import * as R from 'ramda';
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Icon } from '@alycecom/ui';
@@ -150,12 +151,17 @@ const DashboardGiftStatuses = ({
     ],
     [accepted, accepted_and_meeting_booked, declined],
   );
+  const giftsCountCreated = useMemo(() => R.compose(R.sum(), R.pluck('count'))(statusesCreated), [statusesCreated]);
+  const giftsCountSent = useMemo(() => R.compose(R.sum(), R.pluck('count'))(statusesSent), [statusesSent]);
+  const giftsCountFinished = useMemo(() => R.compose(R.sum(), R.pluck('count'))(statusesFinished), [statusesFinished]);
+
+  const getInvitesLabel = giftsCount => (giftsCount === 1 ? 'invite' : 'invites');
 
   return (
     <Box display="flex" flexDirection="row" flexWrap="nowrap">
       <DashboardStatusesSection
         icon="atom-alt"
-        title="invites created"
+        title={`${getInvitesLabel(giftsCountCreated)} created`}
         isLoading={isLoading}
         statuses={statusesCreated}
       />
@@ -164,7 +170,7 @@ const DashboardGiftStatuses = ({
       </Box>
       <DashboardStatusesSection
         icon="truck"
-        title="invites sent and not yet accepted"
+        title={`${getInvitesLabel(giftsCountSent)} sent and not yet accepted`}
         isLoading={isLoading}
         statuses={statusesSent}
       />
@@ -173,7 +179,7 @@ const DashboardGiftStatuses = ({
       </Box>
       <DashboardStatusesSection
         icon="star"
-        title="invites finished"
+        title={`${getInvitesLabel(giftsCountFinished)} finished`}
         isLoading={isLoading}
         statuses={statusesFinished}
       />

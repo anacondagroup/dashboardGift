@@ -35,7 +35,7 @@ const GiftOptionsReadyButton = ({ campaign, giftStatus, onStatusClick }: GiftOpt
   if (!campaign) {
     return (
       <Tooltip
-        title={`You don't have access to this campaign. If you have questions please contact campaign owner.`}
+        title={`You don't have access to this campaign. Contact the campaign owner if you require assistance.`}
         arrow
         placement="bottom-end"
       >

@@ -92,7 +92,7 @@ export const CampaignsBreakdownTableComponent = ({
                 active={sort === 'meetings_booked'}
                 onClick={() => onSort('meetings_booked')}
               >
-                meeting booked
+                meetings booked
               </TableSortLabel>
             </TableCell>
           </TableRow>
