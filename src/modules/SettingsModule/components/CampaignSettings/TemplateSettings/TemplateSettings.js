@@ -6,6 +6,7 @@ import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { actions, selectors } from '../../../store/campaign/template';
+import { commonCampaignSettingsSetAllowEditTemplate } from '../../../store/campaign/commonData/commonData.actions';
 
 import TemplateForm from './TemplateForm';
 
@@ -45,10 +46,13 @@ const TemplateSettings = ({ campaignId }) => {
     [dispatch, campaignId],
   );
 
-  const handleSaveTemplate = useCallback(template => dispatch(actions.saveTemplate({ template, campaignId })), [
-    dispatch,
-    campaignId,
-  ]);
+  const handleSaveTemplate = useCallback(
+    template => {
+      dispatch(actions.saveTemplate({ template, campaignId }));
+      dispatch(commonCampaignSettingsSetAllowEditTemplate(template.allowEditTemplate));
+    },
+    [dispatch, campaignId],
+  );
 
   return (
     <>
