@@ -223,6 +223,7 @@ const CreateCampaign = ({
                           color="primary"
                           checked={setSpecificMembers}
                           onChange={handleChangeCheckbox}
+                          data-testid="SpecificTeamMembers.Checkbox"
                         />
                       }
                       label={<Typography color="primary">Grant access to specific team members</Typography>}
