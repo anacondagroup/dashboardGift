@@ -3,6 +3,7 @@ import {
   COMMON_CAMPAIGN_SETTINGS_DATA_SUCCESS,
   COMMON_CAMPAIGN_SETTINGS_DATA_FAIL,
   COMMON_CAMPAIGN_SETTINGS_CLEAR_DATA,
+  COMMON_CAMPAIGN_SETTINGS_SET_ALLOW_EDIT_TEMPLATE,
 } from './commonData.types';
 
 export const commonCampaignSettingsDataRequest = payload => ({
@@ -22,4 +23,9 @@ export const commonCampaignSettingsDataFail = payload => ({
 
 export const commonCampaignSettingsClearData = () => ({
   type: COMMON_CAMPAIGN_SETTINGS_CLEAR_DATA,
+});
+
+export const commonCampaignSettingsSetAllowEditTemplate = payload => ({
+  type: COMMON_CAMPAIGN_SETTINGS_SET_ALLOW_EDIT_TEMPLATE,
+  payload,
 });

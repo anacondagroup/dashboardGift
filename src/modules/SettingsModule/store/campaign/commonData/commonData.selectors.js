@@ -30,6 +30,8 @@ export const getIsSwag = pipe(getCampaignType, getIsSwagCampaign);
 
 export const getIsInternational = pipe(getCommonCampaignData, propOr(false, 'isInternational'));
 
+export const getIsAllowEditTemplate = pipe(getCommonCampaignData, propOr(true, 'allowEditTemplate'));
+
 // TODO: Update template response, for returning default template.
 export const getDefaultTemplate = createSelector(
   getCommonCampaignData,

@@ -388,7 +388,7 @@ const CampaignTableToolbar = ({
           <Grid>
             <FormControlLabel
               control={<Switch checked={isIncludeArchived} onChange={handleIncludeArchived} color="primary" />}
-              label="Include archived"
+              label="Include archived teams"
             />
           </Grid>
         </HasFeature>

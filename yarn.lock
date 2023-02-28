@@ -7,24 +7,24 @@
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.0.1.tgz#b38b444ad3aa5fedbb15f2f746dcd934226a12dd"
   integrity sha512-+u76oB43nOHrF4DDWRLWDCtci7f3QJoEBigemIdIeTi1ODqjx6Tad9NCVnPRwewWlKkVab5PlK8DCtPTyX7S8g==
 
-"@alycecom/hooks@2023.2.3":
-  version "2023.2.3"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/hooks/-/@alycecom/hooks-2023.2.3.tgz#45a4089f8eeaa5676d3138a269e50b1bf6501668"
-  integrity sha1-RaQIn47qpWdtMTiiaeULG/ZQFmg=
+"@alycecom/hooks@2023.2.5":
+  version "2023.2.5"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/hooks/-/@alycecom/hooks-2023.2.5.tgz#ad72f04df9a697944d1df751bafa0c23d9cde293"
+  integrity sha1-rXLwTfmml5RNHfdRuvoMI9nN4pM=
   dependencies:
-    "@alycecom/utils" "2023.2.3"
+    "@alycecom/utils" "2023.2.5"
     react-hook-form "^7.24.0"
     react-router-last-location "^2.0.1"
 
-"@alycecom/modules@2023.2.3":
-  version "2023.2.3"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/modules/-/@alycecom/modules-2023.2.3.tgz#b2c29ca4d7309485cce8906af16732565d24f6ae"
-  integrity sha1-ssKcpNcwlIXM6JBq8WcyVl0k9q4=
+"@alycecom/modules@2023.2.5":
+  version "2023.2.5"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/modules/-/@alycecom/modules-2023.2.5.tgz#890c9ca4cf941b3526a9e2c40fbb9e3aa611dd9e"
+  integrity sha1-iQycpM+UGzUmqeLED7ueOqYR3Z4=
   dependencies:
-    "@alycecom/hooks" "2023.2.3"
-    "@alycecom/services" "2023.2.3"
-    "@alycecom/ui" "2023.2.3"
-    "@alycecom/utils" "2023.2.3"
+    "@alycecom/hooks" "2023.2.5"
+    "@alycecom/services" "2023.2.5"
+    "@alycecom/ui" "2023.2.5"
+    "@alycecom/utils" "2023.2.5"
     "@babel/preset-typescript" "^7.10.4"
     "@date-io/moment" "^1.3.9"
     "@hookform/resolvers" "^2.8.5"
@@ -42,14 +42,14 @@
     uuid "^8.3.2"
     yup "^0.32.11"
 
-"@alycecom/services@2023.2.3":
-  version "2023.2.3"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/services/-/@alycecom/services-2023.2.3.tgz#997d9039d4b8ecaf002eefc072a72e8587307934"
-  integrity sha1-mX2QOdS47K8ALu/AcqcuhYcweTQ=
+"@alycecom/services@2023.2.5":
+  version "2023.2.5"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/services/-/@alycecom/services-2023.2.5.tgz#78a967eb1e116e102688d600f888114455d0b83c"
+  integrity sha1-eKln6x4RbhAmiNYA+IgRRFXQuDw=
   dependencies:
-    "@alycecom/hooks" "2023.2.3"
-    "@alycecom/ui" "2023.2.3"
-    "@alycecom/utils" "2023.2.3"
+    "@alycecom/hooks" "2023.2.5"
+    "@alycecom/ui" "2023.2.5"
+    "@alycecom/utils" "2023.2.5"
     "@babel/plugin-proposal-class-properties" "^7.12.1"
     "@babel/plugin-proposal-optional-chaining" "^7.12.1"
     "@babel/plugin-transform-runtime" "^7.12.1"
@@ -65,13 +65,13 @@
     redux-persist "^6.0.0"
     tsd-jsdoc "^2.5.0"
 
-"@alycecom/ui@2023.2.3":
-  version "2023.2.3"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/ui/-/@alycecom/ui-2023.2.3.tgz#22b8fe769c2e69bf5553d6b37d56c80dc348a745"
-  integrity sha1-Irj+dpwuab9VU9azfVbIDcNIp0U=
+"@alycecom/ui@2023.2.5":
+  version "2023.2.5"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/ui/-/@alycecom/ui-2023.2.5.tgz#dae378416a3f9bbae1488639855bd7f3ecd6f891"
+  integrity sha1-2uN4QWo/m7rhSIY5hVvX8+zW+JE=
   dependencies:
-    "@alycecom/hooks" "2023.2.3"
-    "@alycecom/utils" "2023.2.3"
+    "@alycecom/hooks" "2023.2.5"
+    "@alycecom/utils" "2023.2.5"
     autosuggest-highlight "^3.1.1"
     babel-plugin-inline-react-svg "^1.1.1"
     babel-plugin-transform-es2015-modules-commonjs "^6.26.2"
@@ -87,10 +87,10 @@
     sanitize-html "^1.27.5"
     tinycolor2 "^1.4.2"
 
-"@alycecom/utils@2023.2.3":
-  version "2023.2.3"
-  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/utils/-/@alycecom/utils-2023.2.3.tgz#6550219a864e79919595b519fb46d9643854fb13"
-  integrity sha1-ZVAhmoZOeZGVlbUZ+0bZZDhU+xM=
+"@alycecom/utils@2023.2.5":
+  version "2023.2.5"
+  resolved "https://gitlab.alycedev.com/api/v4/projects/153/packages/npm/@alycecom/utils/-/@alycecom/utils-2023.2.5.tgz#36a2a00f22793316ff2ad094db097580cdb7528b"
+  integrity sha1-NqKgDyJ5Mxb/KtCU2wl1gM23Uos=
 
 "@ampproject/remapping@^2.1.0":
   version "2.2.0"

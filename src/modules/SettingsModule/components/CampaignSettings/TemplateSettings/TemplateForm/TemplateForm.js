@@ -1,13 +1,15 @@
 import React, { useCallback, useMemo, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Divider, ActionButton, HtmlTip } from '@alycecom/ui';
 import { CommonData } from '@alycecom/modules';
 import { isString } from '@alycecom/utils';
+
+import { getIsAllowEditTemplate } from '../../../../store/campaign/commonData/commonData.selectors';
 
 import { templateShape } from './shapes/template.shape';
 import { placeholderShape } from './shapes/placeholder.shape';
@@ -36,6 +38,7 @@ const TemplateForm = ({ item, isLoading, customData, onSaveTemplate, onDeleteTem
   const classes = useStyles();
 
   const charsLimit = useSelector(CommonData.selectors.getEmailCharLimit);
+  const isAllowEditTemplate = useSelector(getIsAllowEditTemplate);
   const validationSchema = useMemo(() => buildValidationSchema(charsLimit), [charsLimit]);
 
   const {
@@ -49,6 +52,7 @@ const TemplateForm = ({ item, isLoading, customData, onSaveTemplate, onDeleteTem
     defaultValues: {
       subject: '',
       message: '',
+      allowEditTemplate: true,
     },
     resolver: yupResolver(validationSchema),
   });
@@ -57,14 +61,16 @@ const TemplateForm = ({ item, isLoading, customData, onSaveTemplate, onDeleteTem
   useEffect(() => {
     setValue('subject', item.subject, { shouldValidate: true });
     setValue('message', item.message, { shouldValidate: true });
-  }, [item, setValue]);
+    setValue('allowEditTemplate', isAllowEditTemplate, { shouldValidate: true });
+  }, [item, setValue, isAllowEditTemplate]);
 
   const handleSaveTemplate = useCallback(
-    ({ subject, message }) =>
+    ({ subject, message, allowEditTemplate }) =>
       onSaveTemplate({
         ...item,
         subject,
         message,
+        allowEditTemplate,
       }),
     [item, onSaveTemplate],
   );
@@ -121,7 +127,7 @@ const TemplateForm = ({ item, isLoading, customData, onSaveTemplate, onDeleteTem
         />
       </Box>
 
-      <Box width={1} display="flex" justifyContent="space-between">
+      <Box width={1} display="flex" justifyContent="flex-start">
         <ActionButton
           onClick={handleSubmit(handleSaveTemplate)}
           type="submit"
@@ -130,6 +136,18 @@ const TemplateForm = ({ item, isLoading, customData, onSaveTemplate, onDeleteTem
         >
           {saveText}
         </ActionButton>
+        <Box pl={2}>
+          <Controller
+            name="allowEditTemplate"
+            control={control}
+            render={({ field }) => (
+              <FormControlLabel
+                control={<Checkbox color="primary" checked={field.value} {...field} />}
+                label="Allow team members to edit message"
+              />
+            )}
+          />
+        </Box>
 
         {onDeleteTemplate && (
           <Button

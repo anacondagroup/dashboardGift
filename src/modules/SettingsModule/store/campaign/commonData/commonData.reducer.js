@@ -5,6 +5,7 @@ import {
   COMMON_CAMPAIGN_SETTINGS_DATA_SUCCESS,
   COMMON_CAMPAIGN_SETTINGS_DATA_FAIL,
   COMMON_CAMPAIGN_SETTINGS_CLEAR_DATA,
+  COMMON_CAMPAIGN_SETTINGS_SET_ALLOW_EDIT_TEMPLATE,
 } from './commonData.types';
 
 const initialState = {
@@ -34,6 +35,14 @@ export const reducer = (state = initialState, action = {}) => {
     case COMMON_CAMPAIGN_SETTINGS_CLEAR_DATA:
       return {
         ...initialState,
+      };
+    case COMMON_CAMPAIGN_SETTINGS_SET_ALLOW_EDIT_TEMPLATE:
+      return {
+        ...state,
+        campaign: {
+          ...state.campaign,
+          allowEditTemplate: payload,
+        },
       };
     case set1t1CampaignCustomMarketplaceId.fulfilled.getType(): {
       return {
