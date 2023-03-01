@@ -1,7 +1,7 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { Auth, Features, HasFeature, GiftingOnTheFly, safeLazy, User, TEmailProviderName } from '@alycecom/modules';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import SendGiftRedirect from './components/Redirect/SendGiftRedirect';
 import ContactRedirect from './components/Redirect/ContactRedirect';
@@ -11,10 +11,12 @@ import { StandardCampaignRoutes } from './modules/SettingsModule/components/Stan
 import { getIsPermissionsLoaded, makeHasPermissionSelector } from './store/common/permissions/permissions.selectors';
 import FullPageLoader from './components/Shared/FullPageLoader';
 import { PermissionKeys } from './constants/permissions.constants';
+import { showNotification } from './store/common/notifications/notifications.actions';
 
 const AuthChunk = safeLazy(() => import('./modules/AuthModule'));
 const MarketplaceChunk = safeLazy(() => import('./modules/MarketplaceModule'));
 const DashboardChunk = safeLazy(() => import('./modules/DashboardModule'));
+const DashboardPreviewChunk = safeLazy(() => import('./modules/DashboardPreviewModule'));
 const SettingsChunk = safeLazy(() => import('./modules/SettingsModule'));
 const EmailBrandingChunk = safeLazy(() => import('./modules/EmailBrandingModule'));
 const ActivateBuilderChunk = safeLazy(() => import('./modules/ActivateModule/CreateActivateModule'));
@@ -35,6 +37,7 @@ const { PrivateRoute } = Auth;
 
 export const DASHBOARD_ROUTES = {
   HOME: '/',
+  ROI_PREVIEW: '/preview',
   EXTERNAL: '/external',
   EXTERNAL_CONTACT: '/external/contact',
   SETTINGS: '/settings',
@@ -59,6 +62,11 @@ export const RoutesComponent = (): JSX.Element => {
   );
   const isPermissionsLoaded = useSelector(getIsPermissionsLoaded);
   const [isAuthenticated] = Auth.hooks.useAuthTokenInfo();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(showNotification(true));
+  }, [dispatch]);
 
   /*
    * If a user is authenticated we're waiting for a moment when permission list is loaded
@@ -74,6 +82,15 @@ export const RoutesComponent = (): JSX.Element => {
         render={() => (
           <Suspense fallback={<div />}>
             <AuthChunk />
+          </Suspense>
+        )}
+      />
+      <PrivateRoute
+        isAuthenticated={isAuthenticated}
+        path={DASHBOARD_ROUTES.ROI_PREVIEW}
+        render={() => (
+          <Suspense fallback={<div />}>
+            <DashboardPreviewChunk />
           </Suspense>
         )}
       />
